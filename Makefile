@@ -1,5 +1,6 @@
 
-.PHONY: all install vim git zsh emacs
+.PHONY: all install vim git zsh emacs update udpate_vim update_zsh update_emacs clean clean_vim \
+				clean_git clean_zsh clean_emacs
 
 all:
 	@echo "Usage:\n"                                                                         \
@@ -12,6 +13,9 @@ all:
 				"\n Uninstallation\n"                                                              \
 				"  make [clean_vim | make clean_git | clean_zsh | clean_emacs]\n"                  \
 				"  make clean       # Remove all configuration files from your home folder\n"
+
+
+
 
 # The principe of the installation is to create links in your home folder link to the configuration
 # files in the repository and copy the configuration folder in your home folder form the repository.

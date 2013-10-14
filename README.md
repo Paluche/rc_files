@@ -1,5 +1,7 @@
-rc_files
+RC Files
 ========
+
+*Hubert lefevre* (github.com/paluche)
 
 
 This repository contain my configuration files for the different software
@@ -10,7 +12,9 @@ This repository contain my configuration files for the different software
 - git
 - awesome (coming soon)
 
-(coming soon)
-Installation
-clone this repository and use the command "make install"  to install all configuration files.
-or use make [vim|emacs|zsh|git|awesome] to install specific configuration files
+#### Installation
+
+The Makefile offer you the possibility to install some or all the configuration files instead of
+your current.
+
+Warning: The previous files are not saved.
