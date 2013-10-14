@@ -2,40 +2,54 @@
 .PHONY: all install vim git zsh emacs
 
 all:
-	@echo "Usage: \n" 				  																										\
-				"Installation\n"                                                          \
-				"make vim         # Install vim configuration in your home folder\n" 			\
-				"make git         # Install git configuration in your home folder\n" 			\
-				"make zsh         # Install zsh configuration in your home folder\n" 			\
-				"make emacs       # Install emacs configuration in your home folder\n" 		\
-				"make install     # Install all the configuration in your home folder\n" 	\
-				"\n Uninstallation\n"                                                      \
-				"make clean_vim   # Remove vim configuration in your home folder\n" 			\
-				"make clean_git   # Remove git configuration in your home folder\n" 			\
-				"make clean_zsh   # Remove zsh configuration in your home folder\n" 			\
-				"make clean_emacs # Remove emacs configuration in your home folder\n"  		\
-				"make clean       # Remove all configuration files from your home folder\n"
+	@echo "Usage:\n"                                                                         \
+				"Installation of the configuration files\n"                                        \
+				"  make [vim | git | zsh | emacs]\n"                                               \
+ 				"  make install     # Install all the previous software configuration\n"           \
+				"\n Update the configuration folders from the repository \n"                       \
+				"  make [update_vim | update_zsh | update_emacs]\n"                                \
+				"  make update      # Update all configuration folders of the previous software\n" \
+				"\n Uninstallation\n"                                                              \
+				"  make [clean_vim | make clean_git | clean_zsh | clean_emacs]\n"                  \
+				"  make clean       # Remove all configuration files from your home folder\n"
 
 # The principe of the installation is to create links in your home folder link to the configuration
-# files and folders in the repository. Then you could share same configurations files with all your
-# computer. And change configuration files from any computer.
-
+# files in the repository and copy the configuration folder in your home folder form the repository.
+# Then you could share same configurations files with all your computer. And change configuration
+# files from any computer.
+#
+# The reference files for the folder is always the repository. If you want to change something,
+# change it in the repository then do a mak update / update_<software_name>
 install: vim git zsh emacs
 
-vim:
+vim: update_vim
 	ln vim_rc/vimrc ~/.vimrc
-	cp vim_rc/vim ~/.vim
 
 git:
 	ln git_rc/gitconfig ~/.gitconfig
 
-zsh:
+zsh: update_zsh
 	ln zsh_rc/zshrc ~/.zshrc
-	cp zsh_rc/zsh ~/.zsh
 
-emacs:
+emacs: update_emacs
 	ln emacs_rc/emacs ~/.emacs
-	cp emacs_rc/emacs.d  ~/.emacs.d
+
+
+
+
+update: udpate_vim update_zsh update_emacs
+
+update_vim:
+	cp -rf vim_rc/vim ~/.vim
+
+update_zsh:
+	cp -rf zsh_rc/zsh ~/.zsh
+
+update_emacs:
+	cp -rf emacs_rc/emacs.d  ~/.emacs.d
+
+
+
 
 clean: clean_vim clean_git clean_zsh clean_emacs
 
