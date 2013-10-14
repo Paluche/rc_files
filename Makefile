@@ -24,18 +24,18 @@ install: vim git zsh emacs
 
 vim:
 	ln vim_rc/vimrc ~/.vimrc
-	ln -s vim_rc/vim ~/.vim
+	cp vim_rc/vim ~/.vim
 
 git:
 	ln git_rc/gitconfig ~/.gitconfig
 
 zsh:
 	ln zsh_rc/zshrc ~/.zshrc
-	ln -s zsh_rc/zsh ~/.zsh
+	cp zsh_rc/zsh ~/.zsh
 
 emacs:
 	ln emacs_rc/emacs ~/.emacs
-	ln -s emacs_rc/emacs.d ~/.emacs.d
+	cp emacs_rc/emacs.d  ~/.emacs.d
 
 clean: clean_vim clean_git clean_zsh clean_emacs
 
