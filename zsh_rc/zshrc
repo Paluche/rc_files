@@ -336,7 +336,7 @@ elif [ `hostname` = "dell-hlefevre" ]; then
   alias catftdi='cat /dev/ttyUSB0'
   alias serialflasher='sudo ./serialflasher'
   alias flasher='sudo ~/Netatmo/apps/Linux/flasher/flasher'
-
+  alias dfu_flash='sudo ../stm32_dfu/stm32_dfu -f=../../embedded/cortex/WeatherStation/app-jtag.bin'
 
   # SSH Users and Host
   users=(hlefevre hubert rest paluche)
