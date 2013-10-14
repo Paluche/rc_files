@@ -23,3 +23,5 @@ Do a Makefile to easily install the different configuration files
 * WIP on function according to computer
     * the final else case will be reserved for my telecom-paristech session
 
+### Installation
+Copy instead of -s link for folders. Install the solarium color see ReadME, rc_files/vim_rc/solarium
