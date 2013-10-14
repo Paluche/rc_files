@@ -88,7 +88,7 @@ alias grep='grep --colour'
 alias ms='ls --color=auto'
 alias la='ls -a --color=auto'
 alias sl='ls --color=auto'
-alias rm='nocorrect rm -r'   # no spelling correction on rm and ask for confirmation
+alias rm='nocorrect rm -r'      # Recursive remove automatic
 alias mv='nocorrect mv -i'      # no spelling correction on mv
 alias make='nocorrect make'     # no spelling correction on make
 alias locate='nocorrect locate' # no spelling correction on locate
@@ -98,13 +98,19 @@ alias fuck='clear'
 alias lo='libreoffice'
 # git
 alias gs='git status'
+alias gd='git diff'
 alias ga='git add'
+alias gap='git add -p'
 alias gc='git commit'
 alias gca='git commit -a'
+alias gcm='git checkout master'
+alias gl='git l'
+alias gr='git reset'
+alias grh='git reset HEAD'
 alias gph='git push'
 alias gpl='git pull'
-alias gd='git diff'
-alias gap='git add -p'
+alias gsd='git svn dcommit'
+alias gsr='git svn rebase'
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
@@ -117,10 +123,12 @@ alias -s md='vim'
 alias -s cpp='vim'
 alias -s vim='vim'
 alias -s mk='vim'
+alias -s txt='vim'
+alias -s md='vim'
+alias -s markdown='vim'
 alias -s mkv='vlc'
 alias -s sv='emacs'
 alias -s v='emacs'
-alias -s txt='emacs'
 alias -s pdf='evince'
 alias -s odt='lowriter'
 alias -s odp='loimpress'
@@ -156,7 +164,7 @@ unsetopt hist_beep
 unsetopt list_beep
 
 # Set Options
-setopt correct
+#setopt correct
 setopt autocd                      # Typing cd everytime is boring
 setopt auto_pushd pushd_minus      # don't use cd, use pushd
 setopt pushd_silent pushd_to_home
@@ -183,7 +191,7 @@ setopt hist_ignore_dups            # If I type cd and then cd again, only save t
 setopt hist_ignore_all_dups        # Even if there are commands inbetween commands that are the same, still only save the last one
 setopt hist_ignore_space           # If a line starts with a space, don't save it.
 setopt hist_no_store
-setopt EXTENDED_HISTORY            # Save the time and how long a command ran
+#setopt EXTENDED_HISTORY            # Save the time and how long a command ran
 setopt hist_save_no_dups
 setopt hist_expire_dups_first
 setopt hist_find_no_dups
@@ -229,21 +237,7 @@ export SAVEHIST=$HISTSIZE
 watch=notme
 export LOGCHECK=60
 
-# Lines for compiling and correct usr of openocd
-export PATH=$PATH:/opt/tools_arm/bin/
-export PATH=$PATH:/opt/openocd/bin/
-export PATH=$PATH:/opt/msp430/msp430mcu-20120406/bin/
-export PATH=$PATH:/opt/soclib/utils/bin/
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
-alias openocd="sudo /opt/openocd/bin/openocd"
-
-# SSH Completion
-users=(hlefevre paluche hubert)
-hosts=(191.168.1.100 198.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
-
-zstyle ':completion:*' users $users
-zstyle ':completion:*:hosts' hosts $hosts
 
 # Format titles for screen and rxvt
 precmd () {print -Pn "\e]2;%n@%m%#  %~ %l  %w :: %T\a"}
@@ -251,7 +245,6 @@ preexec () {print -Pn "\e]2;%n@%m%#  <$1>  %~ %l  %w :: %T\a"}
 
 # Misc settings
 #export EDITOR="nano -mw"
-export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
 # functions
 # extract the files
@@ -315,7 +308,44 @@ fi
 
 if [ `hostname` = "paluche-laptop" ]; then
   alias gohubert='cd /media/paluche/OS/Users/Hubert'
+  # Lines for compiling and correct usr of openocd
+  export PATH=$PATH:/opt/tools_arm/bin/
+  export PATH=$PATH:/opt/openocd/bin/
+  export PATH=$PATH:/opt/msp430/msp430mcu-20120406/bin/
+  export PATH=$PATH:/opt/soclib/utils/bin/
+  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+  alias openocd="sudo /opt/openocd/bin/openocd"
+
+  export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
+
+  # SSH host
+  users=(hlefevre paluche hubert)
+  hosts=(191.168.1.100 198.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+
 elif [ `hostname` = "dell-hlefevre" ]; then
-  #TODO Add here specific
+  # Netatmo shortcut
+  export PATH=$PATH:~/Netatmo/generic/stm32_sbm
+  #~/Netatmo/apps/Linux/flasher/
+
+  # App shortcuts
+  alias flash-run='stm32_sbm -f app-jtag.bin'
+  alias fw-flash-run='stm32_bm -f app.bin -s 0x1000'
+  alias catftdi='cat /dev/ttyUSB0'
+  alias serialflasher='sudo ./serialflasher'
+  alias flasher='sudo ~/Netatmo/apps/Linux/flasher/flasher'
+
+  alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
+
+  # SSH Users and Host
+  users=(hlefevre hubert rest paluche)
+  hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
+
+else
+  # enst session
+  # TODO
 fi
 
+# SSH Completion
+zstyle ':completion:*' users $users
+zstyle ':completion:*:hosts' hosts $hosts
