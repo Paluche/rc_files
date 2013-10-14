@@ -1,0 +1,9 @@
+[user]
+	name = Hubert Lefevre
+	email = hubelefevre@gmail.com
+[color]
+    ui = true
+[core]
+    editor = vim
+[alias]
+    l = log --graph --date=short --pretty=format:'%C(yellow)%h%Creset %ad: %an %n%x09%s%n'
