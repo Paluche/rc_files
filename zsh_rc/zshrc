@@ -135,6 +135,8 @@ alias -s odp='loimpress'
 alias -s ods='localc'
 alias -s xls='localc'
 alias -s py='python'
+alias Makefile='vim Makefile'
+alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Auto background
 alias f='firefox &'
 alias xchat='xchat &'
@@ -335,7 +337,6 @@ elif [ `hostname` = "dell-hlefevre" ]; then
   alias serialflasher='sudo ./serialflasher'
   alias flasher='sudo ~/Netatmo/apps/Linux/flasher/flasher'
 
-  alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 
   # SSH Users and Host
   users=(hlefevre hubert rest paluche)
