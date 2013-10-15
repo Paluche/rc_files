@@ -1,7 +1,7 @@
 RC Files
 ========
 
-*Hubert lefevre* (github.com/paluche)
+**Hubert lefevre** (github.com/paluche)
 
 
 This repository contain my configuration files for the different software
