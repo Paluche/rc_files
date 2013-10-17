@@ -22,3 +22,9 @@ Do a Makefile to easily install the different configuration files
 
 * WIP on function according to computer
     * the final else case will be reserved for my telecom-paristech session
+
+### Awesome
+* Put the rc.lua file in this repo
+* Add keyboard shortcuts for
+    * locking the screen
+    * Increase/decrease volume
