@@ -332,7 +332,7 @@ elif [ `hostname` = "dell-hlefevre" ]; then
 
   # App shortcuts
   alias flash-run='stm32_sbm -f app-jtag.bin'
-  alias fw-flash-run='stm32_bm -f app.bin -s 0x1000'
+  alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
   alias catftdi='cat /dev/ttyUSB0'
   alias serialflasher='sudo ./serialflasher'
   alias flasher='sudo ~/Netatmo/apps/Linux/flasher/flasher'
