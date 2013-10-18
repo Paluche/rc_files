@@ -28,3 +28,5 @@ Do a Makefile to easily install the different configuration files
 * Add keyboard shortcuts for
     * locking the screen
     * Increase/decrease volume
+
+* Check this website: blog.wolf.am/archives/2011/04/25/awesome_wm/
