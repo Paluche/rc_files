@@ -20,7 +20,7 @@ set title           " Change the terminal title
 set encoding=utf-8  " Show utf-8 chars
 set showcmd         " count highlighted
 set ruler           " Show where I am in the command area
-set colorcolumn=75  " vertical ruler at  characters
+set colorcolumn=78  " vertical ruler at  characters
 set showmode        " -- INSERT (appreciation)-- :)
 set laststatus=2    " always show the status line
                         " ↪ (0 = never, 1 = default [multi-window only])
@@ -33,7 +33,7 @@ set scrolloff=3     " Start scrolling when I'm 3 lines from top/bottom
 set history=1000    " Remember commands and search history
 set backspace=2     " Backspace over indent, eol, and insert
 set mousehide       " Hide the mouse pointer while typing
-set mouse=a   	    " I want my click back
+"set mouse=a   	    " I want my click back
 
 set number          " Show linenumbers
 set nowrap          " Turn off linewrap
@@ -82,12 +82,12 @@ set guifont=Source\ Code\ Pro\ 14
 
 let g:syntastic_c_checkers=['make']
 set foldmethod=marker
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>99v.\+', -1)
+au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>78v.\+', -1)
 " }}}
 
 " Version 7.3 (703) --------------------------------------------------- {{{
 if v:version >= 703
-        set colorcolumn=100
+        set colorcolumn=78
         set undodir=~/.vim-undo
         set undofile
         set undolevels=1000 "max number of changes that can be undone
@@ -110,10 +110,10 @@ endif
 
 " Dumb osx ------------------------------------------------------------ {{{
 if has("unix")
-        let s:uname = system("uname")
-        if s:uname == "Darwin\n"
-                set clipboard=unnamed
-        endif
+ let s:uname = system("uname")
+ if s:uname == "Darwin\n"
+   set clipboard=unnamed
+ endif
 endif
 " }}}
 
