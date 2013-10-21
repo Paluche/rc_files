@@ -1,25 +1,32 @@
-TODO
+TODO List
 ======
 
-# Global
-
-Merge configuration files from work into the configuration files
-Do a Makefile to easily install the different configuration files
+### Makefile
+* Add to the installation process the installation of the software
+* Add Awesome in installation in Makefile
+* Do a complete Makefile to install a virgin computer with all the software
+I need, and configure them correctly.
 
 ### Vim
-
 #### C syntax
-
-* Highlight the first of two consecutives normal word (not in comment, not followed by '(') just int i.
+* Highlight the first of two consecutives normal word (not in comment)
+Just like Emacs. Examples:
+    * "bidule_t"  blabla
+    * "bidule_t" *blabla
+    * "bidule_t"  blabla()
+    * "bidule_t" *blabla()
 
 * If you have time, increase the indentation power of vim
 
 #### Global
+* Highlight as TODO and FIXME the words : TESTME (orange) , WIP (green), DEBUG (red), ENDDEBUG (red)
+* Highlight every region between // DEBUG and // ENDDEBUG
 
-* Activate the copy paste on vim, and especially the center button.
+### Emacs
+#### Global
+* Highlight words and debug region just like Vim
 
 ### Zsh
-
 * WIP on function according to computer
     * the final else case will be reserved for my telecom-paristech session
 
@@ -28,5 +35,4 @@ Do a Makefile to easily install the different configuration files
 * Add keyboard shortcuts for
     * locking the screen
     * Increase/decrease volume
-
 * Check this website: blog.wolf.am/archives/2011/04/25/awesome_wm/
