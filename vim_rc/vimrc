@@ -33,7 +33,7 @@ set scrolloff=3     " Start scrolling when I'm 3 lines from top/bottom
 set history=1000    " Remember commands and search history
 set backspace=2     " Backspace over indent, eol, and insert
 set mousehide       " Hide the mouse pointer while typing
-"set mouse=a   	    " I want my click back
+" set mouse=a       " I want my click back
 
 set number          " Show linenumbers
 set nowrap          " Turn off linewrap
@@ -90,9 +90,9 @@ if v:version >= 703
         set colorcolumn=78
         set undodir=~/.vim-undo
         set undofile
-        set undolevels=1000 "max number of changes that can be undone
-        set undoreload=10000 "max number lines to save for undo
-        "on buffer reload
+        set undolevels=1000  " Max number of changes that can be undone
+        set undoreload=10000 " Max number lines to save for undo on buffer
+                             "  reload
 
         " Toggle line numbers in normal mode, set by default
         set relativenumber
@@ -137,22 +137,25 @@ nnoremap <leader>l :set list!<CR>
 nnoremap <tab> %
 vnoremap <tab> %
 
-"Opens a vertical split and switches over (,v)
+" Opens a vertical split and switches over (,v)
 nnoremap <leader>v <C-w>v<C-w>l
 
-"Moves around split windows
+" Moves around split windows
 nnoremap <leader>w <C-w><C-w>
 
-"Delete Blanklines
+" Delete Blanklines
 nnoremap <leader>S :v/\S/d<CR>
 
-"Double Space
+" Double Space
 nnoremap <leader>D :g/^/put_<CR>
 
-"Real Returns
+" Real Returns
 nnoremap <leader>R :%s/\r/\r/g<CR>
 
-"Moving around windows
+" Replace <TAB> by two spaces
+nnoremap <leader>T :%s/\t/  /g<CR>
+
+" Moving around windows
 map <C-j> <C-W>j
 map <A-S-Down> <C-W>j
 
@@ -172,12 +175,13 @@ augroup ft_statuslinecolor
         au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
         au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
 augroup END
-set statusline=%f " Path.
+set statusline=%f  " Path.
 set statusline+=%m " Modified flag.
 set statusline+=%r " Readonly flag.
 set statusline+=%w " Preview window flag.
-set statusline+=\ " Space.
+set statusline+=\  "Space.
 set statusline+=%= " Right align.
+
 " Line and column position and counts.
 set statusline+=\ (line\ %l\/%L,\ col\ %03c)
 " }}}
@@ -207,16 +211,17 @@ set printoptions=paper:A4,syntax:y,wrap:y
 " Omni-completion ----------------------------------------------------- {{{
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/cpp
-"set tags+=~/.vim/tags/llvm
-"set tags+=~/.vim/tags/glib
-"set tags+=~/.vim/tags/llvm
+" set tags+=~/.vim/tags/llvm
+" set tags+=~/.vim/tags/glib
+" set tags+=~/.vim/tags/llvm
 let OmniCpp_NamespaceSearch = 1
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_ShowAccess = 1
 let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+let OmniCpp_MayCompleteDot = 1      " autocomplete after .
+let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
+let OmniCpp_MayCompleteScope = 1    " autocomplete after ::
+
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 set completeopt=menuone,menu,longest,preview

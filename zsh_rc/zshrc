@@ -125,6 +125,7 @@ alias -s vim='vim'
 alias -s mk='vim'
 alias -s txt='vim'
 alias -s md='vim'
+alias -s mkd='vim'
 alias -s markdown='vim'
 alias -s mkv='vlc'
 alias -s sv='emacs'
@@ -136,7 +137,7 @@ alias -s ods='localc'
 alias -s xls='localc'
 alias -s py='python'
 alias Makefile='vim Makefile'
-alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
+#alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Auto background
 alias f='firefox &'
 alias xchat='xchat &'
@@ -246,7 +247,7 @@ precmd () {print -Pn "\e]2;%n@%m%#  %~ %l  %w :: %T\a"}
 preexec () {print -Pn "\e]2;%n@%m%#  <$1>  %~ %l  %w :: %T\a"}
 
 # Misc settings
-#export EDITOR="nano -mw"
+export EDITOR="vim"
 
 # functions
 # extract the files
