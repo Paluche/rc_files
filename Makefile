@@ -27,16 +27,16 @@ all:
 install: vim git zsh emacs
 
 vim: update_vim
-	ln vim_rc/vimrc ~/.vimrc
+	ln -P vim_rc/vimrc ~/.vimrc
 
 git:
-	ln git_rc/gitconfig ~/.gitconfig
+	ln -P git_rc/gitconfig ~/.gitconfig
 
 zsh: update_zsh
-	ln zsh_rc/zshrc ~/.zshrc
+	ln -P zsh_rc/zshrc ~/.zshrc
 
 emacs: update_emacs
-	ln emacs_rc/emacs ~/.emacs
+	ln -P emacs_rc/emacs ~/.emacs
 
 
 
