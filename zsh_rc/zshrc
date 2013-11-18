@@ -326,22 +326,6 @@ if [ `hostname` = "paluche-laptop" ]; then
   users=(hlefevre paluche hubert)
   hosts=(191.168.1.100 198.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
 
-elif [ `hostname` = "dell-hlefevre" ]; then
-  # Netatmo shortcut
-  export PATH=$PATH:~/Netatmo/generic/stm32_sbm
-  #~/Netatmo/apps/Linux/flasher/
-
-  # App shortcuts
-  alias flash-run='stm32_sbm -f app-jtag.bin'
-  alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
-  alias catftdi='cat /dev/ttyUSB0'
-  alias serialflasher='sudo ./serialflasher'
-  alias flasher='sudo ~/Netatmo/apps/Linux/flasher/flasher'
-  alias dfu_flash='sudo ../stm32_dfu/stm32_dfu -f=../../embedded/cortex/WeatherStation/app-jtag.bin'
-
-  # SSH Users and Host
-  users=(hlefevre hubert rest paluche)
-  hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 
 else
   # enst session
