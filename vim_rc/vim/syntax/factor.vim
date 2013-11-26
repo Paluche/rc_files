@@ -25,7 +25,7 @@ endif
 
 syn cluster factorCluster contains=factorComment,factorFrySpecifier,factorKeyword,factorRepeat,factorConditional,factorBoolean,factorBreakpoint,factorDeclaration,factorCallQuotation,factorExecute,factorCallNextMethod,factorString,factorTriString,factorSbuf,@factorNumber,@factorNumErr,factorDelimiter,factorChar,factorBackslash,factorMBackslash,factorLiteral,factorLiteralBlock,@factorWordOps,factorAlien,factorSlot,factorTuple,factorError,factorStruct
 
-syn match factorTodo /\(TODO\|FIXME\|XXX\):\=/ contained
+syn match factorTodo /\(TODO\|FIXME\|XXX\|DEBUG\|ENDDEBUG\|WIP\|TEST\):\=/ contained
 syn match factorComment /\<#\?!\>.*/ contains=factorTodo,@Spell
 syn match factorShebang /\%\^#!.*/ display
 syn match factorShebangErr /\%\^#!\S\+/
