@@ -163,7 +163,6 @@ alias -g T='| tail'
 # lock screen using xscreensaver
 alias lock='xscreensaver-command -lock'
 
-
 unsetopt beep                      # keep quiet
 unsetopt hist_beep
 unsetopt list_beep
