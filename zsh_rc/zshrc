@@ -324,10 +324,12 @@ if [ `hostname` = "paluche-laptop" ]; then
   export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
   # SSH host
-  users=(hlefevre paluche hubert)
-  hosts=(191.168.1.100 198.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+  users=(hlefevre paluche hubert bar)
+  hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
 
-
+  # Alias for settong VGA options
+  alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
+  alias set_screen_off='xrandr --output LVDS1 --off'
 else
   # enst session
   # TODO
