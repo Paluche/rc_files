@@ -33,7 +33,7 @@ set scrolloff=3     " Start scrolling when I'm 3 lines from top/bottom
 set history=1000    " Remember commands and search history
 set backspace=2     " Backspace over indent, eol, and insert
 set mousehide       " Hide the mouse pointer while typing
-set mouse=          " I want my click back
+set mouse=nvc       " Activate mouse support in all mode exept insertion
 
 set number          " Show linenumbers
 set nowrap          " Turn off linewrap
