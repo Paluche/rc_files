@@ -12,3 +12,5 @@
   ca = commit -a
   cm = commit --amend
   cam = commit -a --amend
+[push]
+	default = simple
