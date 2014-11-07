@@ -231,7 +231,7 @@ chpwd_functions+='chpwd_update_git_vars'
 # prompt
 autoload -U promptinit
 promptinit
-export PROMPT='%{${fg_lred}%}%(1?.$?${fg_dgray}|.)${fg_lblue}%n${fg_dgray}@${fg_lgreen}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
+export PROMPT='%{${fg_lred}%}%(1?.$?${fg_dgray}|.)${fg_green}%n${fg_dgray}@${fg_blue}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
 ${fg_cyan}-> ${at_normal}'
 export RPROMPT="${at_bold}${fg_purple}%~/ ${at_normal}"
 
