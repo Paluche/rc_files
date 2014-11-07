@@ -81,18 +81,18 @@ alias ssh='ssh -X'              # Automatix graphic interface with ssh
 alias m='more'
 alias more=less
 alias l="ls -AFhl -g"
-alias ls='ls --color=auto'
-alias ll='ls --color=auto -lh'
-alias lll='ls --color=auto -lh | less'
-alias grep='grep --colour'
-alias ms='ls --color=auto'
-alias la='ls -a --color=auto'
-alias sl='ls --color=auto'
+alias ls='ls'
+alias ll='ls -lh'
+alias lll='ls -lh | less'
+alias grep='grep --colour -rn'
+alias ms='ls'
+alias la='ls -a'
+alias sl='ls'
 alias rm='nocorrect rm -r'      # Recursive remove automatic
-alias mv='nocorrect mv -i'      # no spelling correction on mv
-alias make='nocorrect make'     # no spelling correction on make
-alias locate='nocorrect locate' # no spelling correction on locate
-alias mkdir='nocorrect mkdir'   # no spelling correction on mkdir
+alias mv='nocorrect mv -i'       # no spelling correction on mv
+alias make='nocorrect make'      # no spelling correction on make
+alias locate='nocorrect locate'  # no spelling correction on locate
+alias mkdir='nocorrect mkdir -p' # no spelling correction on mkdir
 alias cp='cp -r -i'
 alias fuck='clear'
 alias lo='libreoffice'
@@ -111,6 +111,7 @@ alias gph='git push'
 alias gpl='git pull'
 alias gsd='git svn dcommit'
 alias gsr='git svn rebase'
+alias gsf='git svn fetch'
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
@@ -129,6 +130,9 @@ alias -s mkd='vim'
 alias -s markdown='vim'
 alias -s lua='vim'
 alias -s tex='vim'
+alias -s java='vim'
+alias -s xml='vim'
+alias -s iadl='vim'
 alias -s mkv='vlc'
 alias -s sv='emacs'
 alias -s v='emacs'
@@ -138,6 +142,7 @@ alias -s odp='loimpress'
 alias -s ods='localc'
 alias -s xls='localc'
 alias -s py='python'
+alias -s sh='bash'
 alias Makefile='vim Makefile'
 #alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Auto background
@@ -226,16 +231,16 @@ chpwd_functions+='chpwd_update_git_vars'
 # prompt
 autoload -U promptinit
 promptinit
-export PROMPT='${fg_green}%n${fg_blue}@${fg_lred}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_yellow}$(prompt_git_info)%{${fg[default]}%}
-${fg_lblue}-> ${at_normal}'
-export RPROMPT="${fg_lgreen}%~/ ${at_normal}"
+export PROMPT='%{${fg_lred}%}%(1?.$?${fg_dgray}|.)${fg_lblue}%n${fg_dgray}@${fg_lgreen}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
+${fg_cyan}-> ${at_normal}'
+export RPROMPT="${at_bold}${fg_purple}%~/ ${at_normal}"
 
 # Historic
 export HISTSIZE=2000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
-#Say how long a command took, if it took more than 10 seconds
-#export REPORTTIME=10
+#Say how long a command took, if it took more than 30 seconds
+export REPORTTIME=30
 
 # Watch other user login/out
 watch=notme
@@ -330,9 +335,25 @@ if [ `hostname` = "paluche-laptop" ]; then
   # Alias for settong VGA options
   alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
   alias set_screen_off='xrandr --output LVDS1 --off'
+elif [ `hostname` = "dell-hlefevre" ]; then
+  # Netatmo shortcut
+  export PATH=$PATH:~/trunk/generic/stm32_sbm
+  export PATH=$PATH:/opt/jdk1.7.0_67/bin
+  export PATH=$PATH:/opt/jdk1.7.0_67/lib
+  # export PATH=$PATH:/opt/jdk1.6.0_45/bin
+  # export PATH=$PATH:/opt/jdk1.6.0_45/lib
+  # ~/trunk/apps/Linux/flasher
+  # App shortcuts
+  alias flash-run='stm32_sbm -f app-jtag.bin'
+  alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
+  alias catftdi='cat /dev/ttyUSB0'
+  alias serialflasher='sudo ./serialflasher'
+  alias flasher='sudo ~/trunk/apps/Linux/flasher/flasher'
+  alias dfu_flash='sudo /home/hlefevre/trunk/generic/stm32_dfu/stm32_dfu -f='
+  # SSH Users and Host
+  users=(hlefevre hubert rest paluche)
+  hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 else
-  # enst session
-  # TODO
 fi
 
 # SSH Completion
