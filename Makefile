@@ -1,15 +1,12 @@
 
 .PHONY: all install vim git zsh emacs update udpate_vim update_zsh update_emacs clean clean_vim \
-				clean_git clean_zsh clean_emacs
+                clean_git clean_zsh clean_emacs
 
 all:
-	@echo "Usage:\n"                                                                         \
+	@echo "Usage:\n"                                                                               \
 				"Installation of the configuration files\n"                                        \
-				"  make [vim | git | zsh | emacs]\n"                                               \
- 				"  make install     # Install all the previous software configuration\n"           \
-				"\n Update the configuration folders from the repository \n"                       \
-				"  make [update_vim | update_zsh | update_emacs]\n"                                \
-				"  make update      # Update all configuration folders of the previous software\n" \
+				"  make [vim | git | zsh | emacs | awesome | xresources]\n"                        \
+				"  make install     # Install all the previous software configuration\n"           \
 				"\n Uninstallation\n"                                                              \
 				"  make [clean_vim | make clean_git | clean_zsh | clean_emacs]\n"                  \
 				"  make clean       # Remove all configuration files from your home folder\n"
@@ -24,35 +21,28 @@ all:
 #
 # The reference files for the folder is always the repository. If you want to change something,
 # change it in the repository then do a mak update / update_<software_name>
-install: vim git zsh emacs
+install: vim git zsh emacs awesome xresources
 
-vim: update_vim
-	ln -fi vim_rc/vimrc ~/.vimrc
+vim:
+	ln -s vim_rc/vimrc          ~/.vimrc
+	ln -s vim_rc/vim            ~/.vim
 
 git:
-	ln -fi git_rc/gitconfig ~/.gitconfig
+	ln -s git_rc/gitconfig      ~/.gitconfig
 
-zsh: update_zsh
-	ln -fi zsh_rc/zshrc ~/.zshrc
+zsh:
+	ln -s zsh_rc/zshrc          ~/.zshrc
+	ln -s zsh_rc/zsh            ~/.zsh
 
-emacs: update_emacs
-	ln -fi emacs_rc/emacs ~/.emacs
+emacs:
+	ln -s emacs_rc/emacs        ~/.emacs
+	ln -s emacs_rc/emacs.d      ~/.emacs.d
 
+awesome:
+	ln -s awesome               ~/.config/awesome
 
-
-
-update: udpate_vim update_zsh update_emacs
-
-update_vim:
-	cp -rf vim_rc/vim ~/.vim
-
-update_zsh:
-	cp -rf zsh_rc/zsh ~/.zsh
-
-update_emacs:
-	cp -rf emacs_rc/emacs.d  ~/.emacs.d
-
-
+xresources:
+	ln -s XResources/XResources ~/.XResources
 
 
 clean: clean_vim clean_git clean_zsh clean_emacs
