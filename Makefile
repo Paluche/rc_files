@@ -24,6 +24,7 @@ all:
 install: vim git zsh emacs awesome xresources
 
 vim:
+	rm -rf ~/.vimrc
 	ln -s $(CURR_DIR)/vim_rc/vimrc          ~/.vimrc
 	ln -s $(CURR_DIR)/vim_rc/vim            ~/vim
 	mv ~/vim ~/.vim
@@ -31,16 +32,11 @@ vim:
 git:
 	ln -s $(CURR_DIR)/git_rc/gitconfig      ~/.gitconfig
 
-zsh: oh-my-zsh
+zsh:
 	rm -rf ~/.zsh ~/.zshrc
 	ln -s $(CURR_DIR)/zsh_rc/zshrc          ~/.zshrc
 	ln -s $(CURR_DIR)/zsh_rc/zsh            ~
 	mv ~/zsh ~/.zsh
-	rm -rf ~/.oh-my-zsh
-	ln -s $(CURR_DIR)/oh-my-zsh ~/.oh-my-zsh
-
-oh-my-zsh:
-	git clone https://github.com/robbyrussell/oh-my-zsh.git
 
 emacs:
 	ln -s $(CURR_DIR)/emacs_rc/emacs        ~/.emacs
@@ -50,9 +46,9 @@ awesome:
 	ln -s $(CURR_DIR)/awesome               ~/.config/awesome
 
 xresources:
-	rm -rf ~/.XResources
-	ln -s $(CURR_DIR)/XResources/XResources ~/.XResources
-
+	rm -rf ~/.Xresources
+	ln -s $(CURR_DIR)/Xresources/Xresources ~/.Xresources
+	xrdb ~/.Xresources
 
 clean: clean_vim clean_git clean_zsh clean_emacs
 

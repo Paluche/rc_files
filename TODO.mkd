@@ -31,14 +31,14 @@ Just like Emacs. Examples:
     * the final else case will be reserved for my telecom-paristech session
 
 ### Awesome
-* Put the rc.lua file in this repo
-* Add keyboard shortcuts for
-    * locking the screen
-    * Increase/decrease volume
-* Check this website: blog.wolf.am/archives/2011/04/25/awesome_wm/
-
 
 ### Computer installation
+Script with check and install:
 * valgrind
 * zsh
   ** chsh ->arg /bin/
+* awesome
+* acpi (for battery display on zsh)
+* vim
+* git
+

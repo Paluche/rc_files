@@ -1,0 +1,7 @@
+case "$1" in
+    acpi*)
+    __EXECUTED_BATTERY_COMMAND=1
+    ;;
+esac
+
+

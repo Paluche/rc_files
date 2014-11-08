@@ -1,0 +1,19 @@
+unset __CURRENT_BATTERY_STATUS
+unset __CURRENT_BATTERY_LEVEL
+
+local bat="$(acpi -b 2>/dev/null)"
+if [[ -n "$bat" ]]; then
+    if [[ $bat =~ 'Discharging' ]]; then
+        __CURRENT_BATTERY_STATUS='discharging'
+        __CURRENT_BATTERY_LEVEL='${bat:5}'
+    elif [[ $bat =~ 'Full' ]]; then
+        __CURRENT_BATTERY_STATUS='full'
+        __CURRENT_BATTERY_LEVEL='${bat:5}'
+    elif [[ $bat =~ 'Charging' ]]; then
+        __CURRENT_BATTERY_STATUS='charging'
+        __CURRENT_BATTERY_LEVEL='${bat:5]}'
+    else
+        __CURRENT_BATTERY_STATUS='error'
+    fi
+fi
+

@@ -10,31 +10,32 @@ limit core 0
 limit -s
 
 # Color table
+##############################################################################
 # Font color
-fg_black=%{$'\e[0;30m'%}
-fg_red=%{$'\e[0;31m'%}
-fg_green=%{$'\e[0;32m'%}
-fg_brown=%{$'\e[0;33m'%}
-fg_blue=%{$'\e[0;34m'%}
-fg_purple=%{$'\e[0;35m'%}
-fg_cyan=%{$'\e[0;36m'%}
-fg_lgray=%{$'\e[0;37m'%}
-fg_dgray=%{$'\e[1;30m'%}
-fg_lred=%{$'\e[1;31m'%}
-fg_lgreen=%{$'\e[1;32m'%}
-fg_yellow=%{$'\e[1;33m'%}
-fg_lblue=%{$'\e[1;34m'%}
-fg_pink=%{$'\e[1;35m'%}
-fg_lcyan=%{$'\e[1;36m'%}
-fg_white=%{$'\e[1;37m'%}
-# Background Colors
-bg_red=%{$'\e[0;41m'%}
-bg_green=%{$'\e[0;42m'%}
-bg_brown=%{$'\e[0;43m'%}
-bg_blue=%{$'\e[0;44m'%}
-bg_purple=%{$'\e[0;45m'%}
-bg_cyan=%{$'\e[0;46m'%}
-bg_gray=%{$'\e[0;47m'%}
+# 16 color terminals
+fg_black=%F{000}
+fg_white=%F{001}
+fg_red=%F{002}
+fg_lbrown=%F{003}
+fg_blue=%F{004}
+fg_dbrown=%F{005}
+fg_lblue=%F{006}
+fg_lgray=%F{007}
+fg_gray=%F{008}
+fg_lred=%F{009}
+fg_lgreen=%F{010}
+fg_yellow=%F{011}
+fg_dblue=%F{012}
+fg_lbrown=%F{013}
+fg_llblue=%F{014}
+fg_white=%F{015}
+fg_black2=%F{016}
+# 256 color bonus
+fg_orange=%F{208}
+fg_purple=%F{164}
+fg_pink=%F{212}
+fg_2gray=%F{248}
+
 # Attributes
 at_normal=%{$'\e[0m'%}
 at_bold=%{$'\e[1m'%}
@@ -55,7 +56,6 @@ at_strikeoff=%{$'\e[29m'%}
 # ls colors
 autoload colors; colors;
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-#export LS_COLORS
 
 # Enable ls colors
 if [ "$DISABLE_LS_COLORS" != "true" ]
@@ -109,7 +109,7 @@ alias grep='grep --colour -rn'
 alias ms='ls'
 alias la='ls -a'
 alias sl='ls'
-alias rm='nocorrect rm -r'      # Recursive remove automatic
+alias rm='nocorrect rm -r'       # Recursive remove automatic
 alias mv='nocorrect mv -i'       # no spelling correction on mv
 alias make='nocorrect make'      # no spelling correction on make
 alias locate='nocorrect locate'  # no spelling correction on locate
@@ -166,10 +166,6 @@ alias -s py='python'
 alias -s sh='bash'
 alias Makefile='vim Makefile'
 #alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
-# Auto background
-alias f='firefox &'
-alias xchat='xchat &'
-alias playonlinux='playonlinux &'
 # Other
 alias today='cat /usr/share/calendar/* | grep `date +"%m/%d"`'
 alias enst='ssh -X hlefevre@ssh.enst.fr'
@@ -189,7 +185,8 @@ alias -g T='| tail'
 # lock screen using xscreensaver
 alias lock='xscreensaver-command -lock'
 
-unsetopt beep                      # keep quiet
+# keep quiet
+unsetopt beep
 unsetopt hist_beep
 unsetopt list_beep
 
@@ -221,7 +218,7 @@ setopt hist_ignore_dups            # If I type cd and then cd again, only save t
 setopt hist_ignore_all_dups        # Even if there are commands inbetween commands that are the same, still only save the last one
 setopt hist_ignore_space           # If a line starts with a space, don't save it.
 setopt hist_no_store
-#setopt EXTENDED_HISTORY            # Save the time and how long a command ran
+#setopt EXTENDED_HISTORY           # Save the time and how long a command ran
 setopt hist_save_no_dups
 setopt hist_expire_dups_first
 setopt hist_find_no_dups
@@ -235,6 +232,8 @@ bindkey '^[[1;5C' forward-word     # Ctrl + RIGHT
 bindkey '\e[1~' beginning-of-line  # Debut
 bindkey '\e[4~' end-of-line        # fin
 
+# Prompt
+##############################################################################
 # Autoload zsh functions.
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
@@ -249,16 +248,22 @@ preexec_functions+='preexec_update_git_vars'
 precmd_functions+='precmd_update_git_vars'
 chpwd_functions+='chpwd_update_git_vars'
 
+# Append battery functions needed for prompt
+preexec_functions+='preexec_update_battery_vars'
+precmd_functions+='precmd_update_battery_vars'
+chpwd_functions+='chpwd_update_battery_vars'
+
 # prompt
 # Need git in english
 export LANGUAGE='en_US.UTF-8 git'
 autoload -U promptinit
-promptinit
-export PROMPT='${fg_green}%n${fg_dgray}@${fg_blue}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
-%(?:%{$fg_green%}➜ :%{$fg_red%}➜ %s)'
-export RPROMPT="${at_bold}${fg_purple}%~/ ${at_normal}"
+export PROMPT='${fg[green]}%n${fg_gray}@${fg[blue]}%m ${fg_lgray}[%T]%{${fg[cyan]}%}%(1j. %j.)${at_bold}${fg_lcyan}$(prompt_git_info)$(prompt_battery_info)
+${at_bold}%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
+export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
+
 
 # Historic
+##############################################################################
 export HISTSIZE=2000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
@@ -279,6 +284,7 @@ preexec () {print -Pn "\e]2;%n@%m%#  <$1>  %~ %l  %w :: %T\a"}
 export EDITOR="vim"
 
 # functions
+##############################################################################
 # extract the files
 extract()
 {
@@ -304,39 +310,6 @@ extract()
         echo "File ('$1') does not exist!"
     fi
 }
-
-# Alexis Polti functions
-# ls handling
-#if [[ -x `which gls` ]]; then
-#    alias rls=`which ls`
-#    alias ls='gls -h --color=auto '
-## Unfortunatly GNU ls support -G.
-#elif [[ $(uname) != 'Linux' && -n `ls -G` && $? == 0 ]]; then
-#    alias ls='ls -G'
-#elif [[ -n `ls --color` && $? == 0 ]]; then
-#  # Check if ls can handle the --color option. If it can it's probably gnu.
-#    alias ls='ls --color=auto'
-#fi
-#
-#if [ `uname` = "Linux" ]; then
-#    export LS_COLORS="di=34;4:ln=35;4:ex=31:*.rpm=32:*.gz=32:*.tar=32:*.tgz=32"
-#fi
-#
-## (if running screen, show window #)
-#if [ x$WINDOW != x ]; then
-#    PROMPT='$WINDOW:'$PROMPT
-#fi
-
-# Nice function but I don't like it
-# on slow disk access, show moving dots
-#expand-or-complete-with-dots() {
-#  echo -n "\e[31m......\e[0m"
-#  zle expand-or-complete
-#  zle redisplay
-#}
-#zle -N expand-or-complete-with-dots
-#bindkey "^I" expand-or-complete-with-dots
-#
 
 if [ `hostname` = "paluche-laptop" ]; then
   alias gohubert='cd /media/paluche/OS/Users/Hubert'
