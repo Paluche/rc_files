@@ -1,4 +1,4 @@
-
+CURR_DIR = $(shell pwd)
 .PHONY: all install vim git zsh emacs update udpate_vim update_zsh update_emacs clean clean_vim \
                 clean_git clean_zsh clean_emacs
 
@@ -24,25 +24,34 @@ all:
 install: vim git zsh emacs awesome xresources
 
 vim:
-	ln -s vim_rc/vimrc          ~/.vimrc
-	ln -s vim_rc/vim            ~/.vim
+	ln -s $(CURR_DIR)/vim_rc/vimrc          ~/.vimrc
+	ln -s $(CURR_DIR)/vim_rc/vim            ~/vim
+	mv ~/vim ~/.vim
 
 git:
-	ln -s git_rc/gitconfig      ~/.gitconfig
+	ln -s $(CURR_DIR)/git_rc/gitconfig      ~/.gitconfig
 
-zsh:
-	ln -s zsh_rc/zshrc          ~/.zshrc
-	ln -s zsh_rc/zsh            ~/.zsh
+zsh: oh-my-zsh
+	rm -rf ~/.zsh ~/.zshrc
+	ln -s $(CURR_DIR)/zsh_rc/zshrc          ~/.zshrc
+	ln -s $(CURR_DIR)/zsh_rc/zsh            ~
+	mv ~/zsh ~/.zsh
+	rm -rf ~/.oh-my-zsh
+	ln -s $(CURR_DIR)/oh-my-zsh ~/.oh-my-zsh
+
+oh-my-zsh:
+	git clone https://github.com/robbyrussell/oh-my-zsh.git
 
 emacs:
-	ln -s emacs_rc/emacs        ~/.emacs
-	ln -s emacs_rc/emacs.d      ~/.emacs.d
+	ln -s $(CURR_DIR)/emacs_rc/emacs        ~/.emacs
+	ln -s $(CURR_DIR)/emacs_rc/emacs.d      ~/.emacs.d
 
 awesome:
-	ln -s awesome               ~/.config/awesome
+	ln -s $(CURR_DIR)/awesome               ~/.config/awesome
 
 xresources:
-	ln -s XResources/XResources ~/.XResources
+	rm -rf ~/.XResources
+	ln -s $(CURR_DIR)/XResources/XResources ~/.XResources
 
 
 clean: clean_vim clean_git clean_zsh clean_emacs

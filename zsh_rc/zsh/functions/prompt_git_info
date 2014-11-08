@@ -20,6 +20,6 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     fi
     s+=")"
 
-    printf " %s%s" "%{${fg[yellow]}%}" $s
+    printf " %s%s" "%{%}" $s
 fi
 

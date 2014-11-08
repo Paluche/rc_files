@@ -52,6 +52,28 @@ at_blinkoff=%{$'\e[25m'%}
 at_reverseoff=%{$'\e[27m'%}
 at_strikeoff=%{$'\e[29m'%}
 
+# ls colors
+autoload colors; colors;
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
+#export LS_COLORS
+
+# Enable ls colors
+if [ "$DISABLE_LS_COLORS" != "true" ]
+then
+  # Find the option for using colors in ls, depending on the version: Linux or BSD
+  if [[ "$(uname -s)" == "NetBSD" ]]; then
+    # On NetBSD, test if "gls" (GNU ls) is installed (this one supports colors);
+    # otherwise, leave ls as is, because NetBSD's ls doesn't support -G
+    gls --color -d . &>/dev/null 2>&1 && alias ls='gls --color=tty'
+  elif [[ "$(uname -s)" == "OpenBSD" ]]; then
+    # On OpenBSD, test if "colorls" is installed (this one supports colors);
+    # otherwise, leave ls as is, because OpenBSD's ls doesn't support -G
+    colorls -G -d . &>/dev/null 2>&1 && alias ls='colorls -G'
+  else
+    ls --color -d . &>/dev/null 2>&1 && alias ls='ls --color=tty' || alias ls='ls -G'
+  fi
+fi
+
 # Completion
 autoload -U compinit
 compinit
@@ -81,7 +103,6 @@ alias ssh='ssh -X'              # Automatix graphic interface with ssh
 alias m='more'
 alias more=less
 alias l="ls -AFhl -g"
-alias ls='ls'
 alias ll='ls -lh'
 alias lll='ls -lh | less'
 alias grep='grep --colour -rn'
@@ -97,7 +118,7 @@ alias cp='cp -r -i'
 alias fuck='clear'
 alias lo='libreoffice'
 # git
-alias gs='git status'
+alias gs='git status -s'
 alias gd='git diff'
 alias ga='git add'
 alias gap='git add -p'
@@ -229,10 +250,12 @@ precmd_functions+='precmd_update_git_vars'
 chpwd_functions+='chpwd_update_git_vars'
 
 # prompt
+# Need git in english
+export LANGUAGE='en_US.UTF-8 git'
 autoload -U promptinit
 promptinit
-export PROMPT='%{${fg_lred}%}%(1?.$?${fg_dgray}|.)${fg_green}%n${fg_dgray}@${fg_blue}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
-${fg_cyan}-> ${at_normal}'
+export PROMPT='${fg_green}%n${fg_dgray}@${fg_blue}%m ${fg_lgray}[%T]%{${fg_cyan}%}%(1j. %j.)${fg_lcyan}$(prompt_git_info)%{${fg[default]}%}
+%(?:%{$fg_green%}➜ :%{$fg_red%}➜ %s)'
 export RPROMPT="${at_bold}${fg_purple}%~/ ${at_normal}"
 
 # Historic
@@ -284,25 +307,25 @@ extract()
 
 # Alexis Polti functions
 # ls handling
-if [[ -x `which gls` ]]; then
-    alias rls=`which ls`
-    alias ls='gls -h --color=auto '
-# Unfortunatly GNU ls support -G.
-elif [[ $(uname) != 'Linux' && -n `ls -G` && $? == 0 ]]; then
-    alias ls='ls -G'
-elif [[ -n `ls --color` && $? == 0 ]]; then
-  # Check if ls can handle the --color option. If it can it's probably gnu.
-    alias ls='ls --color=auto'
-fi
-
-if [ `uname` = "Linux" ]; then
-    export LS_COLORS="di=34;4:ln=35;4:ex=31:*.rpm=32:*.gz=32:*.tar=32:*.tgz=32"
-fi
-
-# (if running screen, show window #)
-if [ x$WINDOW != x ]; then
-    PROMPT='$WINDOW:'$PROMPT
-fi
+#if [[ -x `which gls` ]]; then
+#    alias rls=`which ls`
+#    alias ls='gls -h --color=auto '
+## Unfortunatly GNU ls support -G.
+#elif [[ $(uname) != 'Linux' && -n `ls -G` && $? == 0 ]]; then
+#    alias ls='ls -G'
+#elif [[ -n `ls --color` && $? == 0 ]]; then
+#  # Check if ls can handle the --color option. If it can it's probably gnu.
+#    alias ls='ls --color=auto'
+#fi
+#
+#if [ `uname` = "Linux" ]; then
+#    export LS_COLORS="di=34;4:ln=35;4:ex=31:*.rpm=32:*.gz=32:*.tar=32:*.tgz=32"
+#fi
+#
+## (if running screen, show window #)
+#if [ x$WINDOW != x ]; then
+#    PROMPT='$WINDOW:'$PROMPT
+#fi
 
 # Nice function but I don't like it
 # on slow disk access, show moving dots
