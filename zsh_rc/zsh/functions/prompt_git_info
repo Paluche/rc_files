@@ -1,6 +1,9 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
-    s+="$__CURRENT_GIT_BRANCH %{${fg[yellow]}%}"
+    s+="$__CURRENT_GIT_BRANCH"
+
+    s+="%{${fg[grey]}%}|%{${fg[yellow]}%}"
+
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
         s+="↑"
@@ -10,6 +13,9 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         ;;
         behind)
         s+="↓"
+        ;;
+        up-to-date)
+        s+="↔"
         ;;
     esac
     if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]; then
