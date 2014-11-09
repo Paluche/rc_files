@@ -15,7 +15,7 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+="↓"
         ;;
         up-to-date)
-        s+="↔"
+        s+="✗"
         ;;
     esac
     if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]; then
