@@ -14,8 +14,8 @@ limit -s
 # Font color
 # 16 color terminals
 fg_black=%F{000}
-fg_white=%F{001}
-fg_red=%F{002}
+fg_red=%F{001}
+fg_green=%F{002}
 fg_lbrown=%F{003}
 fg_blue=%F{004}
 fg_dbrown=%F{005}
@@ -75,6 +75,7 @@ then
 fi
 
 # Completion
+##############################################################################
 autoload -U compinit
 compinit
 # case insensitive completion
@@ -98,7 +99,12 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 # Menu select
 zstyle ':completion:*' menu select
 
+# SSH Completion
+zstyle ':completion:*' users $users
+zstyle ':completion:*:hosts' hosts $hosts
+
 # Aliases
+##############################################################################
 alias ssh='ssh -X'              # Automatix graphic interface with ssh
 alias m='more'
 alias more=less
@@ -185,12 +191,13 @@ alias -g T='| tail'
 # lock screen using xscreensaver
 alias lock='xscreensaver-command -lock'
 
+# Set Options
+##############################################################################
 # keep quiet
 unsetopt beep
 unsetopt hist_beep
 unsetopt list_beep
 
-# Set Options
 #setopt correct
 setopt autocd                      # Typing cd everytime is boring
 setopt auto_pushd pushd_minus      # don't use cd, use pushd
@@ -224,6 +231,7 @@ setopt hist_expire_dups_first
 setopt hist_find_no_dups
 
 # Bind Key
+##############################################################################
 # Emacs key
 bindkey -e
 # Input control
@@ -237,6 +245,10 @@ bindkey '\e[4~' end-of-line        # fin
 # Autoload zsh functions.
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
+autoload -U promptinit
+
+# Need git in english
+export LANGUAGE='en_US.UTF-8 git'
 
 # Enable auto-execution of functions.
 typeset -ga preexec_functions
@@ -254,10 +266,7 @@ precmd_functions+='precmd_update_battery_vars'
 chpwd_functions+='chpwd_update_battery_vars'
 
 # prompt
-# Need git in english
-export LANGUAGE='en_US.UTF-8 git'
-autoload -U promptinit
-export PROMPT='${fg[green]}%n${fg_gray}@${fg[blue]}%m ${fg_lgray}[%T]%{${fg[cyan]}%}%(1j. %j.)${at_bold}${fg_lcyan}$(prompt_git_info)$(prompt_battery_info)
+export PROMPT='${fg_gray}[${fg_green}%n${fg_gray}@${fg_blue}%m${fg_gray}]─[${fg_lgray}%T${fg_gray}]%(1j.-[${fg[cyan]}%j${fg_gray}].)${at_bold}$(prompt_git_info)$(prompt_battery_info)
 ${at_bold}%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
 export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
 
@@ -311,6 +320,8 @@ extract()
     fi
 }
 
+# Computer's specific configurations
+##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
   alias gohubert='cd /media/paluche/OS/Users/Hubert'
   # Lines for compiling and correct usr of openocd
@@ -351,7 +362,3 @@ elif [ `hostname` = "dell-hlefevre" ]; then
   hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 else
 fi
-
-# SSH Completion
-zstyle ':completion:*' users $users
-zstyle ':completion:*:hosts' hosts $hosts

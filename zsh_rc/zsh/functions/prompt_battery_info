@@ -2,7 +2,7 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
     local s
     case "$__CURRENT_BATTERY_STATUS" in
         full)
-        s+="%{${fg[green]}%}["
+        s+="%{${fg[green]}%}"
         ;;
         discharging)
         s+="%{${fg[red]}%}"
@@ -16,6 +16,9 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
         s+="++++++++++"
     else
         case "$__CURRENT_BATTERY_LEVEL" in
+           0)
+           s+="----------"
+           ;;
            1)
            s+="+---------"
            ;;
@@ -45,6 +48,6 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
            ;;
         esac
     fi
-    printf " %s%s%s" "%{${fg[white]}%}[" $s $__CURRENT_BATTERY_LEVEL  "%{${fg[white]}%}]"
+    printf "%s%s%s" "%{${fg[grey]}%}─[" $s "%{${fg[grey]}%}]"
 fi
 

@@ -5,15 +5,52 @@ local bat="$(acpi -b 2>/dev/null)"
 if [[ -n "$bat" ]]; then
     if [[ $bat =~ 'Discharging' ]]; then
         __CURRENT_BATTERY_STATUS='discharging'
-        __CURRENT_BATTERY_LEVEL='${bat:5}'
     elif [[ $bat =~ 'Full' ]]; then
         __CURRENT_BATTERY_STATUS='full'
-        __CURRENT_BATTERY_LEVEL='${bat:5}'
     elif [[ $bat =~ 'Charging' ]]; then
         __CURRENT_BATTERY_STATUS='charging'
-        __CURRENT_BATTERY_LEVEL='${bat:5]}'
     else
         __CURRENT_BATTERY_STATUS='error'
+    fi
+
+    if [[ $bat =~ ' 100' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 9 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 8 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 7 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 6 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 5 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 4 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 3 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 2 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif [[ $bat =~ ' 1 ' ]]; then
+        __CURRENT_BATTERY_LEVEL='0'
+    elif  [[ $bat =~ ' 9' ]]; then
+        __CURRENT_BATTERY_LEVEL='9'
+    elif  [[ $bat =~ ' 8' ]]; then
+        __CURRENT_BATTERY_LEVEL='8'
+    elif  [[ $bat =~ ' 7' ]]; then
+        __CURRENT_BATTERY_LEVEL='7'
+    elif  [[ $bat =~ ' 6' ]]; then
+        __CURRENT_BATTERY_LEVEL='6'
+    elif  [[ $bat =~ ' 5' ]]; then
+        __CURRENT_BATTERY_LEVEL='5'
+    elif  [[ $bat =~ ' 4' ]]; then
+        __CURRENT_BATTERY_LEVEL='4'
+    elif  [[ $bat =~ ' 3' ]]; then
+        __CURRENT_BATTERY_LEVEL='3'
+    elif  [[ $bat =~ ' 2' ]]; then
+        __CURRENT_BATTERY_LEVEL='2'
+    elif  [[ $bat =~ ' 1' ]]; then
+        __CURRENT_BATTERY_LEVEL='1'
     fi
 fi
 

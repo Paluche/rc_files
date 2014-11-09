@@ -1,6 +1,6 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
-    local s="("
-    s+="$__CURRENT_GIT_BRANCH"
+    local s
+    s+="$__CURRENT_GIT_BRANCH %{${fg[yellow]}%}"
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
         s+="↑"
@@ -12,14 +12,16 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+="↓"
         ;;
     esac
+    if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]; then
+        s+="←"
+    fi
     if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]; then
         s+="⚡"
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         s+="?"
     fi
-    s+=")"
 
-    printf " %s%s" "%{%}" $s
+    printf "%s%s%s" "%{${fg[grey]}%}─[%{${fg[cyan]}%}" $s "%{${fg[grey]}%}]"
 fi
 

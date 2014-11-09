@@ -1,6 +1,7 @@
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
+unset __CURRENT_GIT_BRANCH_ADDED_FILES
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 
 local st="$(git status 2>/dev/null)"
@@ -36,7 +37,7 @@ if [[ -n "$st" ]]; then
         __CURRENT_GIT_BRANCH_IS_DIRTY='1'
     fi
     if [[ $st =~ 'Changes to be committed' ]]; then
-        __CURRENT_GIT_BRANCH_IS_DIRTY='1'
+        __CURRENT_GIT_BRANCH_ADDED_FILES='1'
     fi
 fi
 

@@ -19,7 +19,7 @@ syn keyword	cLabel		case default
 syn keyword	cConditional	if else switch
 syn keyword	cRepeat		while for do
 
-syn keyword	cTodo		contained TODO FIXME XXX DEBUG ENDDEBUG WIP TEST
+syn keyword	cTodo		contained TODO FIXME XXX DEBUG ENDDEBUG WIP NOTE TEST
 
 " It's easy to accidentally add a space after a backslash that was intended
 " for line continuation.  Some compilers allow it, which makes it
@@ -172,6 +172,8 @@ syn match	cNumbersCom	display contained transparent "\<\d\|\.\d" contains=cNumbe
 syn match	cNumber		display contained "\d\+\(u\=l\{0,2}\|ll\=u\)\>"
 "hex number
 syn match	cNumber		display contained "0x\x\+\(u\=l\{0,2}\|ll\=u\)\>"
+"bin number
+syn match	cNumber		display contained "0b\x\+\(u\=l\{0,2}\|ll\=u\)\>"
 " Flag the first zero of an octal number as something special
 syn match	cOctal		display contained "0\o\+\(u\=l\{0,2}\|ll\=u\)\>" contains=cOctalZero
 syn match	cOctalZero	display contained "\<0"
@@ -230,20 +232,20 @@ endif
 syn keyword	cType		int long short char void
 syn keyword	cType		signed unsigned float double
 if !exists("c_no_ansi") || exists("c_ansi_typedefs")
-  syn keyword   cType		size_t ssize_t off_t wchar_t ptrdiff_t sig_atomic_t fpos_t
-  syn keyword   cType		clock_t time_t va_list jmp_buf FILE DIR div_t ldiv_t
-  syn keyword   cType		mbstate_t wctrans_t wint_t wctype_t
+  syn keyword   cType	size_t ssize_t off_t wchar_t ptrdiff_t sig_atomic_t
+  syn keyword   cType	clock_t time_t va_list jmp_buf FILE DIR div_t
+  syn keyword   cType	mbstate_t wctrans_t wint_t wctype_t fpos_t ldiv_t
 endif
 if !exists("c_no_c99") " ISO C99
-  syn keyword	cType		_Bool bool _Complex complex _Imaginary imaginary
-  syn keyword	cType		int8_t int16_t int32_t int64_t
-  syn keyword	cType		uint8_t uint16_t uint32_t uint64_t
-  syn keyword	cType		int_least8_t int_least16_t int_least32_t int_least64_t
-  syn keyword	cType		uint_least8_t uint_least16_t uint_least32_t uint_least64_t
-  syn keyword	cType		int_fast8_t int_fast16_t int_fast32_t int_fast64_t
-  syn keyword	cType		uint_fast8_t uint_fast16_t uint_fast32_t uint_fast64_t
-  syn keyword	cType		intptr_t uintptr_t
-  syn keyword	cType		intmax_t uintmax_t
+  syn keyword	cType	_Bool bool _Complex complex _Imaginary imaginary
+  syn keyword	cType	int8_t int16_t int32_t int64_t
+  syn keyword	cType	uint8_t uint16_t uint32_t uint64_t
+  syn keyword	cType	int_least8_t int_least16_t int_least32_t int_least64_t
+  syn keyword	cType	uint_least8_t uint_least16_t uint_least32_t uint_least64_t
+  syn keyword	cType	int_fast8_t int_fast16_t int_fast32_t int_fast64_t
+  syn keyword	cType	uint_fast8_t uint_fast16_t uint_fast32_t uint_fast64_t
+  syn keyword	cType	intptr_t uintptr_t
+  syn keyword	cType	intmax_t uintmax_t
 endif
 
 " GNOME Library
@@ -260,16 +262,18 @@ syn keyword cType GAttrib GAttribResultFunc GAttribNotifyFunc
 
 " BlueLib
 syn keyword cType bl_primary_t bl_included_t bl_char_t bl_desc_t bl_value_t
+syn keyword cType conn_state_t sec_level_t dev_ctx_t user_cb_fct_t
+syn keyword cType write_type_t
 
-if exists("c_gnu")
-  syn keyword	cType		__label__ __complex__ __volatile__
-endif
+" ChibiOS
+syn keyword cType bool_t EventListener EXTDriver EXTConfig expchannel_t
+syn keyword cType systime_t msg_t RTCTime RTCAlarm rtcalarm_t
 
+
+syn keyword	cType		__label__ __complex__ __volatile__
 syn keyword	cStructure	struct union enum typedef
 syn keyword	cStorageClass	static register auto volatile extern const
-if exists("c_gnu")
-  syn keyword	cStorageClass	inline __attribute__
-endif
+syn keyword	cStorageClass	inline __attribute__
 if !exists("c_no_c99")
   syn keyword	cStorageClass	inline restrict
 endif
