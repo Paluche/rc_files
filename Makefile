@@ -29,18 +29,19 @@ vim: clean_vim
 	@ln -s $(CURR_DIR)/vim_rc/vim            ~/vim
 	@mv ~/vim ~/.vim
 
-git:
-	ln -s $(CURR_DIR)/git_rc/gitconfig      ~/.gitconfig
+git: clean_git
+	@echo Install git
+	@ln -s $(CURR_DIR)/git_rc/gitconfig      ~/.gitconfig
 
 zsh: clean_zsh
-	rm -rf ~/.zsh ~/.zshrc
-	ln -s $(CURR_DIR)/zsh_rc/zshrc          ~/.zshrc
-	ln -s $(CURR_DIR)/zsh_rc/zsh            ~
-	mv ~/zsh ~/.zsh
+	@echo Install zsh
+	@ln -s $(CURR_DIR)/zsh_rc/zshrc          ~/.zshrc
+	@ln -s $(CURR_DIR)/zsh_rc/zsh            ~
+	@mv ~/zsh ~/.zsh
 
-emacs:
-	ln -s $(CURR_DIR)/emacs_rc/emacs        ~/.emacs
-	ln -s $(CURR_DIR)/emacs_rc/emacs.d      ~/.emacs.d
+emacs: clean_emacs
+	@ln -s $(CURR_DIR)/emacs_rc/emacs        ~/.emacs
+	@ln -s $(CURR_DIR)/emacs_rc/emacs.d      ~/.emacs.d
 
 awesome:
 	ln -s $(CURR_DIR)/awesome               ~/.config/awesome
