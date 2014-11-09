@@ -6,7 +6,7 @@
 [core]
   editor = vim
 [alias]
-  l = log --graph --date=short --pretty=format:'%C(yellow)%h%Creset %ad: %an %n%x09%s%n'
+  l = log --graph --date=short --pretty=format:'%P%C(yellow)%h%Creset %ad: %an %n%x09%s%n'
   g = grep -ni --break --heading
   c = commit
   ca = commit -a
