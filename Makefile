@@ -21,36 +21,44 @@ all:
 #
 # The reference files for the folder is always the repository. If you want to change something,
 # change it in the repository then do a mak update / update_<software_name>
-install: vim git zsh emacs awesome xresources
+install: vim git zsh emacs awesome xresources adb_logcat
 
 vim: clean_vim
-	@echo Install vim
-	@ln -s $(CURR_DIR)/vim_rc/vimrc          ~/.vimrc
-	@ln -s $(CURR_DIR)/vim_rc/vim            ~/vim
-	@mv ~/vim ~/.vim
+	@echo Install vim configuration
+	@ln -s $(CURR_DIR)/vim_rc/vimrc                   ~/.vimrc
+	@ln -s $(CURR_DIR)/vim_rc/vim                     ~/vim
+	@mv    ~/vim                                      ~/.vim
 
 git: clean_git
-	@echo Install git
-	@ln -s $(CURR_DIR)/git_rc/gitconfig      ~/.gitconfig
+	@echo Install git configuration
+	@ln -s $(CURR_DIR)/git_rc/gitconfig               ~/.gitconfig
 
 zsh: clean_zsh
-	@echo Install zsh
-	@ln -s $(CURR_DIR)/zsh_rc/zshrc          ~/.zshrc
-	@ln -s $(CURR_DIR)/zsh_rc/zsh            ~
-	@mv ~/zsh ~/.zsh
+	@echo Install zsh configuration
+	@ln -s $(CURR_DIR)/zsh_rc/zshrc                   ~/.zshrc
+	@ln -s $(CURR_DIR)/zsh_rc/zsh                     ~/
+	@mv    ~/zsh                                      ~/.zsh
 
 emacs: clean_emacs
-	@ln -s $(CURR_DIR)/emacs_rc/emacs        ~/.emacs
-	@ln -s $(CURR_DIR)/emacs_rc/emacs.d      ~/.emacs.d
+	@echo Install emacs configuration
+	@ln -s $(CURR_DIR)/emacs_rc/emacs                 ~/.emacs
+	@ln -s $(CURR_DIR)/emacs_rc/emacs.d               ~/.emacs.d
 
 awesome:
-	ln -s $(CURR_DIR)/awesome               ~/.config/awesome
+	@echo Install awesome configuration
+	@ln -s $(CURR_DIR)/awesome                        ~/.config/awesome
 
 xresources:
-	ln -s $(CURR_DIR)/Xresources/Xresources ~/.Xresources
-	xrdb ~/.Xresources
+	@echo Install xresources configuration
+	ln -s $(CURR_DIR)/Xresources/Xresources           ~/.Xresources
+	xrdb                                              ~/.Xresources
 
-clean: clean_vim clean_git clean_zsh clean_emacs
+adb_logcat: clean_adb_logcat
+	@echo Install adb_logcat.py script
+	@ln -s $(CURR_DIR)/adb_logcat/coloredlogcat.pytxt ~/.adb_logcat.py
+
+
+clean: clean_vim clean_git clean_zsh clean_emacs clean_adb_logcat
 
 clean_vim:
 	@echo Remove vim configuration
@@ -77,3 +85,7 @@ clean_awesome:
 clean_xresources:
 	@echo Remove .Xresources configuration
 	@rm -rf ~/.Xresources
+
+clean_adb_logcat:
+	@echo Remove .adb_logcat.py script
+	@rm -rf ~/.adb_logcat.py
