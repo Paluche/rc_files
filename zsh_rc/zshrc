@@ -270,8 +270,8 @@ precmd_functions+='precmd_update_battery_vars'
 chpwd_functions+='chpwd_update_battery_vars'
 
 # prompt
-export PROMPT='${fg_gray}[${fg_green}%n${fg_gray}@${fg_blue}%m${fg_gray}]─[${fg_lgray}%T${fg_gray}]%(1j.─[${fg[cyan]}%j${fg_gray}].)${at_bold}$(prompt_battery_info)$(prompt_git_info)
-${at_bold}%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
+export PROMPT='${fg_gray}┌─[${fg_green}%n${fg_gray}@${fg_blue}%m${fg_gray}]─[${fg_lgray}%T${fg_gray}]%(1j.─[${fg[cyan]}%j${fg_gray}].)${at_bold}$(prompt_battery_info)$(prompt_git_info)${at_normal}
+${fg_gray}└%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
 export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
 
 
