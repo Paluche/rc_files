@@ -22,6 +22,8 @@ set showcmd              " count highlighted
 set listchars=nbsp:.
 set ruler                " Show where I am in the command area
 set colorcolumn=110      " vertical ruler at  characters
+set textwidth=110        " Automatic word wrapping
+set formatoptions+=t
 set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
                          " ↪ (0 = never, 1 = default [multi-window only])
@@ -157,6 +159,9 @@ nnoremap <leader>R :%s/\r/\r/g<CR>
 " Replace <TAB> by four spaces
 nnoremap <leader>T :%s/\t/    /g<CR>
 
+" show tabs
+nnoremap <leader>t /\t
+
 " Moving around windows
 map <C-j> <C-W>j
 map <A-S-Down> <C-W>j
@@ -169,6 +174,8 @@ map <A-S-Left> <C-W>h
 
 map <C-l> <C-W>l
 map <A-S-Right> <C-W>l
+
+map <F8> <C-E>:sleep 2000m<CR>j<F8>
 " }}}
 
 " Status line --------------------------------------------------------- {{{
@@ -198,7 +205,7 @@ let g:debuggerPort = 9999
 
 " NERDTree Settings---------------------------------------------------- {{{
 "map <leader>t :NERDTreeToggle<CR>
-noremap <leader>t :NERDTreeTabsToggle<CR>
+"noremap <leader>r:NERDTreeTabsToggle<CR>
 " }}}
 
 " Included for PowerLine ---------------------------------------------- {{{
