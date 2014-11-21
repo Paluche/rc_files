@@ -115,11 +115,12 @@ alias grep='grep --colour -rni'
 alias ms='ls'
 alias la='ls -a'
 alias sl='ls'
-alias rm='nocorrect rm -r'       # Recursive remove automatic
-alias mv='nocorrect mv -i'       # no spelling correction on mv
-alias make='nocorrect make'      # no spelling correction on make
-alias locate='nocorrect locate'  # no spelling correction on locate
-alias mkdir='nocorrect mkdir -p' # no spelling correction on mkdir
+alias rm='nocorrect rm -r'         # Recursive remove automatic
+alias mv='nocorrect mv -i'         # no spelling correction on mv
+alias make='nocorrect make'        # no spelling correction on make
+alias locate='nocorrect locate -i' # no spelling correction on locate
+alias find='nocorrect find -name'
+alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r -i'
 alias fuck='clear'
 alias lo='libreoffice'
@@ -192,10 +193,6 @@ alias -g S='| sort'
 alias -g T='| tail'
 # lock screen using xscreensaver
 alias lock='xscreensaver-command -lock'
-# Alias for having adb logcat in color
-alias _logcat='~/.adb_logcat.py'
-alias adb_logcat='adb logcat | _logcat'
-alias adb_logcat_clear='adb logcat -c'
 
 # Set Options
 ##############################################################################
@@ -324,6 +321,15 @@ extract()
     else
         echo "File ('$1') does not exist!"
     fi
+}
+
+# Do a wonderfull job with adb logcat
+adb_logcat()
+{
+    while :
+    do
+        adb logcat | ~/.adb_logcat.py
+    done
 }
 
 # Computer's specific configurations
