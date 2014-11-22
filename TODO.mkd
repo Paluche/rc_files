@@ -41,4 +41,8 @@ Script with check and install:
 * acpi (for battery display on zsh)
 * vim
 * git
+* git-svn
+* gitk
+* wireshark
+* android
 

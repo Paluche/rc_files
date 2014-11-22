@@ -1,0 +1,25 @@
+
+menu 90.19 TSke&l.Snippets.au\ augroup\ \.\.\.\ autocmd\ block :call tskeleton#ExpandBitUnderCursor("n", 'au augroup ... autocmd block')<cr>
+imenu 90.19 TSke&l.Snippets.au\ augroup\ \.\.\.\ autocmd\ block <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'au augroup ... autocmd block')<cr>
+menu 90.19 TSke&l.Snippets.bun\ Vundle\.vim\ Plugin\ definition :call tskeleton#ExpandBitUnderCursor("n", 'bun Vundle.vim Plugin definition')<cr>
+imenu 90.19 TSke&l.Snippets.bun\ Vundle\.vim\ Plugin\ definition <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'bun Vundle.vim Plugin definition')<cr>
+menu 90.19 TSke&l.Snippets.f\ function :call tskeleton#ExpandBitUnderCursor("n", 'f function')<cr>
+imenu 90.19 TSke&l.Snippets.f\ function <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'f function')<cr>
+menu 90.19 TSke&l.Snippets.for\ for\ \.\.\.\ in\ loop :call tskeleton#ExpandBitUnderCursor("n", 'for for ... in loop')<cr>
+imenu 90.19 TSke&l.Snippets.for\ for\ \.\.\.\ in\ loop <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'for for ... in loop')<cr>
+menu 90.19 TSke&l.Snippets.forkv\ for\ [key,\ value]\ in\ loop :call tskeleton#ExpandBitUnderCursor("n", 'forkv for [key, value] in loop')<cr>
+imenu 90.19 TSke&l.Snippets.forkv\ for\ [key,\ value]\ in\ loop <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'forkv for [key, value] in loop')<cr>
+menu 90.19 TSke&l.Snippets.guard\ script\ reload\ guard :call tskeleton#ExpandBitUnderCursor("n", 'guard script reload guard')<cr>
+imenu 90.19 TSke&l.Snippets.guard\ script\ reload\ guard <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'guard script reload guard')<cr>
+menu 90.19 TSke&l.Snippets.header\ standard\ Vim\ script\ file\ header :call tskeleton#ExpandBitUnderCursor("n", 'header standard Vim script file header')<cr>
+imenu 90.19 TSke&l.Snippets.header\ standard\ Vim\ script\ file\ header <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'header standard Vim script file header')<cr>
+menu 90.19 TSke&l.Snippets.if\ if\ statement :call tskeleton#ExpandBitUnderCursor("n", 'if if statement')<cr>
+imenu 90.19 TSke&l.Snippets.if\ if\ statement <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'if if statement')<cr>
+menu 90.19 TSke&l.Snippets.ife\ if\ \.\.\.\ else\ statement :call tskeleton#ExpandBitUnderCursor("n", 'ife if ... else statement')<cr>
+imenu 90.19 TSke&l.Snippets.ife\ if\ \.\.\.\ else\ statement <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'ife if ... else statement')<cr>
+menu 90.19 TSke&l.Snippets.plug\ Vundle\.vim\ Plugin\ definition :call tskeleton#ExpandBitUnderCursor("n", 'plug Vundle.vim Plugin definition')<cr>
+imenu 90.19 TSke&l.Snippets.plug\ Vundle\.vim\ Plugin\ definition <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'plug Vundle.vim Plugin definition')<cr>
+menu 90.19 TSke&l.Snippets.t\ try\ \.\.\.\ catch\ statement :call tskeleton#ExpandBitUnderCursor("n", 't try ... catch statement')<cr>
+imenu 90.19 TSke&l.Snippets.t\ try\ \.\.\.\ catch\ statement <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 't try ... catch statement')<cr>
+menu 90.19 TSke&l.Snippets.wh\ while\ loop :call tskeleton#ExpandBitUnderCursor("n", 'wh while loop')<cr>
+imenu 90.19 TSke&l.Snippets.wh\ while\ loop <c-\><c-o>:call tskeleton#ExpandBitUnderCursor("i", 'wh while loop')<cr>
