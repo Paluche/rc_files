@@ -290,3 +290,7 @@ autocmd BufNewFile *.c     TSkeletonSetup template.c
 autocmd BufNewFile *.java  TSkeletonSetup template.java
 autocmd BufNewFile *.scala TSkeletonSetup template.scala
 " }}}
+
+" Spellchecker ---------------------------------------------------- {{{
+set spell spelllang=en_us
+" }}}
