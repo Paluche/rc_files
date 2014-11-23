@@ -350,10 +350,11 @@ if [ `hostname` = "paluche-laptop" ]; then
 
     export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
-    # Init a sessions
+    # Init a session
     init() {
         setxkbmap fr
         xflux -l 48.8534100 -g 2.3488000
+        ssh-add
     }
 
     # SSH host
