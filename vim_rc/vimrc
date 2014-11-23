@@ -284,7 +284,9 @@ let g:tskelUserName = 'Hubert Lefevre'
 let g:tskelUserCompany = 'Netatmo'
 let g:tskelUserEmail = 'hubelefevre@gmail.com'
 let g:tskelDateFormat = '%Y'
-autocmd BufNewFile *.h       TSkeletonSetup template.h
 
+autocmd BufNewFile *.h    TSkeletonSetup template.h
+autocmd BufNewFile *.c    TSkeletonSetup template.c
+autocmd BufNewFile *.java TSkeletonSetup template.java
 
 " }}}

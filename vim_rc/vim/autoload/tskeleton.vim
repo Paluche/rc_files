@@ -182,6 +182,14 @@ if !exists('*TSkeleton_C_HEADER_NAME') "{{{2
     endf
 endif
 
+if !exists('*TSkeleton_JAVA_PACKAGE') "{{{2
+    function! TSkeleton_JAVA_PACKAGE() "{{{3
+        let path = expand("%:p:h")
+        let nosl = substitute(path, '/', '\.', 'g')
+        let pkgp = substitute(nosl, "^\.*src\.", '', 'g')
+        return pkgp
+    endf
+endif
 
 if !exists('*TSkeleton_NOTE') "{{{2
     function! TSkeleton_NOTE() "{{{3
