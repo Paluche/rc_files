@@ -1,6 +1,6 @@
 CURR_DIR = $(shell pwd)
-.PHONY: all install vim git zsh emacs update udpate_vim update_zsh update_emacs clean clean_vim \
-                clean_git clean_zsh clean_emacs
+.PHONY: vim git zsh emacs awesome xresources adb_logcat clean_adb_logcat xflux clean clean_vim     \
+	clean_git clean_zsh clean_emacs clean_awesome clean_xresources clean_adb_logcat clean_xflux all
 
 all:
 	@echo "Usage:\n"                                                                               \
@@ -10,9 +10,6 @@ all:
 				"\n Uninstallation\n"                                                              \
 				"  make [clean_vim | make clean_git | clean_zsh | clean_emacs]\n"                  \
 				"  make clean       # Remove all configuration files from your home folder\n"
-
-
-
 
 # The principe of the installation is to create links in your home folder link to the configuration
 # files in the repository and copy the configuration folder in your home folder form the repository.
@@ -44,11 +41,11 @@ emacs: clean_emacs
 	@ln -s $(CURR_DIR)/emacs_rc/emacs                 ~/.emacs
 	@ln -s $(CURR_DIR)/emacs_rc/emacs.d               ~/.emacs.d
 
-awesome:
+awesome: clean_awesome
 	@echo Install awesome configuration
 	@ln -s $(CURR_DIR)/awesome                        ~/.config/awesome
 
-xresources:
+xresources: clean_xresources
 	@echo Install xresources configuration
 	ln -s $(CURR_DIR)/Xresources/Xresources           ~/.Xresources
 	xrdb                                              ~/.Xresources
@@ -57,8 +54,11 @@ adb_logcat: clean_adb_logcat
 	@echo Install adb_logcat.py script
 	@ln -s $(CURR_DIR)/adb_logcat/coloredlogcat.pytxt ~/.adb_logcat.py
 
+xflux: clean_xflux
+	@echo Install xflux
+	@ln -s $(CURR_DIR)/xflux/xflux ~/.xflux
 
-clean: clean_vim clean_git clean_zsh clean_emacs clean_adb_logcat
+clean: clean_vim clean_git clean_zsh clean_emacs clean_awesome clean_xresources clean_adb_logcat
 
 clean_vim:
 	@echo Remove vim configuration
@@ -88,4 +88,8 @@ clean_xresources:
 
 clean_adb_logcat:
 	@echo Remove .adb_logcat.py script
+	@rm -rf ~/.adb_logcat.py
+
+clean_xflux:
+	@echo Remove .xflux
 	@rm -rf ~/.adb_logcat.py

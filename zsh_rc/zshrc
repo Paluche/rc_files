@@ -60,18 +60,18 @@ export LSCOLORS="Gxfxcxdxbxegedabagacad"
 # Enable ls colors
 if [ "$DISABLE_LS_COLORS" != "true" ]
 then
-  # Find the option for using colors in ls, depending on the version: Linux or BSD
-  if [[ "$(uname -s)" == "NetBSD" ]]; then
-    # On NetBSD, test if "gls" (GNU ls) is installed (this one supports colors);
-    # otherwise, leave ls as is, because NetBSD's ls doesn't support -G
-    gls --color -d . &>/dev/null 2>&1 && alias ls='gls --color=tty'
-  elif [[ "$(uname -s)" == "OpenBSD" ]]; then
-    # On OpenBSD, test if "colorls" is installed (this one supports colors);
-    # otherwise, leave ls as is, because OpenBSD's ls doesn't support -G
-    colorls -G -d . &>/dev/null 2>&1 && alias ls='colorls -G'
-  else
-    ls --color -d . &>/dev/null 2>&1 && alias ls='ls --color=tty' || alias ls='ls -G'
-  fi
+    # Find the option for using colors in ls, depending on the version: Linux or BSD
+    if [[ "$(uname -s)" == "NetBSD" ]]; then
+        # On NetBSD, test if "gls" (GNU ls) is installed (this one supports colors);
+        # otherwise, leave ls as is, because NetBSD's ls doesn't support -G
+        gls --color -d . &>/dev/null 2>&1 && alias ls='gls --color=tty'
+    elif [[ "$(uname -s)" == "OpenBSD" ]]; then
+        # On OpenBSD, test if "colorls" is installed (this one supports colors);
+        # otherwise, leave ls as is, because OpenBSD's ls doesn't support -G
+        colorls -G -d . &>/dev/null 2>&1 && alias ls='colorls -G'
+    else
+        ls --color -d . &>/dev/null 2>&1 && alias ls='ls --color=tty' || alias ls='ls -G'
+    fi
 fi
 
 # Completion
@@ -337,42 +337,49 @@ adb_logcat()
 # Computer's specific configurations
 ##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
-  alias gohubert='cd /media/paluche/OS/Users/Hubert'
-  # Lines for compiling and correct usr of openocd
-  export PATH=$PATH:/opt/tools_arm/bin/
-  export PATH=$PATH:/opt/openocd/bin/
-  export PATH=$PATH:/opt/msp430/msp430mcu-20120406/bin/
-  export PATH=$PATH:/opt/soclib/utils/bin/
-  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    alias gohubert='cd /media/paluche/OS/Users/Hubert'
+    # Lines for compiling and correct usr of openocd
+    export PATH=$PATH:/opt/tools_arm/bin/
+    export PATH=$PATH:/opt/openocd/bin/
+    export PATH=$PATH:/opt/msp430/msp430mcu-20120406/bin/
+    export PATH=$PATH:/opt/soclib/utils/bin/
+    export PATH=$PATH:/home/paluche/git/rc_files/xflux
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
-  alias openocd="sudo /opt/openocd/bin/openocd"
+    alias openocd="sudo /opt/openocd/bin/openocd"
 
-  export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
+    export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
-  # SSH host
-  users=(hlefevre paluche hubert bar)
-  hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+    # Init a sessions
+    init() {
+        setxkbmap fr
+        xflux -l 48.8534100 -g 2.3488000
+    }
 
-  # Alias for settong VGA options
-  alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
-  alias set_screen_off='xrandr --output LVDS1 --off'
+    # SSH host
+    users=(hlefevre paluche hubert bar)
+    hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+
+    # Alias for settong VGA options
+    alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
+    alias set_screen_off='xrandr --output LVDS1 --off'
 elif [ `hostname` = "dell-hlefevre" ]; then
-  # Netatmo shortcut
-  export PATH=$PATH:~/trunk/generic/stm32_sbm
-  export PATH=$PATH:/opt/jdk1.7.0_67/bin
-  export PATH=$PATH:/opt/jdk1.7.0_67/lib
-  # export PATH=$PATH:/opt/jdk1.6.0_45/bin
-  # export PATH=$PATH:/opt/jdk1.6.0_45/lib
-  # ~/trunk/apps/Linux/flasher
-  # App shortcuts
-  alias flash-run='stm32_sbm -f app-jtag.bin'
-  alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
-  alias catftdi='cat /dev/ttyUSB0'
-  alias serialflasher='sudo ./serialflasher'
-  alias flasher='sudo ~/trunk/apps/Linux/flasher/flasher'
-  alias dfu_flash='sudo /home/hlefevre/trunk/generic/stm32_dfu/stm32_dfu -f='
-  # SSH Users and Host
-  users=(hlefevre hubert rest paluche)
-  hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
+    # Netatmo shortcut
+    export PATH=$PATH:~/trunk/generic/stm32_sbm
+    export PATH=$PATH:/opt/jdk1.7.0_67/bin
+    export PATH=$PATH:/opt/jdk1.7.0_67/lib
+    # export PATH=$PATH:/opt/jdk1.6.0_45/bin
+    # export PATH=$PATH:/opt/jdk1.6.0_45/lib
+    # ~/trunk/apps/Linux/flasher
+    # App shortcuts
+    alias flash-run='stm32_sbm -f app-jtag.bin'
+    alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
+    alias catftdi='cat /dev/ttyUSB0'
+    alias serialflasher='sudo ./serialflasher'
+    alias flasher='sudo ~/trunk/apps/Linux/flasher/flasher'
+    alias dfu_flash='sudo /home/hlefevre/trunk/generic/stm32_dfu/stm32_dfu -f='
+    # SSH Users and Host
+    users=(hlefevre hubert rest paluche)
+    hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 else
 fi
