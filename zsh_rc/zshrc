@@ -1,7 +1,8 @@
 # My .zshrc by Hubert Lefevre
-# Some part by Matt Blissey http://matt.blissett.me.uk/linux/zsh/zshrc
-# Git prompt by Sebastian Celis (sebastiancelis.com)
-# Some from Alexis Polti
+# Some by Matt Blissey http://matt.blissett.me.uk/linux/zsh/zshrc
+# Some by Alexis Polti
+# Git prompt by Sebastian Celis (sebastiancelis.com) reviewed by Hubert Lefevre
+# Battery prompt by Hubert Lefevre
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
@@ -143,6 +144,7 @@ alias gpl='git pull'
 alias gsd='git svn dcommit'
 alias gsr='git svn rebase'
 alias gsf='git svn fetch'
+alias gss='git show --stat'
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
