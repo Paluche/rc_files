@@ -352,7 +352,7 @@ if [ `hostname` = "paluche-laptop" ]; then
 
     export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
-    # Init a session
+    # Initialize a session
     init() {
         setxkbmap fr
         xflux -l 48.8534100 -g 2.3488000
@@ -367,6 +367,12 @@ if [ `hostname` = "paluche-laptop" ]; then
     alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
     alias set_screen_off='xrandr --output LVDS1 --off'
 elif [ `hostname` = "dell-hlefevre" ]; then
+    export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
+    # Initialize a session
+    init() {
+        xflux -l 48.8534100 -g 2.3488000
+        ssh-add
+    }
     # Netatmo shortcut
     export PATH=$PATH:~/trunk/generic/stm32_sbm
     export PATH=$PATH:/opt/jdk1.7.0_67/bin
