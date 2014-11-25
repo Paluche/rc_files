@@ -145,6 +145,7 @@ alias gsd='git svn dcommit'
 alias gsr='git svn rebase'
 alias gsf='git svn fetch'
 alias gss='git show --stat'
+alias gb='git branch'
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
@@ -178,6 +179,7 @@ alias -s xls='localc'
 alias -s py='python'
 alias -s sh='bash'
 alias Makefile='vim Makefile'
+alias xflux='xflux -l 48.8534100 -g 2.3488000'
 #alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Other
 alias today='cat -v /usr/share/calendar/* | grep `date +"%m/%d"`'
