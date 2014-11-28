@@ -12,5 +12,6 @@
   ca = commit -a
   cm = commit --amend
   cam = commit -a --amend
+  stak = stash save -k -u
 [push]
 	default = simple
