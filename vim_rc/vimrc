@@ -39,8 +39,8 @@ set mousehide            " Hide the mouse pointer while typing
 "set mousefocus          " The Window where the mouse is, is directly activated
 set mouse=nvc            " Activate mouse support in all mode exept insertion
 
-set number               " Show linenumbers
-set nowrap               " Turn off linewrap
+set number               " Show line numbers
+set nowrap               " Turn off line wrap
 set tabstop=4            " 4 spaces
 set shiftwidth=4         " 4 spaces
 set softtabstop=4        " 4 spaces
@@ -160,7 +160,10 @@ nnoremap <leader>R :%s/\r/\r/g<CR>
 nnoremap <leader>T :%s/\t/    /g<CR>
 
 " show tabs
-nnoremap <leader>t /\t
+nnoremap <leader>t /\t<CR>
+
+" When copying a patch remove all space before a +
+noremap <leader>p :%s/\s\+\ +/+/b<CR>
 
 " Moving around windows
 map <C-j> <C-W>j

@@ -21,8 +21,8 @@ fg_lbrown=%F{003}
 fg_blue=%F{004}
 fg_dbrown=%F{005}
 fg_lblue=%F{006}
-fg_lgray=%F{007}
-fg_gray=%F{008}
+fg_lgrey=%F{007}
+fg_grey=%F{008}
 fg_lred=%F{009}
 fg_lgreen=%F{010}
 fg_yellow=%F{011}
@@ -35,7 +35,7 @@ fg_black2=%F{016}
 fg_orange=%F{208}
 fg_purple=%F{164}
 fg_pink=%F{212}
-fg_2gray=%F{248}
+fg_2grey=%F{248}
 
 # Attributes
 at_normal=%{$'\e[0m'%}
@@ -275,8 +275,8 @@ precmd_functions+='precmd_update_battery_vars'
 chpwd_functions+='chpwd_update_battery_vars'
 
 # prompt
-export PROMPT='${fg_gray}┌─[${fg_green}%n${fg_gray}@${fg_blue}%m${fg_gray}]─[${fg_lgray}%T${fg_gray}]%(1j.─[${fg[cyan]}%j${fg_gray}].)${at_bold}$(prompt_battery_info)$(prompt_git_info)${at_normal}
-${fg_gray}└%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
+export PROMPT='${fg[cyan]}┌─[${fg[green]}%n${fg_lgrey}@${fg_blue}%m${fg[cyan]}]─[${fg_lgrey}%T${fg[cyan]}]%(1j.─[${fg_orange}%j${fg[cyan]}].)$(prompt_battery_info)$(prompt_git_info)${at_normal}
+${fg[cyan]}└%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
 export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
 
 

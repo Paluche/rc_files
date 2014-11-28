@@ -1,8 +1,10 @@
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_STATUS
+unset __CURRENT_GIT_BRANCH_OPERATION
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
 unset __CURRENT_GIT_BRANCH_ADDED_FILES
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
+unset __CURRENT_GIT_BRANCH_UNMERGERD_FILES
 
 local st="$(git status 2>/dev/null)"
 if [[ -n "$st" ]]; then
@@ -27,9 +29,16 @@ if [[ -n "$st" ]]; then
         else
             __CURRENT_GIT_BRANCH_STATUS='error'
         fi
+    elif [[ $arr[2] =~ 'You are currently ' ]]; then
+        if [[ $arr[2] =~ 'reverting' ]]; then
+            __CURRENT_GIT_BRANCH_OPERATION='reverting'
+        elif [[ $arr[2] =~ 'reibasing' ]]; then
+            __CURRENT_GIT_BRANCH_OPERATION='rebasing'
+        fi
     fi
 
-    if [[ $st =~ 'ntracked files' ]]; then
+
+    if [[ $st =~ 'Untracked files' ]]; then
         __CURRENT_GIT_BRANCH_UNTRACKED_FILES='1'
     fi
 
@@ -38,6 +47,9 @@ if [[ -n "$st" ]]; then
     fi
     if [[ $st =~ 'Changes to be committed' ]]; then
         __CURRENT_GIT_BRANCH_ADDED_FILES='1'
+    fi
+    if [[ $st =~ 'Unmerged paths' ]]; then
+        __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
     fi
 fi
 

@@ -2,7 +2,16 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
     s+="$__CURRENT_GIT_BRANCH"
 
-    s+="%{${fg[grey]}%}|%{${fg[yellow]}%}"
+    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+
+    case "$__CURRENT_GIT_BRANCH_OPERATION" in
+        reverting)
+            s+="%{${fg[red]}%}reverting%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+        ;;
+        rebasing)
+            s+="%{${fg[red]}%}rebasing%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+        ;;
+    esac
 
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
@@ -17,29 +26,35 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         up-to-date)
         if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ] ||
             [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]   ||
+            [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
             [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         else
             s+="✓"
         fi
         ;;
         *)
-        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ] ||
-            [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]   ||
+        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]     ||
+            [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]       ||
+            [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
             [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         else
             s+="•"
         fi
     esac
+
     if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]; then
         s+="◄"
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]; then
         s+="⚡"
     fi
+    if [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ]; then
+        s+="!"
+    fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         s+="?"
     fi
 
-    printf "%s%s%s" "%{${fg[grey]}%}─[%{${fg[cyan]}%}" $s "%{${fg[grey]}%}]"
+    printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[blue]}%}" $s "%{${fg[cyan]}%}]"
 fi
 
