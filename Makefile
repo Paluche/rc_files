@@ -27,8 +27,12 @@ vim: clean_vim
 	@mv    ~/vim                                      ~/.vim
 
 git: clean_git
-	@echo Install git configuration
+	@echo "Install git configuration"
 	@ln -s $(CURR_DIR)/git_rc/gitconfig               ~/.gitconfig
+	@echo "Configuration of git colors and pull:rebase"
+	@git config --global ui.color true
+	@git config pull.rebase true
+
 
 zsh: clean_zsh
 	@echo Install zsh configuration

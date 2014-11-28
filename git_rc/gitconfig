@@ -6,7 +6,7 @@
 [core]
   editor = vim
 [alias]
-  l = log --graph --date=short --pretty=format:'%P%C(yellow)%h%Creset %ad: %an %n%x09%s%n'
+  l = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
   g = grep -ni --break --heading --color=always
   c = commit
   ca = commit -a
@@ -15,3 +15,5 @@
   stak = stash save -k -u
 [push]
 	default = simple
+[ui]
+	color = true
