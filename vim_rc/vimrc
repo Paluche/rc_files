@@ -165,6 +165,9 @@ nnoremap <leader>t /\t<CR>
 " When copying a patch remove all space before a +
 noremap <leader>p :%s/\s\+\ +/+/b<CR>
 
+" Search for git merge
+noremap <leader>m /\=\=\=\=\=<CR>
+
 " Moving around windows
 map <C-j> <C-W>j
 map <A-S-Down> <C-W>j
