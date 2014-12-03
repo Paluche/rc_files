@@ -51,8 +51,8 @@ awesome: clean_awesome
 
 xresources: clean_xresources
 	@echo Install xresources configuration
-	ln -s $(CURR_DIR)/Xresources/Xresources           ~/.Xresources
-	xrdb                                              ~/.Xresources
+	@ln -s $(CURR_DIR)/Xresources/Xresources           ~/.Xresources
+	@xrdb                                              ~/.Xresources
 
 adb_logcat: clean_adb_logcat
 	@echo Install adb_logcat.py script
