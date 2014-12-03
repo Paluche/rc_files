@@ -178,9 +178,11 @@ alias -s ods='localc'
 alias -s xls='localc'
 alias -s py='python'
 alias -s sh='bash'
+alias xflux_au='xflux -l -48.8534100 -g 180'
+alias xflux_fr='xflux -l 48.8534100 -g 2.3'
 alias Makefile='vim Makefile'
-alias xflux='xflux -l 48.8534100 -g 2.3488000'
-#alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
+
+alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Other
 alias today='cat -v /usr/share/calendar/* | grep `date +"%m/%d"`'
 alias enst='ssh -X hlefevre@ssh.enst.fr'
@@ -275,7 +277,7 @@ precmd_functions+='precmd_update_battery_vars'
 chpwd_functions+='chpwd_update_battery_vars'
 
 # prompt
-export PROMPT='%{$fg[cyan]%}┌─[%{$fg[green]%}%n%{$fg[cyan]%}@${fg_blue}%m%{$fg[cyan]%}]─[${fg_lgrey}%T%{$fg[cyan]%}]%(1j.─[${fg_orange}%j%{$fg[cyan]%}].)$(prompt_battery_info)$(prompt_git_info)${at_normal}
+export PROMPT='%{$fg[cyan]%}┌─[%{$fg[green]%}%n${fg_lgreen}@${fg_blue}%m%{$fg[cyan]%}]─[${fg_lgrey}%T%{$fg[cyan]%}]%(1j.─[${fg_orange}%j%{$fg[cyan]%}].)$(prompt_battery_info)$(prompt_git_info)${at_normal}
 %{$fg[cyan]%}└%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
 export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
 
@@ -357,7 +359,7 @@ if [ `hostname` = "paluche-laptop" ]; then
     # Initialize a session
     init() {
         setxkbmap fr
-        xflux -l 48.8534100 -g 2.3488000
+        xflux_fr
         ssh-add
     }
 
@@ -372,7 +374,7 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
     # Initialize a session
     init() {
-        xflux -l 48.8534100 -g 2.3488000
+        xflux_au
         ssh-add
     }
     # Netatmo shortcut
