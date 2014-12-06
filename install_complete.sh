@@ -1,8 +1,7 @@
 # Terminal zsh and needed program associated
 if hash zsh 2>/dev/null; then
     sudo apt-get install zsh
-    echo "Enter /usr/bin/zsh for setting zsh as a default shell"
-    chsh
+    chsh -s /bin/zsh
 fi
 
 if hash acpi 2>/dev/null; then
@@ -17,6 +16,7 @@ fi
 if hash gnome-wm 2>/dev/null; then
     sudo apt-get install gnome
 fi
+
 
 # Code editor
 if hash emacs 2>/dev/null; then
@@ -50,5 +50,7 @@ if hash fluxgui 2>/dev/null; then
     sudo apt-get update
     sudo apt-get install fluxgui
 fi
+
+TODO apt-get install silversearcher-ag
 
 make install

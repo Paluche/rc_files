@@ -2,28 +2,26 @@
 " Tyler Cipriani's can be found at
 " https://github.com/thcipriani/dotfiles/blob/master/vimrc
 
-" What is this 'Vee-Eye' of which you speak? -------------------------- {{{
-set nocompatible
-" " }}}
 
 " Pathogen ------------------------------------------------------------ {{{
+runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
 " " }}}
 
 " Basic options ------------------------------------------------------- {{{
 let mapleader=","
+set nocompatible
 set t_Co=256             " My terminal's got all those colors, yo
 
 set title                " Change the terminal title
 set encoding=utf-8       " Show utf-8 chars
 set showcmd              " count highlighted
-set listchars=nbsp:.
 set ruler                " Show where I am in the command area
-set colorcolumn=110      " vertical ruler at  characters
-set textwidth=110        " Automatic word wrapping
-set formatoptions+=t
+set colorcolumn=110      " vertical ruler at 110 characters
+set textwidth=80         " Automatic word wrapping at 80 characters
+set formatoptions+=t     " TODO WHAT IS THAT???
+set listchars=nbsp:.     " Add non breaking space to list
 set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
                          " ↪ (0 = never, 1 = default [multi-window only])
@@ -36,7 +34,6 @@ set scrolloff=3          " Start scrolling when I'm 3 lines from top/bottom
 set history=1000         " Remember commands and search history
 set backspace=2          " Backspace over indent, eol, and insert
 set mousehide            " Hide the mouse pointer while typing
-"set mousefocus          " The Window where the mouse is, is directly activated
 set mouse=nvc            " Activate mouse support in all mode exept insertion
 
 set number               " Show line numbers
@@ -67,22 +64,17 @@ filetype indent on
 set fileformats=unix,dos,mac
 
 autocmd BufWritePre * :%s/\s\+$//e " Erase endline spaces
+" set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 
-set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 " Colorscheme
 " https://github.com/altercation/vim-colors-solarized
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-colorscheme solarized
-if has('gui_running')
-        set background=light
-else
-        set background=dark
-endif
+set background=dark
 
-" GUI Font (same as my gnome-terminal font)
-" https://github.com/adobe/source-code-pro
-set guifont=Source\ Code\ Pro\ 14
+" Solarized options
+let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
+let g:solarized_termcolors=16
+colorscheme solarized
 
 let g:syntastic_c_checkers=['make']
 set foldmethod=marker
@@ -131,9 +123,6 @@ vnoremap JJ <ESC>
 " un-highlight search results
 noremap <leader><space> :noh<cr>
 
-" Toggle auto-indent before clipboard paste
-set pastetoggle=<leader>p
-
 " Shortcut to rapidly toggle `set list`
 nnoremap <leader>l :set list!<CR>
 
@@ -147,11 +136,8 @@ nnoremap <leader>v <C-w>v<C-w>l
 " Moves around split windows
 nnoremap <leader>w <C-w><C-w>
 
-" Delete Blanklines
-nnoremap <leader>S :v/\S/d<CR>
-
-" Double Space
-nnoremap <leader>D :g/^/put_<CR>
+"Moves around tabs
+nnoremap <leader>t <Esc>:tabnew<CR>
 
 " Real Returns
 nnoremap <leader>R :%s/\r/\r/g<CR>
@@ -180,8 +166,6 @@ map <A-S-Left> <C-W>h
 
 map <C-l> <C-W>l
 map <A-S-Right> <C-W>l
-
-map <F8> <C-E>:sleep 2000m<CR>j<F8>
 " }}}
 
 " Status line --------------------------------------------------------- {{{
@@ -201,26 +185,9 @@ set statusline+=%= " Right align.
 set statusline+=\ (line\ %l\/%L,\ col\ %03c)
 " }}}
 
-" Development Tools --------------------------------------------------- {{{
-" Tagbar (requires Exuberant ctags 5.5+)
-noremap <leader>c :TagbarToggle<CR>
-
-" Xdebug local debugger
-let g:debuggerPort = 9999
-" }}}
-
 " NERDTree Settings---------------------------------------------------- {{{
 "map <leader>t :NERDTreeToggle<CR>
 "noremap <leader>r:NERDTreeTabsToggle<CR>
-" }}}
-
-" Included for PowerLine ---------------------------------------------- {{{
-let g:Powerline_symbols = 'fancy'
-" }}}
-
-" Printing options ---------------------------------------------------- {{{
-set pdev=pdf    " print in a PDF file
-set printoptions=paper:A4,syntax:y,wrap:y
 " }}}
 
 " Omni-completion ----------------------------------------------------- {{{
@@ -255,34 +222,6 @@ set shellslash
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 set background=dark
-" }}}
-
-" Ruby options -------------------------------------------------------- {{{
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-"improve autocomplete menu color
-highlight Pmenu ctermbg=238 gui=bold
-
-set nocompatible          " We're running Vim, not Vi!
-syntax on                 " Enable syntax highlighting
-filetype plugin indent on " Enable filetype-specific indenting and plugins
-
-" Load matchit (% to bounce from do to end, etc.)
-runtime! macros/matchit.vim
-
-augroup myfiletypes
-        " Clear old autocmds in group
-        autocmd!
-        " autoindent with two spaces, always expand tabs
-        autocmd FileType ruby,eruby,yaml set ai sw=2 sts=2 et
-augroup END
-" }}}
-
-" ARM ASM options ----------------------------------------------------- {{{
-let asmsyntax='armasm'
-let filetype_inc='armasm'
 " }}}
 
 " tskeleton options ---------------------------------------------------- {{{

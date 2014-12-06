@@ -97,6 +97,7 @@ zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:kill:*' force-list always
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+
 # Menu select
 zstyle ':completion:*' menu select
 
@@ -106,14 +107,14 @@ zstyle ':completion:*:hosts' hosts $hosts
 
 # Aliases
 ##############################################################################
-alias ssh='ssh -X'              # Automatix graphic interface with ssh
+alias ssh='ssh -X'                 # Automatix graphic interface with ssh
 alias m='more'
 alias more=less
 alias l="ls -AFhl -g"
 alias ll='ls -lh'
 alias lll='ls -lh | less'
-alias grep='grep --colour'
-alias grepg='grep -rni'
+alias grep='ag --colour'        #
+alias grepg='ag -rni'
 alias ms='ls'
 alias la='ls -a'
 alias sl='ls'
@@ -121,12 +122,12 @@ alias rm='nocorrect rm -r'         # Recursive remove automatic
 alias mv='nocorrect mv -i'         # no spelling correction on mv
 alias make='nocorrect make'        # no spelling correction on make
 alias locate='nocorrect locate -i' # no spelling correction on locate
-alias find='nocorrect find -name'
+                                   # case insensitive.
+alias find='nocorrect find -name'  # no spelling correction on find, find by name.
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r -i'
-alias fuck='clear'
-alias lo='libreoffice'
-# git
+
+# git aliases
 alias gs='git status -s'
 alias gd='git diff'
 alias ga='git add'
@@ -146,11 +147,15 @@ alias gsr='git svn rebase'
 alias gsf='git svn fetch'
 alias gss='git show --stat'
 alias gb='git branch'
+
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
+
 # Auto launch
 alias -s html='firefox'
+
+# For vim auto launches
 alias -s c='vim'
 alias -s h='vim'
 alias -s o='vim'
@@ -168,21 +173,25 @@ alias -s java='vim'
 alias -s xml='vim'
 alias -s iadl='vim'
 alias -s scala='vim'
-alias -s mkv='vlc'
+
+# emacs auto launches
 alias -s sv='emacs'
 alias -s v='emacs'
+
+alias -s mkv='vlc'
 alias -s pdf='evince'
 alias -s odt='lowriter'
 alias -s odp='loimpress'
 alias -s ods='localc'
 alias -s xls='localc'
-alias -s py='python'
+alias -s py='python3'
 alias -s sh='bash'
+
+# handling xflux
 alias xflux_au='xflux -l -48.8534100 -g 180'
 alias xflux_fr='xflux -l 48.8534100 -g 2.3'
-alias Makefile='vim Makefile'
+alias test='cd ./test'
 
-alias test='cd ./test' # Because I have currently a folder called test and I don't need the useless function test
 # Other
 alias today='cat -v /usr/share/calendar/* | grep `date +"%m/%d"`'
 alias enst='ssh -X hlefevre@ssh.enst.fr'
@@ -210,10 +219,11 @@ unsetopt hist_beep
 unsetopt list_beep
 
 #setopt correct
-setopt autocd                      # Typing cd everytime is boring
+setopt autocd                      # Typing cd every time is boring
 setopt auto_pushd pushd_minus      # don't use cd, use pushd
 setopt pushd_silent pushd_to_home
 setopt pushd_ignore_dups
+setopt prompt_percent
 setopt prompt_subst                # allow function for prompt
 setopt rm_star_wait                # Don't do anything stupid Like delete all
 setopt chase_links                 # converts links to real path
@@ -225,16 +235,18 @@ setopt list_types
 setopt mark_dirs
 setopt path_dirs
 setopt auto_remove_slash
-setopt prompt_percent
-setopt prompt_subst
 setopt rm_star_wait                # rm * waits 10 seconds
 setopt multios                     # allow multiple redirection echo 'a'>b>c
 setopt bang_hist                   # allow ! for accessing history
 setopt nohup                       # don't hup running jobs on logout.
 unsetopt share_history             # Share history between multiple shells
-setopt hist_ignore_dups            # If I type cd and then cd again, only save the last one
-setopt hist_ignore_all_dups        # Even if there are commands inbetween commands that are the same, still only save the last one
-setopt hist_ignore_space           # If a line starts with a space, don't save it.
+setopt hist_ignore_dups            # If I type cd and then cd again, only save
+                                   # the last one
+setopt hist_ignore_all_dups        # Even if there are commands inbetween
+                                   # commands that are the same, still only
+                                   # save the last one
+setopt hist_ignore_space           # If a line starts with a space, don't save
+                                   # it.
 setopt hist_no_store
 #setopt EXTENDED_HISTORY           # Save the time and how long a command ran
 setopt hist_save_no_dups
@@ -276,11 +288,48 @@ preexec_functions+='preexec_update_battery_vars'
 precmd_functions+='precmd_update_battery_vars'
 chpwd_functions+='chpwd_update_battery_vars'
 
-# prompt
-export PROMPT='%{$fg[cyan]%}┌─[%{$fg[green]%}%n${fg_lgreen}@${fg_blue}%m%{$fg[cyan]%}]─[${fg_lgrey}%T%{$fg[cyan]%}]%(1j.─[${fg_orange}%j%{$fg[cyan]%}].)$(prompt_battery_info)$(prompt_git_info)${at_normal}
-%{$fg[cyan]%}└%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ %s)${at_normal}'
-export RPROMPT="${at_bold}${fg_orange}%~/ ${at_normal}"
+# Reset prompt and right prompt
+export PROMPT
+export RPROMPT
 
+# The prompt
+function setprompt() {
+    local -a infoline llines rlines
+    local i_width i_filler filler
+
+    # Introduce the prompt with some design.
+    infoline=( "%{$fg[cyan]%}╭─" )
+
+    # User informations.
+    infoline+=( "[%{$fg[green]%}%n%{$fg[cyan]%}@${fg_blue}%m%{$fg[cyan]%}]" )
+
+    # Display time.
+    infoline+=( "─[${fg_lgrey}%T%{$fg[cyan]%}]" )
+
+    # Display the numbers of jobs suspended or running in background.
+    infoline+=( "%(1j.─[${fg_orange}%j%{$fg[cyan]%}].)" )
+
+    # Display battery info if your computer has a battery.
+    infoline+=( "$(prompt_battery_info)" )
+
+    # Display git info.
+    infoline+=( $(prompt_git_info) )
+
+    # Append the different parts of the upper line of the prompt.
+    llines=${(j::)infoline}
+
+    # Finish the design of the prompt.
+    # Display a green arrow that turns red if the return code of the last
+    # function is different of zero.
+    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}▸:%{$fg[red]%}▸)${at_normal}" )
+
+    rlines="${at_bold}${fg_orange}%~/ ${at_normal}"
+
+    PROMPT=${(F)llines}
+    RPROMPT=${(F)rlines}
+}
+
+precmd_functions+='setprompt'
 
 # Historic
 ##############################################################################
@@ -297,8 +346,8 @@ export LOGCHECK=60
 
 
 # Format titles for screen and rxvt
-precmd () {print -Pn "\e]2;%n@%m%#  %~ %l  %w :: %T\a"}
-preexec () {print -Pn "\e]2;%n@%m%#  <$1>  %~ %l  %w :: %T\a"}
+#precmd () {print -Pn "\e]2;%n@%m%#  %~ %l  %w :: %T\a"}
+#preexec () {print -Pn "\e]2;%n@%m%#  <$1>  %~ %l  %w :: %T\a"}
 
 # Misc settings
 export EDITOR="vim"
@@ -365,11 +414,9 @@ if [ `hostname` = "paluche-laptop" ]; then
 
     # SSH host
     users=(hlefevre paluche hubert bar)
-    hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+    hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net \
+        a406-01.enst.fr a406-10.enst.fr paluche-laptop)
 
-    # Alias for settong VGA options
-    alias set_vga_home='xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1 --mode'
-    alias set_screen_off='xrandr --output LVDS1 --off'
 elif [ `hostname` = "dell-hlefevre" ]; then
     export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
     # Initialize a session
@@ -390,9 +437,9 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     alias catftdi='cat /dev/ttyUSB0'
     alias serialflasher='sudo ./serialflasher'
     alias flasher='sudo ~/trunk/apps/Linux/flasher/flasher'
-    alias dfu_flash='sudo /home/hlefevre/trunk/generic/stm32_dfu/stm32_dfu -f='
+    alias dfu_flash='sudo /home/hlefevre/netatmo/generic/stm32_dfu/stm32_dfu -f='
     # SSH Users and Host
-    users=(hlefevre hubert rest paluche)
-    hosts=(ssh.enst.fr devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
+    users=(hlefevre hubert paluche)
+    hosts=(devatmo vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 else
 fi
