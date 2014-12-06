@@ -1,19 +1,33 @@
 [user]
-	name = Hubert Lefevre
-	email = hubelefevre@gmail.com
+	name        = Hubert Lefevre
+	email       = hubelefevre@gmail.com
+
 [color]
-  ui = true
+    grep        = true
+    diff        = true
+    branch      = true
+    interactive = true
+    status      = true
+    blame       = true
+    ui          = true
+
 [core]
-  editor = vim
+  editor        = vim
+
 [alias]
-  l = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
-  g = grep -ni --break --heading --color=always
-  c = commit
-  ca = commit -a
-  cm = commit --amend
-  cam = commit -a --amend
-  stak = stash save -k -u
+  l             = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
+  g             = grep -ni --break --heading --color=always
+  c             = commit
+  ca            = commit -a
+  cm            = commit --amend
+  cam           = commit -a --amend
+  stak          = stash save -k -u
+
 [push]
 	default = simple
+
 [ui]
 	color = true
+
+[pull]
+    rebase = true

@@ -1,99 +1,214 @@
 CURR_DIR = $(shell pwd)
-.PHONY: vim git zsh emacs awesome xresources adb_logcat clean_adb_logcat xflux clean clean_vim     \
-	clean_git clean_zsh clean_emacs clean_awesome clean_xresources clean_adb_logcat clean_xflux all
 
 all:
 	@echo "Usage:\n"                                                                               \
-				"Installation of the configuration files\n"                                        \
-				"  make [vim | git | zsh | emacs | awesome | xresources]\n"                        \
-				"  make install     # Install all the previous software configuration\n"           \
-				"\n Uninstallation\n"                                                              \
-				"  make [clean_vim | make clean_git | clean_zsh | clean_emacs]\n"                  \
-				"  make clean       # Remove all configuration files from your home folder\n"
+			"    Installation of the configuration files\n"                                        \
+			"        make [vim | git | zsh | emacs | awesome | xresources | adb_logcat | xflux]\n" \
+			"        make install     # Install all the previous software configuration\n"
 
-# The principe of the installation is to create links in your home folder link to the configuration
-# files in the repository and copy the configuration folder in your home folder form the repository.
-# Then you could share same configurations files with all your computer. And change configuration
-# files from any computer.
-#
-# The reference files for the folder is always the repository. If you want to change something,
-# change it in the repository then do a mak update / update_<software_name>
-install: vim git zsh emacs awesome xresources adb_logcat
+# Specify where to install the symbolic links of the configuration files and folders
+VIMRC_DIR      = $(HOME)
+VIM_DIR        = $(HOME)
+GITCONFIG_DIR  = $(HOME)
+ZSHRC_DIR      = $(HOME)
+ZSH_DIR        = $(HOME)
+EMACS_DIR      = $(HOME)
+EMACS_D_DIR    = $(HOME)
+AWESOME_DIR    = $(HOME)/.config
+XRESOURCES_DIR = $(HOME)
 
-vim: clean_vim
-	@echo Install vim configuration
-	@ln -s $(CURR_DIR)/vim_rc/vimrc                   ~/.vimrc
-	@ln -s $(CURR_DIR)/vim_rc/vim                     ~/vim
-	@mv    ~/vim                                      ~/.vim
+# Where to put the symbolic links of the scripts
+SCRIPT_DIR     = ~/script
 
-git: clean_git
-	@echo "Install git configuration"
-	@ln -s $(CURR_DIR)/git_rc/gitconfig               ~/.gitconfig
-	@echo "Configuration of git colors and pull:rebase"
-	@git config --global ui.color true
-	@git config pull.rebase true
+# Where to save previous configuration files
+BACKUP_FOLDER  = ~/rc_backup
+
+#################################
+# Create the directories needed #
+#################################
+DIR_LIST       = $(sort $(VIMRC_DIR) $(VIM_DIR) $(GITCONFIG_DIR) $(ZSHRC_DIR) $(ZSH_DIR) $(EMACS_DIR) \
+                 $(EMACS_D_DIR) $(AWESOME_DIR) $(XRESOURCES_DIR) $(SCRIPT_DIR) $(BACKUP_FOLDER))
+
+$(DIR_LIST):
+	mkdir $@
+
+###############
+# Phony rules #
+###############
+install: vim git zsh emacs awesome xresources adb_logcat xflux
+
+vim:        save_vim        $(VIMRC_DIR)/.vimrc           $(VIM_DIR)/.vim
+git:        save_git        $(GITCONFIG_DIR)/.gitconfig
+zsh:        save_zsh        $(ZSHRC_DIR)/.zshrc           $(ZSH_DIR)/.zsh
+emacs:      save_emacs      $(EMACS_DIR)/.emacs           $(EMACS_D_DIR)/.emacs.d
+awesome: 	save_awesome    $(AWESOME_DIR)/awesome
+xresources: save_xresources $(XRESOURCES_DIR)/.Xresources
+adb_logcat:                 $(SCRIPT_DIR)/adb_logcat.py
+xflux:                      $(SCRIPT_DIR)/xflux
+
+#########
+# Rules #
+#########
+%/.vim: $(CURR_DIR)/vim_rc/vimrc %
+	@echo Install vimrc configuration file
+	@-ln -sn $< $@
+
+%/.vimrc: $(CURR_DIR)/vim_rc/vim $@ %
+	@echo Install vim folder
+	@-ln -sn $< $@
+
+%/.gitconfig: %
+	@echo Install gitconfig file
+	@-ln -sn $(CURR_DIR)/git_rc/gitconfig $@
+
+%/.zsh: $(CURR_DIR)/zsh_rc/zsh %
+	@echo Install zsh configuration file
+	@-ln -sn $< $@
+
+%/.zshrc: $(CURR_DIR)/zsh_rc/zshrc %
+	@echo Install zshrc configuration folder
+	@-ln -sn $< $@
 
 
-zsh: clean_zsh
-	@echo Install zsh configuration
-	@ln -s $(CURR_DIR)/zsh_rc/zshrc                   ~/.zshrc
-	@ln -s $(CURR_DIR)/zsh_rc/zsh                     ~/
-	@mv    ~/zsh                                      ~/.zsh
+%/.emacs: $(CURR_DIR)/emacs_rc/emacs %
+	@echo Install emacs configuration file
+	@-ln -sn $< $@
 
-emacs: clean_emacs
-	@echo Install emacs configuration
-	@ln -s $(CURR_DIR)/emacs_rc/emacs                 ~/.emacs
-	@ln -s $(CURR_DIR)/emacs_rc/emacs.d               ~/.emacs.d
+%/.emacs: $(CURR_DIR)/emacs_rc/emacs.d %
+	@echo Install emacs.d folder
+	@-ln -sn $< $@
 
-awesome: clean_awesome
+%/awesome: $(CURR_DIR)/awesome %
 	@echo Install awesome configuration
-	@ln -s $(CURR_DIR)/awesome                        ~/.config/awesome
+	@-ln -sn $< $@
 
-xresources: clean_xresources
+%/xresources: $(CURR_DIR)/Xresources/Xresources %
 	@echo Install xresources configuration
-	@ln -s $(CURR_DIR)/Xresources/Xresources           ~/.Xresources
-	@xrdb                                              ~/.Xresources
+	@-ln -sn $< $@
+	@xrdb $@
 
-adb_logcat: clean_adb_logcat
+%/adb_logcat.py: $(CURR_DIR)/adb_logcat/coloredlogcat.pytxt %
 	@echo Install adb_logcat.py script
-	@ln -s $(CURR_DIR)/adb_logcat/coloredlogcat.pytxt ~/.adb_logcat.py
+	@-ln -sn $< $@
 
-xflux: clean_xflux
+%/xflux: $(CURR_DIR)/xflux/xflux %
 	@echo Install xflux
-	@ln -s $(CURR_DIR)/xflux/xflux ~/.xflux
+	@-ln -sn $< $@
 
-clean: clean_vim clean_git clean_zsh clean_emacs clean_awesome clean_xresources clean_adb_logcat
+#
+# Save the previous the configurations
+#
+.PHONY: save save_vim save_git save_zsh save_emacs save_awesome save_xresources save_adb_logcat save_xflux
 
-clean_vim:
-	@echo Remove vim configuration
-	@rm -rf ~/.vimrc ~/.vim
+# Set the variables to YES if the selected file/folder is actually a symbolic link
+test_file       = $(shell                    \
+                    if [ -e $(1) ];          \
+                        then if [ -L $(1) ]; \
+                            then echo NO;    \
+                            else echo YES;   \
+                        fi;                  \
+                    else                     \
+                        echo NO;             \
+                    fi)
 
-clean_git:
-	@echo Remove git configuration
-	@rm -rf  ~/.gitconfig
+VIM_TEST        = $(call test_file, $(VIM_DIR)/.vim)
+VIMRC_TEST      = $(call test_file, $(VIMRC_DIR)/.vimrc)
+GITCONFIG_TEST  = $(call test_file, $(GITCONFIG_DIR)/.gitconfig)
+ZSH_TEST        = $(call test_file, $(ZSH_DIR)/.zsh)
+ZSHRC_TEST      = $(call test_file, $(ZSHRC_DIR)/.zshrc)
+EMACS_TEST      = $(call test_file, $(EMACS_DIR)/.emacs)
+EMACSD_TEST     = $(call test_file, $(EMACS_D_DIR)/.emacs.d)
+AWESOME_TEST    = $(call test_file, $(AWESOME_DIR)/awesome)
+XRESOURCES_TEST = $(call test_file, $(XRESOURCES_DIR)/.Xresource)
 
-clean_zsh:
-	@echo Remove zsh configuration
-	@rm -rf ~/.zshrc
-	@rm -rf ~/.zsh
+# Main save rule
+save: save_vim save_git save_zsh save_emacs save_awesome save_xresources save_adb_logcat
 
-clean_emacs:
-	@echo Remove emacs configuration
-	@rm -rf ~/.emacs
-	@rm -rf ~/.emacs.d
+testsave:
+	@echo "vim:        $(VIM_TEST)"
+	@echo "vimrc:      $(VIMRC_TEST)"
+	@echo "gitconfig:  $(GITCONFIG_TEST)"
+	@echo "zsh:        $(ZSH_TEST)"
+	@echo "zshrc:      $(ZSHRC_TEST)"
+	@echo "emacs:      $(EMACS_TEST)"
+	@echo "emacsd:     $(EMACSD_TEST)"
+	@echo "awesome:    $(AWESOME_TEST)"
+	@echo "xresources: $(XRESOURCES_TEST)"
 
-clean_awesome:
-	@echo Remove emacs configuration
-	@rm -rf ~/.config/awesome
+# VIM
+ifeq ($(VIM_TEST), YES)
+save_vim: save_vimrc $(BACKUP_FOLDER)
+	@echo Backup .vimrc file in $(BACKUP_FOLDER)
+	@mv ~/.vimrc $(BACKUP_FOLDER)/vimrc
+else
+save_vim: save_vimrc
+endif
 
-clean_xresources:
-	@echo Remove .Xresources configuration
-	@rm -rf ~/.Xresources
+ifeq ($(VIMRC_TEST), YES)
+save_vimrc: $(BACKUP_FOLDER)
+	@echo Backup .vim folder in ~/rc_backup
+	@mv ~/.vimrc ~/rc_backup/vimrc
+else
+save_vimrc:
+endif
 
-clean_adb_logcat:
-	@echo Remove .adb_logcat.py script
-	@rm -rf ~/.adb_logcat.py
+# GIT
+ifeq ($(GITCONFIG_TEST), YES)
+save_git: $(BACKUP_FOLDER)
+	@echo Backup .gitconfig file in ~/rc_backup
+	@mv ~/.gitconfig ~/rc_backup/gitconfig
+else
+save_git:
+endif
 
-clean_xflux:
-	@echo Remove .xflux
-	@rm -rf ~/.adb_logcat.py
+# ZSH
+ifeq ($(ZSH_TEST), YES)
+save_zsh: save_zshrc $(BACKUP_FOLDER)
+	@echo Backup .zsh folder in ~/rc_backup
+	@mv ~/.zsh ~/rc_backup/zsh
+else
+save_zsh: save_zshrc
+endif
+
+ifeq ($(ZSHRC_TEST), YES)
+save_zshrc: $(BACKUP_FOLDER)
+	@echo Backup .zshrc file in ~/rc_backup
+	@mv ~/.zshrc ~/rc_backup/zshrc
+else
+save_zshrc:
+endif
+
+# EMACS
+ifeq ($(EMACS_TEST), YES)
+save_emacs: save_emacsd $(BACKUP_FOLDER)
+	@echo Backup .emacs file in ~/rc_backup
+	@mv ~/.emacs ~/rc_backup/emacs
+else
+save_emacs: save_emacsd
+endif
+
+ifeq ($(EMACSD_TEST), YES)
+save_emacsd: $(BACKUP_FOLDER)
+	@echo Backup .emacsd folder in ~/rc_backup
+	@mv ~/.emacs ~/rc_backup/emacsd
+else
+save_emacsd:
+endif
+
+# Awesome WM
+ifeq ($(AWESOME_TEST), YES)
+save_awesome: $(BACKUP_FOLDER)
+	@echo Backup .awesome folder in ~/rc_backup
+	@mv ~/.config/awesome ~/rc_backup/awesome
+else
+save_awesome:
+endif
+
+# Xresource
+ifeq ($(XRESOURCES_TEST), YES)
+save_xresources: $(BACKUP_FOLDER)
+	@echo Backup .Xressources file in ~/rc_backup
+	@mv ~/.emacs ~/rc_backup/emacs
+else
+save_xresources:
+endif
