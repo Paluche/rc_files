@@ -170,8 +170,9 @@ alias -s md='vim'
 alias -s mkd='vim'
 alias -s markdown='vim'
 alias -s lua='vim'
-alias -s tex='vim'
 alias -s java='vim'
+alias -s aidl='vim'
+alias -s tex='vim'
 alias -s xml='vim'
 alias -s iadl='vim'
 alias -s scala='vim'
@@ -186,7 +187,7 @@ alias -s odt='lowriter'
 alias -s odp='loimpress'
 alias -s ods='localc'
 alias -s xls='localc'
-alias -s py='python3'
+alias -s py='python'
 alias -s sh='bash'
 
 # handling xflux
@@ -315,7 +316,7 @@ function setprompt() {
     infoline+=( "$(prompt_battery_info)" )
 
     # Display git info.
-    infoline+=( $(prompt_git_info) )
+    infoline+=( "$(prompt_git_info)" )
 
     # Append the different parts of the upper line of the prompt.
     llines=${(j::)infoline}
@@ -382,7 +383,7 @@ extract()
     fi
 }
 
-# Do a wonderfull job with adb logcat
+# Do a wonderful job with adb logcat
 adb_logcat()
 {
     while :
@@ -420,7 +421,6 @@ if [ `hostname` = "paluche-laptop" ]; then
         a406-01.enst.fr a406-10.enst.fr paluche-laptop)
 
 elif [ `hostname` = "dell-hlefevre" ]; then
-    export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
     # Initialize a session
     init() {
         xflux_au
