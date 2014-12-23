@@ -24,12 +24,19 @@ ${cyan}cyan
 ${white}white
 ${bwhite}bwhite"
 
-if command -v tree >/dev/null; then
-    echo -e "${orange}Tree ${blue}already installed${NC}"
+curr_dir= pwd
+
+echo -e "${red}WARNING
+This script will override any configuration files of the following programs:
+    VIM, emacs, awesome WM, Xresources.
+
+    Enter yes to proceed${NC}"
+read yesOrNo
+
+if [ "$yesOrNo" = "yes" ] || [ "${yesOrNo}" = "Yes" ]; then
+    echo ""
 else
-    echo -e "${red}Installing ${orange}tree${NC}";
-    sudo apt-get install tree;
-    echo -e "${orange}tree ${green}installed${NC}";
+    exit
 fi
 
 if command -v zsh >/dev/null; then
@@ -37,9 +44,26 @@ if command -v zsh >/dev/null; then
 else
     echo -e "${red}Installing ${orange}ZSH${NC}"
     sudo apt-get install zsh
-    echo -e "${purple}Setting ZSH as the default shell${NC}"
+    echo -e "${lpurple}Setting ZSH as the default shell${NC}"
     chsh -s /bin/zsh
+
     echo -e "${orange}ZSH installed${NC}"
+fi
+
+# Make
+if [ -L $HOME/.zshrc ]; then
+    echo -e "${orange}ZSH ${blue}configuration files already up to date${NC}"
+else
+    echo -e "${purple}Installing ZSH configuration files${NC}"
+    ln -sf $curr_dir/zsh_rc/zshrc $HOME/.zshrc
+fi
+
+if command -v tree >/dev/null; then
+    echo -e "${orange}Tree ${blue}already installed${NC}"
+else
+    echo -e "${red}Installing ${orange}tree${NC}";
+    sudo apt-get install tree;
+    echo -e "${orange}tree ${green}installed${NC}";
 fi
 
 if command -v acpi >/dev/null; then
