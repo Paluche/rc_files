@@ -10,3 +10,9 @@ utils
 WIFI
 unmerged
 inbetween
+Mutex
+Bluetooth
+VPN
+netcom
+USB
+connectable
