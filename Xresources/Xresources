@@ -29,19 +29,21 @@ xterm*multiScroll:        true
 
 
 ! Common
-
 #define S_yellow        #b58900
+#define S_lyellow       #b58922
 #define S_orange        #cb4b16
 #define S_red           #dc322f
 #define S_magenta       #d33682
 #define S_violet        #6c71c4
 #define S_blue          #268bd2
+#define S_lblue         #2a8ada
 #define S_cyan          #2aa198
+#define S_lcyan         #2fafaf
 #define S_green         #859900
+#define S_lgreen        #909f22
 
 
 ! Dark
-
 #define S_base03        #002b36
 #define S_base02        #073642
 #define S_base01        #586e75
@@ -50,7 +52,6 @@ xterm*multiScroll:        true
 #define S_base1         #93a1a1
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
-
 
 ! Light
 
@@ -70,26 +71,42 @@ xterm*multiScroll:        true
 ! URxvt*background:            S_base03
 
 xterm*background:              S_base03
-xterm*foreground:              S_base0
+xterm*foreground:              S_base2
 xterm*fading:                  40
 xterm*fadeColor:               S_base03
 xterm*cursorColor:             S_base1
 xterm*pointerColorBackground:  S_base01
 xterm*pointerColorForeground:  S_base1
 
+! black
 xterm*color0:                  S_base02
+! red
 xterm*color1:                  S_red
+! green
 xterm*color2:                  S_green
+! yellow
 xterm*color3:                  S_yellow
+! blue
 xterm*color4:                  S_blue
+! magenta
 xterm*color5:                  S_magenta
+! cyan
 xterm*color6:                  S_cyan
+! lgrey
 xterm*color7:                  S_base2
-xterm*color9:                  S_orange
+! grey
 xterm*color8:                  S_base03
-xterm*color10:                 S_base01
+! light red
+xterm*color9:                  S_orange
+! light green
+xterm*color10:                 S_lgreen
+! light yellow
 xterm*color11:                 S_base00
-xterm*color12:                 S_base0
+! light blue
+xterm*color12:                 S_lblue
+! violet
 xterm*color13:                 S_violet
+! light cyan
 xterm*color14:                 S_base1
+! white
 xterm*color15:                 S_base3
