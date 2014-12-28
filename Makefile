@@ -18,7 +18,7 @@ AWESOME_DIR    = $(HOME)/.config
 XRESOURCES_DIR = $(HOME)
 
 # Where to put the symbolic links of the scripts
-SCRIPT_DIR     = ~/script
+SCRIPT_DIR     = ~/.script
 
 # Where to save previous configuration files
 BACKUP_FOLDER  = ~/rc_backup
