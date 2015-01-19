@@ -147,6 +147,6 @@ if command -v ag >/dev/null; then
     echo -e "${orange}AG ${blue}already installed${NC}"
 else
     echo -e "${red}Installing AG${NC}"
-    apt-get install silversearcher-ag
+    sudo apt-get install silversearcher-ag
     echo -e "${green}AG installed${NC}"
 fi

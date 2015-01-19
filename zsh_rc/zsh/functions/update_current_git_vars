@@ -32,10 +32,11 @@ if [[ -n "$st" ]]; then
         else
             __CURRENT_GIT_BRANCH_STATUS='error'
         fi
-    elif [[ $arr[2] =~ 'You are currently reverting' ]]; then
-        __CURRENT_GIT_BRANCH_OPERATION='reverting'
     fi
 
+    if [[ $st =~ 'You are currently reverting' ]]; then
+        __CURRENT_GIT_BRANCH_OPERATION='reverting'
+    fi
 
     if [[ $st =~ 'Untracked files' ]]; then
         __CURRENT_GIT_BRANCH_UNTRACKED_FILES='1'

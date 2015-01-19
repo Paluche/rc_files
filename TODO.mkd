@@ -45,4 +45,4 @@ Script with check and install:
 * gitk
 * wireshark
 * android
-
+* ssh server

@@ -17,11 +17,12 @@
 [alias]
   l             = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
   g             = grep -ni --break --heading --color=always
+  stak          = stash save -k -u
+
   c             = commit
   ca            = commit -a
   cm            = commit --amend
   cam           = commit -a --amend
-  stak          = stash save -k -u
 
 [push]
 	default = simple
