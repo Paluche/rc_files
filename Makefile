@@ -49,11 +49,11 @@ xflux:                      $(SCRIPT_DIR)/xflux
 #########
 # Rules #
 #########
-%/.vim: $(CURR_DIR)/vim_rc/vimrc %
+%/.vim: $(CURR_DIR)/vim_rc/vim %
 	@echo Install vimrc configuration file
 	@-ln -sn $< $@
 
-%/.vimrc: $(CURR_DIR)/vim_rc/vim $@ %
+%/.vimrc: $(CURR_DIR)/vim_rc/vimrc $@ %
 	@echo Install vim folder
 	@-ln -sn $< $@
 
