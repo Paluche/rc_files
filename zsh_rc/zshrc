@@ -454,7 +454,13 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     # SSH Users and Host
     users=(hlefevre hubert paluche)
     hosts=(devatmo democes1 vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
-else
+
+elif [ `hostname` = "dell-democes1" ]; then
+    # Initialize a session
+    init() {
+        eval `ssh-agent -s`
+        ssh-add
+    }
 fi
 
 # SSH Completion
