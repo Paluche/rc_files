@@ -397,6 +397,12 @@ adb_logcat()
     done
 }
 
+serial_logcat()
+{
+    echo "logcat" > /dev/ttyUSB0
+    cat /dev/ttyUSB0 | ~/.script/adb_logcat.py
+}
+
 # Computer's specific configurations
 ##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
@@ -429,11 +435,11 @@ if [ `hostname` = "paluche-laptop" ]; then
 elif [ `hostname` = "dell-hlefevre" ]; then
     # Initialize a session
     init() {
-        xflux_au
+        xflux_fr
         ssh-add
     }
     # Netatmo shortcut
-    export PATH=$PATH:~/trunk/generic/stm32_sbm
+    export PATH=$PATH:~/netatmo/generic/stm32_sbm
     #export PATH=$PATH:/opt/jdk1.7.0_67/bin
     #export PATH=$PATH:/opt/jdk1.7.0_67/lib
     export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
@@ -443,7 +449,7 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     export ANDROID_HOME=/opt/Android/Sdk
     # export PATH=$PATH:/opt/jdk1.6.0_45/bin
     # export PATH=$PATH:/opt/jdk1.6.0_45/lib
-    # ~/trunk/apps/Linux/flasher
+    # ~/netatmo/apps/Linux/flasher
     # App shortcuts
     alias flash-run='stm32_sbm -f app-jtag.bin'
     alias fw-flash-run='stm32_sbm -f app.bin -s 0x1000'
