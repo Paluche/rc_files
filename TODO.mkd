@@ -46,3 +46,4 @@ Script with check and install:
 * wireshark
 * android
 * ssh server
+* colordiff
