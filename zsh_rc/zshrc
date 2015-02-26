@@ -134,7 +134,7 @@ alias gc='git commit'              # Shortcut
 alias gca='git commit -a'          # Shortcut
 alias gch='git checkout'           # Shortcut
 alias gcm='git checkout master'    # Shortcut
-alias gl='git l'                   # Shortcut
+alias gl='git l'                   # Custom log
 alias gr='git reset'               # Shortcut
 alias grh='git reset HEAD'         # Shortcut
 alias gri='git rebase -i'          # Shortcut
@@ -143,6 +143,7 @@ alias gpl='git pull'               # Shortcut
 alias gsd='git svn dcommit'        # Shortcut
 alias gsr='git svn rebase'         # Shortcut
 alias gsf='git svn fetch'          # Shortcut
+alias gsh='git show'               # Shortcut
 alias gss='git show --stat'        # Shorter diff for git show
 alias gb='git branch'              # Shortcut
 
