@@ -81,28 +81,31 @@ RULES = {
     #re.compile(r"([\w\.@]+)=([\w\.@]+)"): r"%s\1%s=%s\2%s" % (format(fg=BLUE), format(fg=GREEN), format(fg=BLUE), format(reset=True)),
 }
 
+PROCESS_WIDTH = 6 # 6 or -1
+TIME_WIDTH = 19
+TAG_WIDTH = 25
 TAGTYPE_WIDTH = 3
-TAG_WIDTH = 20
-PROCESS_WIDTH = 8 # 8 or -1
-HEADER_SIZE = TAGTYPE_WIDTH + 1 + TAG_WIDTH + 1 + PROCESS_WIDTH + 1
+HEADER_SIZE = TAGTYPE_WIDTH + 1 + TAG_WIDTH + 1 + PROCESS_WIDTH + 1 + TIME_WIDTH + 1
 
 TAGTYPES = {
-    "V": "%s%s%s " % (format(fg=WHITE, bg=BLACK), "V".center(TAGTYPE_WIDTH), format(reset=True)),
-    "D": "%s%s%s " % (format(fg=BLACK, bg=BLUE), "D".center(TAGTYPE_WIDTH), format(reset=True)),
-    "I": "%s%s%s " % (format(fg=BLACK, bg=GREEN), "I".center(TAGTYPE_WIDTH), format(reset=True)),
+    "V": "%s%s%s " % (format(fg=WHITE, bg=BLACK),  "V".center(TAGTYPE_WIDTH), format(reset=True)),
+    "D": "%s%s%s " % (format(fg=BLACK, bg=BLUE),   "D".center(TAGTYPE_WIDTH), format(reset=True)),
+    "I": "%s%s%s " % (format(fg=BLACK, bg=GREEN),  "I".center(TAGTYPE_WIDTH), format(reset=True)),
     "W": "%s%s%s " % (format(fg=BLACK, bg=YELLOW), "W".center(TAGTYPE_WIDTH), format(reset=True)),
-    "E": "%s%s%s " % (format(fg=BLACK, bg=RED), "E".center(TAGTYPE_WIDTH), format(reset=True)),
-    "F": "%s%s%s " % (format(fg=RED,   bg=WHITE), "F".center(TAGTYPE_WIDTH), format(reset=True)),
+    "E": "%s%s%s " % (format(fg=BLACK, bg=RED),    "E".center(TAGTYPE_WIDTH), format(reset=True)),
+    "F": "%s%s%s " % (format(fg=RED,   bg=WHITE),  "F".center(TAGTYPE_WIDTH), format(reset=True)),
 }
 
-retag = re.compile("^([A-Z])/([^\(]+)\(([^\)]+)\): (.*)$")
+retagtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
+retag     = re.compile("^([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
+
 
 # to pick up -d or -e
 adb_args = ' '.join(sys.argv[1:])
 
 # if someone is piping in to us, use stdin as input.  if not, invoke adb logcat
 if os.isatty(sys.stdin.fileno()):
-    input = os.popen("adb %s logcat" % adb_args)
+    input = os.popen("adb %s logcat -v time" % adb_args)
 else:
     input = sys.stdin
 
@@ -112,15 +115,51 @@ while True:
     except KeyboardInterrupt:
         break
 
-    match = retag.match(line)
-    if not match is None:
+    matchTime = retagtime.match(line)
+    match     = retag.match(line)
+    if not matchTime is None:
+        month, day, hours, minutes, seconds, milliseconds, tagtype, tag, owner, message = matchTime.groups()
+        linebuf = StringIO.StringIO()
+
+        # center process info
+        if PROCESS_WIDTH > 0:
+            owner = owner.strip().center(PROCESS_WIDTH)
+            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False), owner, format(reset=True)))
+
+        # print time
+        linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK, bright=False), month, day, hours,
+            minutes, seconds, milliseconds, format(reset=True)))
+
+
+        # right-align tag title and allocate color if needed
+        tag = tag.strip()
+        color = allocate_color(tag)
+        tag = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
+        linebuf.write("%s%s %s" % (format(fg=color, dim=False), tag, format(reset=True)))
+
+        # write out tagtype colored edge
+        if not tagtype in TAGTYPES: break
+        linebuf.write(TAGTYPES[tagtype])
+
+        # insert line wrapping as needed
+        message = indent_wrap(message, HEADER_SIZE, WIDTH)
+
+        # format tag message using rules
+        for matcher in RULES:
+            replace = RULES[matcher]
+            message = matcher.sub(replace, message)
+
+        linebuf.write(message)
+        line = linebuf.getvalue()
+
+    elif not match is None:
         tagtype, tag, owner, message = match.groups()
         linebuf = StringIO.StringIO()
 
         # center process info
         if PROCESS_WIDTH > 0:
             owner = owner.strip().center(PROCESS_WIDTH)
-            linebuf.write("%s%s%s " % (format(fg=BLACK, bg=BLACK, bright=True), owner, format(reset=True)))
+            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False), owner, format(reset=True)))
 
         # right-align tag title and allocate color if needed
         tag = tag.strip()

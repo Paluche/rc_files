@@ -393,13 +393,13 @@ adb_logcat()
 {
     while :
     do
-        adb logcat | ~/.script/adb_logcat.py
+        adb logcat -v time | ~/.script/adb_logcat.py
     done
 }
 
 serial_logcat()
 {
-    echo "logcat" > /dev/ttyUSB0
+    echo "\n\rlogcat -v time" > /dev/ttyUSB0
     cat /dev/ttyUSB0 | ~/.script/adb_logcat.py
 }
 
