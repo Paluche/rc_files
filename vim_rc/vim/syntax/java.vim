@@ -68,7 +68,7 @@ syn keyword javaScopeDecl	public protected private abstract
 if exists("java_highlight_java_lang_ids")
   let java_highlight_all=1
 endif
-if exists("java_highlight_all")  || exists("java_highlight_java")  || exists("java_highlight_java_lang") 
+if exists("java_highlight_all")  || exists("java_highlight_java")  || exists("java_highlight_java_lang")
   " java.lang.*
   syn match javaLangClass "\<System\>"
   syn keyword javaR_JavaLang NegativeArraySizeException ArrayStoreException IllegalStateException RuntimeException IndexOutOfBoundsException UnsupportedOperationException ArrayIndexOutOfBoundsException ArithmeticException ClassCastException EnumConstantNotPresentException StringIndexOutOfBoundsException IllegalArgumentException IllegalMonitorStateException IllegalThreadStateException NumberFormatException NullPointerException TypeNotPresentException SecurityException
@@ -128,7 +128,7 @@ syn cluster javaTop add=javaExternal,javaError,javaError,javaBranch,javaLabelReg
 
 
 " Comments
-syn keyword javaTodo		 contained TODO FIXME XXX
+syn keyword javaTodo		 contained TODO FIXME XXX DEBUG
 if exists("java_comment_strings")
   syn region  javaCommentString    contained start=+"+ end=+"+ end=+$+ end=+\*/+me=s-1,he=s-1 contains=javaSpecial,javaCommentStar,javaSpecialChar,@Spell
   syn region  javaComment2String   contained start=+"+	end=+$\|"+  contains=javaSpecial,javaSpecialChar,@Spell
