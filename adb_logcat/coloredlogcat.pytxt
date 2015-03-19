@@ -124,7 +124,7 @@ while True:
         # center process info
         if PROCESS_WIDTH > 0:
             owner = owner.strip().center(PROCESS_WIDTH)
-            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False), owner, format(reset=True)))
+            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=True), owner, format(reset=True)))
 
         # print time
         linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK, bright=False), month, day, hours,
