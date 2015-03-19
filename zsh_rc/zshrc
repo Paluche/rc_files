@@ -407,6 +407,16 @@ serial_logcat()
     cat /dev/ttyUSB0 | ~/.script/adb_logcat.py
 }
 
+common_init()
+{
+    if [ -n "$SSH_CLIENT" ]
+    then
+        eval `ssh-agent -s`
+    else
+        xflux_fr
+    fi
+    ssh-add
+}
 # Computer's specific configurations
 ##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
@@ -427,8 +437,7 @@ if [ `hostname` = "paluche-laptop" ]; then
     # Initialize a session
     init() {
         setxkbmap fr
-        xflux_fr
-        ssh-add
+        common_init
     }
 
     # SSH host
@@ -439,8 +448,7 @@ if [ `hostname` = "paluche-laptop" ]; then
 elif [ `hostname` = "dell-hlefevre" ]; then
     # Initialize a session
     init() {
-        xflux_fr
-        ssh-add
+        common_init
     }
     # Netatmo shortcut
     export PATH=$PATH:~/netatmo/generic/stm32_sbm
