@@ -81,11 +81,15 @@ RULES = {
     #re.compile(r"([\w\.@]+)=([\w\.@]+)"): r"%s\1%s=%s\2%s" % (format(fg=BLUE), format(fg=GREEN), format(fg=BLUE), format(reset=True)),
 }
 
-PROCESS_WIDTH = 6 # 6 or -1
-TIME_WIDTH = 18
-TAG_WIDTH = 25
-TAGTYPE_WIDTH = 3
-HEADER_SIZE = TAGTYPE_WIDTH + 1 + TAG_WIDTH + 1 + PROCESS_WIDTH + 1 + TIME_WIDTH + 1
+PROCESS_WIDTH          = 6
+THREAD_WIDTH           = 6
+TIME_WIDTH             = 18
+TAG_WIDTH              = 25
+TAGTYPE_WIDTH          = 3
+THREADTIME_HEADER_SIZE = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + THREAD_WIDTH + TIME_WIDTH + 4
+THREAD_HEADER_SIZE     = TAGTYPE_WIDTH + PROCESS_WIDTH + THREAD_WIDTH + 1
+TIME_HEADER_SIZE       = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + TIME_WIDTH + 4
+BRIEF_HEADER_SIZE      = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + 3
 
 TAGTYPES = {
     "V": "%s%s%s " % (format(fg=WHITE, bg=BLACK),  "V".center(TAGTYPE_WIDTH), format(reset=True)),
@@ -96,9 +100,10 @@ TAGTYPES = {
     "F": "%s%s%s " % (format(fg=RED,   bg=WHITE),  "F".center(TAGTYPE_WIDTH), format(reset=True)),
 }
 
-retagtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
-retag     = re.compile("^([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
-
+retagthreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) ([^\)]+) ([VDIWEF]) ([^\(]+): (.*)$")
+retagthread     = re.compile("^([VDIWEF])\(([^\)]+):([^\)]+)\) (.*)$")
+retagtime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
+retagbrief      = re.compile("^([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
 
 # to pick up -d or -e
 adb_args = ' '.join(sys.argv[1:])
@@ -115,10 +120,90 @@ while True:
     except KeyboardInterrupt:
         break
 
-    matchTime = retagtime.match(line)
-    match     = retag.match(line)
-    if not matchTime is None:
-        month, day, hours, minutes, seconds, milliseconds, tagtype, tag, owner, message = matchTime.groups()
+    matchthreadtime = retagthreadtime.match(line)
+    matchthread     = retagthread.match(line)
+    matchtime       = retagtime.match(line)
+    matchbrief      = retagbrief.match(line)
+
+    if not matchthreadtime is None:
+        month, day, hours, minutes, seconds, milliseconds, owner, thread, tagtype, tag, message = matchthreadtime.groups()
+        linebuf = StringIO.StringIO()
+
+        # center process info
+        if PROCESS_WIDTH > 0:
+            owner = owner.strip().center(PROCESS_WIDTH)
+            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False), owner, format(reset=True)))
+
+        # center thread info
+        if THREAD_WIDTH > 0:
+            owner = owner.strip().center(THREAD_WIDTH)
+            linebuf.write(" %s%s%s " % (format(fg=CYAN, bg=BLACK, bright=True), thread, format(reset=True)))
+
+        # print time
+        linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK, bright=False), month, day, hours,
+            minutes, seconds, milliseconds, format(reset=True)))
+
+
+        # right-align tag title and allocate color if needed
+        tag = tag.strip()
+        color = allocate_color(tag)
+        tag = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
+        linebuf.write("%s%s %s" % (format(fg=color, dim=False), tag, format(reset=True)))
+
+        # write out tagtype colored edge
+        if not tagtype in TAGTYPES: break
+        linebuf.write(TAGTYPES[tagtype])
+
+        # insert line wrapping as needed
+        message = indent_wrap(message, THREADTIME_HEADER_SIZE, WIDTH)
+
+        # format tag message using rules
+        for matcher in RULES:
+            replace = RULES[matcher]
+            message = matcher.sub(replace, message)
+
+        linebuf.write(message)
+        line = linebuf.getvalue()
+
+
+    elif not matchthread is None:
+        tagtype, owner, thread, message = matchthread.groups()
+        linebuf = StringIO.StringIO()
+
+        # center process info
+        if PROCESS_WIDTH > 0:
+            owner = owner.strip().center(PROCESS_WIDTH)
+            linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=True), owner, format(reset=True)))
+
+        # center thread info
+        if THREAD_WIDTH > 0:
+            owner = owner.strip().center(THREAD_WIDTH)
+            linebuf.write("%s%s%s " % (format(fg=CYAN, bg=BLACK, bright=True), thread, format(reset=True)))
+
+        ## right-align tag title and allocate color if needed
+        #tag = tag.strip()
+        #color = allocate_color(tag)
+        #tag = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
+        #linebuf.write("%s%s %s" % (format(fg=color, dim=False), tag, format(reset=True)))
+
+        # write out tagtype colored edge
+        if not tagtype in TAGTYPES: break
+        linebuf.write(TAGTYPES[tagtype])
+
+        # insert line wrapping as needed
+        message = indent_wrap(message, THREAD_HEADER_SIZE, WIDTH)
+
+        # format tag message using rules
+        for matcher in RULES:
+            replace = RULES[matcher]
+            message = matcher.sub(replace, message)
+
+        linebuf.write(message)
+        line = linebuf.getvalue()
+
+
+    elif not matchtime is None:
+        month, day, hours, minutes, seconds, milliseconds, tagtype, tag, owner, message = matchtime.groups()
         linebuf = StringIO.StringIO()
 
         # center process info
@@ -142,7 +227,7 @@ while True:
         linebuf.write(TAGTYPES[tagtype])
 
         # insert line wrapping as needed
-        message = indent_wrap(message, HEADER_SIZE, WIDTH)
+        message = indent_wrap(message, TIME_HEADER_SIZE, WIDTH)
 
         # format tag message using rules
         for matcher in RULES:
@@ -152,8 +237,8 @@ while True:
         linebuf.write(message)
         line = linebuf.getvalue()
 
-    elif not match is None:
-        tagtype, tag, owner, message = match.groups()
+    elif not matchbrief is None:
+        tagtype, tag, owner, message = matchbrief.groups()
         linebuf = StringIO.StringIO()
 
         # center process info
@@ -172,7 +257,7 @@ while True:
         linebuf.write(TAGTYPES[tagtype])
 
         # insert line wrapping as needed
-        message = indent_wrap(message, HEADER_SIZE, WIDTH)
+        message = indent_wrap(message, BRIEF_HEADER_SIZE, WIDTH)
 
         # format tag message using rules
         for matcher in RULES:
