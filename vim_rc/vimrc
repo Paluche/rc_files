@@ -34,7 +34,7 @@ set scrolloff=3          " Start scrolling when I'm 3 lines from top/bottom
 set history=1000         " Remember commands and search history
 set backspace=2          " Backspace over indent, eol, and insert
 set mousehide            " Hide the mouse pointer while typing
-set mouse=nvc            " Activate mouse support in all mode exept insertion
+set mouse=nvc            " Activate mouse support in all mode except insertion
 
 set number               " Show line numbers
 set nowrap               " Turn off line wrap
@@ -49,6 +49,8 @@ set wrapscan             " Set the search scan to wrap around the file
 set ignorecase           " when searching
 set smartcase            " …unless I use an uppercase character
 
+set t_vb=                " Stop the screen from blinking in case of action
+                         " couldn't be made
 set showmatch            " show matching brackets
 set mat=2
 
