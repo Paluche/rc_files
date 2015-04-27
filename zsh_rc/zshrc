@@ -196,7 +196,7 @@ alias xflux_fr='xflux -l 48.8534100 -g 2.3'
 alias test='cd ./test'
 
 # Other
-alias today='cat -v /usr/share/calendar/* | grep `date +"%m/%d"`'
+alias today='grep -r `date +"%m/%d"` /usr/share/calendar'
 alias enst='ssh -X hlefevre@ssh.enst.fr'
 alias a406='ssh -X hlefevre@a406-04.enst.fr'
 alias apt-get='sudo apt-get'
