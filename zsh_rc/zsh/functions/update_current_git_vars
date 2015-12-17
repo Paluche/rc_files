@@ -37,6 +37,15 @@ if [[ -n "$st" ]]; then
     if [[ $st =~ 'You are currently reverting' ]]; then
         __CURRENT_GIT_BRANCH_OPERATION='reverting'
     fi
+    if [[ $st =~ 'You have unmerged paths' ]]; then
+        __CURRENT_GIT_BRANCH_OPERATION='merging'
+    fi
+    if [[ $st =~ 'All conflicts fixed but you are still merging' ]]; then
+        __CURRENT_GIT_BRANCH_OPERATION='merging'
+    fi
+    if [[ $st =~ 'You are currently cherry-picking' ]]; then
+        __CURRENT_GIT_BRANCH_OPERATION='cherrypicking'
+    fi
 
     if [[ $st =~ 'Untracked files' ]]; then
         __CURRENT_GIT_BRANCH_UNTRACKED_FILES='1'
