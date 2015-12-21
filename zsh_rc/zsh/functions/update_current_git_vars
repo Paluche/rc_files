@@ -12,13 +12,11 @@ local dir="$(pwd 2>/dev/null)"
 
 if [[ -n "$st" ]]; then
     while true; do
-        ls $dir/.git >/dev/null
-        if [ $? -eq 0 ]; then
+        if [ -e $dir/.git ]; then
             break
         fi
         dir="$(dirname $dir 2> /dev/null)"
     done
-
     __CURRENT_GIT_NAME="$(basename $dir 2> /dev/null)"
 
     local -a arr
