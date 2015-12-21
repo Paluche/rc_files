@@ -1,3 +1,4 @@
+unset __CURRENT_GIT_NAME
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_OPERATION
@@ -7,7 +8,19 @@ unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
 
 local st="$(git status 2>/dev/null)"
+local dir="$(pwd 2>/dev/null)"
+
 if [[ -n "$st" ]]; then
+    while true; do
+        ls $dir/.git >/dev/null
+        if [ $? -eq 0 ]; then
+            break
+        fi
+        dir="$(dirname $dir 2> /dev/null)"
+    done
+
+    __CURRENT_GIT_NAME="$(basename $dir 2> /dev/null)"
+
     local -a arr
     arr=(${(f)st})
 
@@ -17,7 +30,7 @@ if [[ -n "$st" ]]; then
         __CURRENT_GIT_BRANCH="${arr[1][(w)5]}";
         __CURRENT_GIT_BRANCH_OPERATION='rebasing'
     else
-        __CURRENT_GIT_BRANCH="${arr[1][(w)4]}";
+        __CURRENT_GIT_BRANCH="${arr[1][(w)4]}"
     fi
 
     if [[ $arr[2] =~ 'Your branch ' ]]; then

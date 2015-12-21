@@ -1,5 +1,7 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
+    s+="$__CURRENT_GIT_NAME"
+    s+="%{${fg[cyan]}%}|%{${fg[blue]}%}"
     s+="$__CURRENT_GIT_BRANCH"
 
     s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
@@ -61,6 +63,6 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+="?"
     fi
 
-    printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[blue]}%}" $s "%{${fg[cyan]}%}]"
+    printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[green]}%}" $s "%{${fg[cyan]}%}]"
 fi
 
