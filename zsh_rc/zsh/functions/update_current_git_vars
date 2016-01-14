@@ -1,5 +1,6 @@
 unset __CURRENT_GIT_NAME
 unset __CURRENT_GIT_BRANCH
+unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_OPERATION
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
@@ -28,6 +29,9 @@ if [[ -n "$st" ]]; then
         __CURRENT_GIT_BRANCH="${arr[1][(w)5]}";
         __CURRENT_GIT_BRANCH_OPERATION='rebasing'
     else
+        if [[ $arr[1] =~ 'detached' ]]; then
+            __CURRENT_GIT_BRANCH_DETACHED='y'
+        fi
         __CURRENT_GIT_BRANCH="${arr[1][(w)4]}"
     fi
 
@@ -72,4 +76,3 @@ if [[ -n "$st" ]]; then
         __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
     fi
 fi
-

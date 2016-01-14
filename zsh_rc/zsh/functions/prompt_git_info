@@ -1,25 +1,30 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
     s+="$__CURRENT_GIT_NAME"
-    s+="%{${fg[cyan]}%}|%{${fg[blue]}%}"
+        s+="%{${fg[cyan]}%}|"
+    if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ]; then
+        s+="%{${fg[magenta]}%}"
+    else
+        s+="%{${fg[blue]}%}"
+    fi
     s+="$__CURRENT_GIT_BRANCH"
-
-    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
 
     case "$__CURRENT_GIT_BRANCH_OPERATION" in
         reverting)
-            s+="%{${fg[red]}%}reverting%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+            s+="%{${fg[red]}%}reverting"
         ;;
         rebasing)
-            s+="%{${fg[red]}%}rebasing%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+            s+="%{${fg[red]}%}rebasing"
         ;;
         merging)
-            s+="%{${fg[red]}%}merging%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+            s+="%{${fg[red]}%}merging"
         ;;
         cherrypicking)
-            s+="%{${fg[red]}%}cherry-picking%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+            s+="%{${fg[red]}%}cherry-picking"
         ;;
     esac
+
+    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
 
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
@@ -32,19 +37,19 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+="↓"
         ;;
         up-to-date)
-        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ] ||
-            [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]   ||
-            [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
-            [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
+        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]    ||
+           [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]       ||
+           [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
+           [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         else
             s+="✓"
         fi
         ;;
         *)
-        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]     ||
-            [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]       ||
-            [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
-            [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
+        if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]    ||
+           [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]       ||
+           [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ] ||
+           [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         else
             s+="•"
         fi
@@ -65,4 +70,3 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
 
     printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[green]}%}" $s "%{${fg[cyan]}%}]"
 fi
-
