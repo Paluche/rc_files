@@ -9,22 +9,31 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     fi
     s+="$__CURRENT_GIT_BRANCH"
 
+    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+
+    print_separator=
     case "$__CURRENT_GIT_BRANCH_OPERATION" in
         reverting)
             s+="%{${fg[red]}%}reverting"
+            print_separator=y
         ;;
         rebasing)
             s+="%{${fg[red]}%}rebasing"
+            print_separator=y
         ;;
         merging)
             s+="%{${fg[red]}%}merging"
+            print_separator=y
         ;;
         cherrypicking)
             s+="%{${fg[red]}%}cherry-picking"
+            print_separator=y
         ;;
     esac
 
-    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+    if [ -n "$print_separator" ]; then
+        s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+    fi
 
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
