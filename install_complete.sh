@@ -158,9 +158,28 @@ else
     sudo apt-get install rxvt-unicode-256color
     echo -e "${green}URxvt installed${NC}"
 fi
+
 echo "Copying fonts..."
 cp ./fonts/* ~/.local/share/fonts
 
 # Reset font cache on Linux
 echo "Resetting font cache, this may take a moment..."
-fc-cache -f ~/.local/share/fonts
+fc-cache -f ~/.local/share/fonts
+
+# VIM plugins
+git clone git@github.com:tpope/vim-pathogen.git                 .vim_rc/vim/bundle/vim-pathogen
+git clone https://github.com/vim-airline/vim-airline            .vim_rc/vim/bundle/vim-airline
+git clone https://github.com/vim-airline/vim-airline-themes     .vim_rc/vim/bundle/vim-airline-themes
+
+# COOL selectioned themes
+# wonbat
+# iterm
+# solarized
+# simple
+# serene
+# kolor
+# ditinguished
+# behelit
+# cool
+git clone git://github.com/altercation/vim-colors-solarized.git .vim_rc/vim/bundle/vim-colors-solarized
+git clone https://github.com/gregsexton/gitv.git                .vim_rc/vim/bundle/gitv

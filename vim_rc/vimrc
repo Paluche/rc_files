@@ -241,6 +241,8 @@ autocmd BufNewFile *.scala TSkeletonSetup template.scala
 set spell spelllang=en_us
 " }}}
 " VIM airline ---------------------------------------------------- {{{
+" Theme
+let g:airline_theme="distinguished"
 " air-line
 let g:airline_powerline_fonts = 1
 
