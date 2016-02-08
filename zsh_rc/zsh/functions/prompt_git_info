@@ -53,7 +53,7 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     esac
 
     if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]; then
-        s+="◄"
+        s+="◀"
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]; then
         s+=""

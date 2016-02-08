@@ -331,7 +331,7 @@ function setprompt() {
     # Finish the design of the prompt.
     # Display a green arrow that turns red if the return code of the last
     # function is different of zero.
-    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})${at_normal}" )
+    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})▶${at_normal}" )
 
     rlines="${at_bold}${fg_orange}%~/ ${at_normal}"
 
