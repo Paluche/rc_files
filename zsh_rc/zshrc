@@ -259,7 +259,7 @@ setopt hist_find_no_dups
 # Bind Key
 ##############################################################################
 # Emacs key
-# bindkey -e
+bindkey -e
 # Input control
 bindkey '^[[1;5D' backward-word    # Ctrl + LEFT
 bindkey '^[[1;5C' forward-word     # Ctrl + RIGHT
@@ -455,8 +455,7 @@ if [ `hostname` = "paluche-laptop" ]; then
 
     # SSH host
     users=(hlefevre paluche hubert bar)
-    hosts=(192.168.1.100 192.168.1.101 ssh.enst.fr bar-telecom.kicks-ass.net \
-        a406-01.enst.fr a406-10.enst.fr paluche-laptop)
+    hosts=(paluche-laptop)
 
 elif [ `hostname` = "dell-hlefevre" ]; then
     # Initialize a session
@@ -487,12 +486,6 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     users=(hlefevre hubert paluche)
     hosts=(devatmo democes1 vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
 
-elif [ `hostname` = "dell-democes1" ]; then
-    # Initialize a session
-    init() {
-        eval `ssh-agent -s`
-        ssh-add
-    }
 fi
 
 # SSH Completion
