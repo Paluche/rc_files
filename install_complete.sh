@@ -150,3 +150,17 @@ else
     sudo apt-get install silversearcher-ag
     echo -e "${green}AG installed${NC}"
 fi
+
+if command -v urxvt >/dev/null; then
+    echo -e "${orange}URxvt ${blue}already installed${NC}"
+else
+    echo -e "${red}Installing URxvt${NC}"
+    sudo apt-get install rxvt-unicode-256color
+    echo -e "${green}URxvt installed${NC}"
+fi
+echo "Copying fonts..."
+cp ./fonts/* ~/.local/share/fonts
+
+# Reset font cache on Linux
+echo "Resetting font cache, this may take a moment..."
+fc-cache -f ~/.local/share/fonts

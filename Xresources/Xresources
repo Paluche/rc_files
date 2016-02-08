@@ -6,24 +6,8 @@ Xft.hinting:    true
 Xft.rgba:       rgb
 Xft.hintstyle:  hintslight
 
-! xterm ----------------------------------------------------------------------
-
-xterm*termName:           xterm-256color
-xterm*VT100.geometry:     80x25
-xterm*faceName:           Inconsolata:style=Medium:size=9
-! xterm*font:               -*-SourceCodeProRegular-r-*-*-16-*-*-*-*-*-*-*
-xterm*dynamicColors:      true
-xterm*utf8:               2
-xterm*eightBitInput:      true
-xterm*saveLines:          4096
-xterm*scrollKey:          true
-xterm*scrollTtyOutput:    false
-xterm*scrollBar:          false
-xterm*rightScrollBar:     false
-xterm*jumpScroll:         true
-xterm*multiScroll:        true
-
-! Solarized color scheme for the X Window System
+! Solarized ------------------------------------------------------------------
+! Color scheme for the X Window System
 !
 ! http://ethanschoonover.com/solarized
 
@@ -67,8 +51,28 @@ xterm*multiScroll:        true
 
 ! To only apply colors to your terminal, for example, prefix
 ! the color assignment statement with its name. Example:
-!
-! URxvt*background:            S_base03
+
+! xterm ----------------------------------------------------------------------
+
+xterm*termName:           xterm-256color
+xterm*VT100.geometry:     80x25
+! xterm*faceName:           Inconsolata:style=Medium:size=9
+! xterm*faceName: xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true
+! xterm*faceName: xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true
+! xterm*faceName: xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true
+! xterm*faceName: xft:Sauce\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true
+xterm*faceName: Sauce\ Code\ Pro\ Semibold
+xterm*faceSize: 9
+xterm*dynamicColors:      true
+xterm*utf8:               2
+xterm*eightBitInput:      true
+xterm*saveLines:          4096
+xterm*scrollKey:          true
+xterm*scrollTtyOutput:    false
+xterm*scrollBar:          false
+xterm*rightScrollBar:     false
+xterm*jumpScroll:         true
+xterm*multiScroll:        true
 
 xterm*background:              S_base03
 xterm*foreground:              S_base2
@@ -110,3 +114,66 @@ xterm*color13:                 S_violet
 xterm*color14:                 S_base1
 ! white
 xterm*color15:                 S_base3
+! xterm ----------------------------------------------------------------------
+
+URxvt*VT100.geometry:     80x25
+! URxvt*faceName:           Inconsolata:style=Medium:size=9
+! URxvt*faceName: xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true
+! URxvt*faceName: xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true
+! URxvt*faceName: xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true
+URxvt*font: xft:Sauce\ Code\ Pro\ Semibold:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true
+URxvt*dynamicColors:      true
+URxvt*utf8:               2
+URxvt*eightBitInput:      true
+URxvt*saveLines:          4096
+URxvt*scrollKey:          true
+URxvt*scrollTtyOutput:    false
+URxvt*scrollBar:          false
+URxvt*rightScrollBar:     false
+URxvt*jumpScroll:         true
+URxvt*multiScroll:        true
+URxvt*keysym.Control-Up:   \033[1;5A
+URxvt*keysym.Control-Down:    \033[1;5B
+URxvt*keysym.Control-Left:    \033[1;5D
+URxvt*keysym.Control-Right:    \033[1;5C
+
+URxvt*background:              S_base03
+URxvt*foreground:              S_base2
+URxvt*fading:                  40
+URxvt*fadeColor:               S_base03
+URxvt*cursorColor:             S_base1
+URxvt*pointerColorBackground:  S_base01
+URxvt*pointerColorForeground:  S_base1
+
+! black
+URxvt*color0:                  S_base02
+! red
+URxvt*color1:                  S_red
+! green
+URxvt*color2:                  S_green
+! yellow
+URxvt*color3:                  S_yellow
+! blue
+URxvt*color4:                  S_blue
+! magenta
+URxvt*color5:                  S_magenta
+! cyan
+URxvt*color6:                  S_cyan
+! lgrey
+URxvt*color7:                  S_base2
+! grey
+URxvt*color8:                  S_base03
+! light red
+URxvt*color9:                  S_orange
+! light green
+URxvt*color10:                 S_lgreen
+! light yellow
+URxvt*color11:                 S_base00
+! light blue
+URxvt*color12:                 S_lblue
+! violet
+URxvt*color13:                 S_violet
+! light cyan
+URxvt*color14:                 S_base1
+! white
+URxvt*color15:                 S_base3

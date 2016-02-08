@@ -259,7 +259,7 @@ setopt hist_find_no_dups
 # Bind Key
 ##############################################################################
 # Emacs key
-bindkey -e
+# bindkey -e
 # Input control
 bindkey '^[[1;5D' backward-word    # Ctrl + LEFT
 bindkey '^[[1;5C' forward-word     # Ctrl + RIGHT
@@ -331,7 +331,7 @@ function setprompt() {
     # Finish the design of the prompt.
     # Display a green arrow that turns red if the return code of the last
     # function is different of zero.
-    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}▸:%{$fg[red]%}▸)${at_normal}" )
+    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})${at_normal}" )
 
     rlines="${at_bold}${fg_orange}%~/ ${at_normal}"
 
@@ -462,6 +462,7 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     # Initialize a session
     init() {
         common_init
+        setxkbmap -option "nbsp:none"
     }
     # Netatmo shortcut
     export PATH=$PATH:~/netatmo/generic/stm32_sbm

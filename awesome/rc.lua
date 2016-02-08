@@ -55,7 +55,7 @@ end
 beautiful.init("~/.config/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "xterm"
+terminal = "urxvt"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -251,14 +251,17 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "Tab", function () awful.screen.focus_relative( 1) end),
     awful.key({ modkey, "Control", "Shift" }, "Tab", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
+    awful.key({ modkey, "Control", "Shift" }, "Tab",   function () awful.screen.focus_relative(-1) end),
+    awful.key({ modkey,                    }, "u",                 awful.client.urgent.jumpto),
 
     -- Standard program
-    awful.key({ modkey, "Control" }, "l", function() awful.util.spawn("xscreensaver-command -lock") end),
-    awful.key({ modkey, "Control" }, "f", function() awful.util.spawn("firefox") end),
-    awful.key({ modkey, "Control" }, "t", function() awful.util.spawn("thunderbird") end),
-    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey, "Control" }, "r", awesome.restart),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit),
+    awful.key({ modkey, "Control" }, "l",         function() awful.util.spawn("xscreensaver-command -lock") end),
+    awful.key({                   }, "XF86Sleep", function() awful.util.spawn("xscreensaver-command -lock") end),
+    awful.key({ modkey, "Control" }, "f",         function() awful.util.spawn("firefox")                    end),
+    awful.key({ modkey, "Control" }, "t",         function() awful.util.spawn("thunderbird")                end),
+    awful.key({ modkey,           }, "Return",    function () awful.util.spawn(terminal)                    end),
+    awful.key({ modkey, "Control" }, "r",         awesome.restart),
+    awful.key({ modkey, "Shift"   }, "q",         awesome.quit),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),

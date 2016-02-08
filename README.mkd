@@ -18,3 +18,5 @@ The Makefile offer you the possibility to install some or all the configuration 
 your current.
 
 Warning: The previous files are not saved.
+
+#### Fonts obtained from https://github.com/ryanoasis/nerd-fonts
