@@ -151,15 +151,6 @@ nnoremap <leader>k /\t<CR>
 " When copying a patch remove all space before a +
 " noremap <leader>p :%s/\s\+\ +/+/b<CR>
 
-<<<<<<< Updated upstream
-" Search for git merge
-noremap <leader>m /v\=\=\=\=\=<CR>
-=======
-"
-
-
->>>>>>> Stashed changes
-
 " Moving around windows
 map <C-j> <C-W>j
 map <A-S-Down> <C-W>j
