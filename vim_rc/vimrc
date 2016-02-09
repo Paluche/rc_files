@@ -137,7 +137,7 @@ nnoremap <leader>v <C-w>v<C-w>l
 nnoremap <leader>w <C-w><C-w>
 
 "Moves around tabs
-nnoremap <leader>t <Esc>:tabnew<CR>
+" nnoremap <leader>t <Esc>:tabnew<CR>
 
 " Real Returns
 nnoremap <leader>R :%s/\r/\r/g<CR>
@@ -146,13 +146,19 @@ nnoremap <leader>R :%s/\r/\r/g<CR>
 nnoremap <leader>T :%s/\t/    /g<CR>
 
 " show tabs
-nnoremap <leader>t /\t<CR>
+nnoremap <leader>k /\t<CR>
 
 " When copying a patch remove all space before a +
 " noremap <leader>p :%s/\s\+\ +/+/b<CR>
 
+<<<<<<< Updated upstream
 " Search for git merge
 noremap <leader>m /v\=\=\=\=\=<CR>
+=======
+"
+
+
+>>>>>>> Stashed changes
 
 " Moving around windows
 map <C-j> <C-W>j
@@ -233,7 +239,7 @@ autocmd BufNewFile *.scala TSkeletonSetup template.scala
 " Spellchecker ---------------------------------------------------- {{{
 set spell spelllang=en_us
 " }}}
-" VIM airline ---------------------------------------------------- {{{
+" VIM airline ----------------------------------------------------- {{{
 " Theme
 let g:airline_theme="distinguished"
 " air-line
@@ -267,7 +273,7 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 " }}}
-" Indent guide --------------------------------------------------- {{{
+" Indent guide ---------------------------------------------------- {{{
 set ts=4 sw=4 et
 let g:indent_guides_auto_colors = 0
 hi IndentGuidesOdd  ctermbg=black
