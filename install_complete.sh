@@ -166,20 +166,14 @@ cp ./fonts/* ~/.local/share/fonts
 echo "Resetting font cache, this may take a moment..."
 fc-cache -f ~/.local/share/fonts
 
+bundle=./vim_rc/vim/bundle
 # VIM plugins
-git clone git@github.com:tpope/vim-pathogen.git                 ./vim_rc/vim/bundle/vim-pathogen
-git clone https://github.com/vim-airline/vim-airline            ./vim_rc/vim/bundle/vim-airline
-git clone https://github.com/vim-airline/vim-airline-themes     ./vim_rc/vim/bundle/vim-airline-themes
-# COOL selectioned themes
-# wonbat
-# iterm
-# solarized
-# simple
-# serene
-# kolor
-# ditinguished
-# behelit
-# cool
-git clone git://github.com/altercation/vim-colors-solarized.git ./vim_rc/vim/bundle/vim-colors-solarized
-git clone https://github.com/gregsexton/gitv.git                ./vim_rc/vim/bundle/gitv
-git clone git://github.com/tpope/vim-fugitive.git               ./vim_rc/vim/bundle/vim-fugitive
+git clone git@github.com:tpope/vim-pathogen.git                 $bundle/vim-pathogen
+git clone https://github.com/vim-airline/vim-airline            $bundle/vim-airline
+git clone https://github.com/vim-airline/vim-airline-themes     $bundle/vim-airline-themes
+# Cool selected themes:
+#   wonbat, iterm, solarized, simple, serene, kolor, ditinguished, behelit, cool
+git clone git://github.com/altercation/vim-colors-solarized.git $bundle/vim-colors-solarized
+git clone https://github.com/gregsexton/gitv.git                $bundle/gitv
+git clone git://github.com/tpope/vim-fugitive.git               $bundle/vim-fugitive
+git clone https://github.com/kien/rainbow_parentheses.vim       $bundle/rainbow_parentheses
