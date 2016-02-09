@@ -167,10 +167,9 @@ echo "Resetting font cache, this may take a moment..."
 fc-cache -f ~/.local/share/fonts
 
 # VIM plugins
-git clone git@github.com:tpope/vim-pathogen.git                 .vim_rc/vim/bundle/vim-pathogen
-git clone https://github.com/vim-airline/vim-airline            .vim_rc/vim/bundle/vim-airline
-git clone https://github.com/vim-airline/vim-airline-themes     .vim_rc/vim/bundle/vim-airline-themes
-
+git clone git@github.com:tpope/vim-pathogen.git                 ./vim_rc/vim/bundle/vim-pathogen
+git clone https://github.com/vim-airline/vim-airline            ./vim_rc/vim/bundle/vim-airline
+git clone https://github.com/vim-airline/vim-airline-themes     ./vim_rc/vim/bundle/vim-airline-themes
 # COOL selectioned themes
 # wonbat
 # iterm
@@ -181,5 +180,6 @@ git clone https://github.com/vim-airline/vim-airline-themes     .vim_rc/vim/bund
 # ditinguished
 # behelit
 # cool
-git clone git://github.com/altercation/vim-colors-solarized.git .vim_rc/vim/bundle/vim-colors-solarized
-git clone https://github.com/gregsexton/gitv.git                .vim_rc/vim/bundle/gitv
+git clone git://github.com/altercation/vim-colors-solarized.git ./vim_rc/vim/bundle/vim-colors-solarized
+git clone https://github.com/gregsexton/gitv.git                ./vim_rc/vim/bundle/gitv
+git clone git://github.com/tpope/vim-fugitive.git               ./vim_rc/vim/bundle/vim-fugitive

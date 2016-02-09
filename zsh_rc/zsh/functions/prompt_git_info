@@ -37,13 +37,13 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
 
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
-        s+="↑"
+        s+=""
         ;;
         diverged)
-        s+="↕"
+        s+=""
         ;;
         behind)
-        s+="↓"
+        s+=""
         ;;
         up-to-date)
         s+=""

@@ -3,13 +3,12 @@
 " https://github.com/thcipriani/dotfiles/blob/master/vimrc
 
 
-" Pathogen ------------------------------------------------------------ {{{
+" Pathogen -------------------------------------------------------- {{{
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 call pathogen#helptags()
 " " }}}
-
-" Basic options ------------------------------------------------------- {{{
+" Basic options --------------------------------------------------- {{{
 let mapleader=","
 set nocompatible
 set t_Co=256             " My terminal's got all those colors, yo
@@ -18,7 +17,7 @@ set title                " Change the terminal title
 set encoding=utf-8       " Show utf-8 chars
 set showcmd              " count highlighted
 set ruler                " Show where I am in the command area
-set colorcolumn=110      " vertical ruler at 110 characters
+set colorcolumn=80      " vertical ruler at 80 characters
 set textwidth=80         " Automatic word wrapping at 80 characters
 set formatoptions+=t     " TODO WHAT IS THAT???
 set listchars=nbsp:.     " Add non breaking space to list
@@ -68,7 +67,8 @@ set fileformats=unix,dos,mac
 autocmd BufWritePre * :%s/\s\+$//e " Erase endline spaces
 " set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 
-" Colorscheme
+" }}}
+" Colorscheme ----------------------------------------------------- {{{
 " https://github.com/altercation/vim-colors-solarized
 set background=dark
 
@@ -76,16 +76,16 @@ set background=dark
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 let g:solarized_termcolors=16
+let g:solarized_hitrail=1
 colorscheme solarized
 
 let g:syntastic_c_checkers=['make']
 set foldmethod=marker
 au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>110v.\+', -1)
 " }}}
-
-" Version 7.3 (703) --------------------------------------------------- {{{
+" Version 7.3 (703) ----------------------------------------------- {{{
 if v:version >= 703
-        set colorcolumn=110
+        set colorcolumn=80
         set undodir=~/.vim-undo
         set undofile
         set undolevels=1000  " Max number of changes that can be undone
@@ -102,11 +102,10 @@ if v:version >= 703
                 endif
         endfunc
 
-        nnoremap <leader>n :call NumberToggle()<cr>
+        nnoremap <leader>n :call NumberToggle()<CR>
 endif
 " }}}
-
-" Dumb osx ------------------------------------------------------------ {{{
+" Dumb osx -------------------------------------------------------- {{{
 if has("unix")
  let s:uname = system("uname")
  if s:uname == "Darwin\n"
@@ -114,8 +113,7 @@ if has("unix")
  endif
 endif
 " }}}
-
-" Convenient Mapping--------------------------------------------------- {{{
+" Convenient Mapping ---------------------------------------------- {{{
 " Make regex sane
 noremap / /\v
 
@@ -123,7 +121,7 @@ noremap / /\v
 inoremap JJ <ESC>
 vnoremap JJ <ESC>
 " un-highlight search results
-noremap <leader><space> :noh<cr>
+noremap <leader><space> :noh<CR>
 
 " Shortcut to rapidly toggle `set list`
 nnoremap <leader>l :set list!<CR>
@@ -151,10 +149,10 @@ nnoremap <leader>T :%s/\t/    /g<CR>
 nnoremap <leader>t /\t<CR>
 
 " When copying a patch remove all space before a +
-noremap <leader>p :%s/\s\+\ +/+/b<CR>
+" noremap <leader>p :%s/\s\+\ +/+/b<CR>
 
 " Search for git merge
-noremap <leader>m /\=\=\=\=\=<CR>
+noremap <leader>m /v\=\=\=\=\=<CR>
 
 " Moving around windows
 map <C-j> <C-W>j
@@ -169,30 +167,27 @@ map <A-S-Left> <C-W>h
 map <C-l> <C-W>l
 map <A-S-Right> <C-W>l
 " }}}
-
-" Status line --------------------------------------------------------- {{{
-augroup ft_statuslinecolor
-        au!
-        au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
-        au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
-augroup END
-set statusline=%f  " Path.
-set statusline+=%m " Modified flag.
-set statusline+=%r " Readonly flag.
-set statusline+=%w " Preview window flag.
-set statusline+=\  "Space.
-set statusline+=%= " Right align.
-
-" Line and column position and counts.
-set statusline+=\ (line\ %l\/%L,\ col\ %03c)
+" Status line ----------------------------------------------------- {{{
+" augroup ft_statuslinecolor
+"         au!
+"         au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
+"         au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
+" augroup END
+" set statusline=%f  " Path.
+" set statusline+=%m " Modified flag.
+" set statusline+=%r " Readonly flag.
+" set statusline+=%w " Preview window flag.
+" set statusline+=\  "Space.
+" set statusline+=%= " Right align.
+"
+" " Line and column position and counts.
+" set statusline+=\ (line\ %l\/%L,\ col\ %03c)
 " }}}
-
-" NERDTree Settings---------------------------------------------------- {{{
+" NERDTree Settings------------------------------------------------ {{{
 "map <leader>t :NERDTreeToggle<CR>
 "noremap <leader>r:NERDTreeTabsToggle<CR>
 " }}}
-
-" Omni-completion ----------------------------------------------------- {{{
+" Omni-completion ------------------------------------------------- {{{
 set ofu=syntaxcomplete#Complete
 set tags+=~/.vim/tags/cpp
 " set tags+=~/.vim/tags/llvm
@@ -214,8 +209,7 @@ set completeopt=menuone,menu,longest,preview
 set wildmenu
 set wildmode=longest:full
 " }}}
-
-" LaTeX options ------------------------------------------------------- {{{
+" LaTeX options --------------------------------------------------- {{{
 if has("gui_macvim")
         let g:Tex_ViewRule_pdf = 'Preview'
 endif
@@ -225,8 +219,7 @@ set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 set background=dark
 " }}}
-
-" tskeleton options ---------------------------------------------------- {{{
+" tskeleton options ----------------------------------------------- {{{
 let g:tskelUserName = 'Hubert Lefevre'
 let g:tskelUserCompany = 'Netatmo'
 let g:tskelUserEmail = 'hubelefevre@gmail.com'
@@ -245,6 +238,7 @@ set spell spelllang=en_us
 let g:airline_theme="distinguished"
 " air-line
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -272,4 +266,44 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
+" }}}
+" Indent guide --------------------------------------------------- {{{
+set ts=4 sw=4 et
+let g:indent_guides_auto_colors = 0
+hi IndentGuidesOdd  ctermbg=black
+" hi IndentGuidesEven ctermbg=black Leave it background color
+
+noremap <leader>g :IndentGuidesToggle<CR>
+
+" }}}
+" Rainbow parentheses --------------------------------------------- {{{
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+let g:rbpt_max = 16
+
+let g:rbpt_loadcmd_toggle = 0
+
+" au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+noremap <leader>p :RainbowParenthesesToggle<CR>
 " }}}
