@@ -118,6 +118,7 @@ xterm*color15:                 S_base3
 
 URxvt*VT100.geometry:          80x25
 URxvt*font:                    xft:Sauce\ Code\ Pro\ Semibold:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Medium:pixelsize=10:antialias=true:hinting=true
+URxvt.letterSpace: -1
 URxvt*dynamicColors:           true
 URxvt*utf8:                    2
 URxvt*eightBitInput:           true
