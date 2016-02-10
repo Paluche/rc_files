@@ -40,7 +40,7 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+=""
         ;;
         diverged)
-        s+=""
+        s+=""
         ;;
         behind)
         s+=""
@@ -59,7 +59,7 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+=""
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ]; then
-        s+="!"
+        s+=""
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         s+="?"
