@@ -2,11 +2,5 @@
 *.swo
 .netrwhist
 cache/
-vim_rc/vim/bundle/powerline/
-vim_rc/vim/bundle/vim-airline/
-vim_rc/vim/bundle/gitv/
-vim_rc/vim/bundle/vim-airline-themes/
-vim_rc/vim/bundle/vim-pathogen/
-vim_rc/vim/bundle/vim-fugitive/
-vim_rc/vim/bundle/vim-indent-guides/
-vim_rc/vim/bundle/rainbow_parentheses/
+
+vim_rc/vim/bundle

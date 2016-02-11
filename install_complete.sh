@@ -168,6 +168,14 @@ fc-cache -f ~/.local/share/fonts
 
 bundle=./vim_rc/vim/bundle
 # VIM plugins
+git clone https://github.com/tpope/vim-surround                 $bundle/vim-surround
+git clone https://github.com/vim-scripts/DoxygenToolkit.vim     $bundle/DoxygenToolkit.vim
+git clone git://github.com/tomtom/tlib_vim                      $bundle/tlib_vim
+git clone https://github.com/tomtom/tskeleton_vim               $bundle/tskeleton_vim
+git clone https://github.com/honza/vim-snippets                 $bundle/vim-snippets
+git clone https://github.com/scrooloose/syntastic               $bundle/syntastic
+git clone https://github.com/scrooloose/nerdtree                $bundle/nerdtree
+git clone https://github.com/scrooloose/nerdcommenter           $bundle/nerdcommenter
 git clone git@github.com:tpope/vim-pathogen.git                 $bundle/vim-pathogen
 git clone https://github.com/vim-airline/vim-airline            $bundle/vim-airline
 git clone https://github.com/vim-airline/vim-airline-themes     $bundle/vim-airline-themes
