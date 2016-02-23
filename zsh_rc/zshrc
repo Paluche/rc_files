@@ -197,8 +197,7 @@ alias test='cd ./test'
 
 # Other
 alias today='grep -r `date +"%m/%d"` /usr/share/calendar'
-alias enst='ssh -X hlefevre@ssh.enst.fr'
-alias a406='ssh -X hlefevre@a406-04.enst.fr'
+alias weather='curl http://wttr.in/paris'
 alias apt-get='sudo apt-get'
 alias aptitude='sudo aptitude'
 alias j='jobs'
@@ -331,7 +330,7 @@ function setprompt() {
     # Finish the design of the prompt.
     # Display a green arrow that turns red if the return code of the last
     # function is different of zero.
-    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})▶${at_normal}" )
+    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})▶${at_normal} " )
 
     rlines="${at_bold}${fg_orange}%~/ ${at_normal}"
 
@@ -444,8 +443,6 @@ if [ `hostname` = "paluche-laptop" ]; then
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
     alias openocd="sudo /opt/openocd/bin/openocd"
-
-    export LM_LICENSE_FILE=@flexlm.comelec.enst.fr
 
     # Initialize a session
     init() {
