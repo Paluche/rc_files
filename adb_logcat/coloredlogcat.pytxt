@@ -148,12 +148,18 @@ def print_message(linebuf, headersize, message):
 
     linebuf.write(message)
 
-
 # if someone is piping in to us, use stdin as input.  if not, invoke adb logcat
 if os.isatty(sys.stdin.fileno()):
-    input = os.popen("adb %s logcat -v time" % adb_args)
+    input = os.popen("adb logcat -v time")
 else:
     input = sys.stdin
+
+reGrep = None
+
+if len(sys.argv) == 2:
+    reGrep = re.compile(sys.argv[1])
+elif len(sys.argv) == 3 and str(sys.argv[1]) == "-i":
+    reGrep = re.compile(sys.argv[2], re.IGNORECASE)
 
 while True:
     try:
@@ -165,10 +171,15 @@ while True:
     matchthread     = retagthread.match(line)
     matchtime       = retagtime.match(line)
     matchbrief      = retagbrief.match(line)
+    linebuf         = StringIO.StringIO()
 
     if not matchthreadtime is None:
         month, day, hours, minutes, seconds, milliseconds, owner, thread, tagtype, tag, message = matchthreadtime.groups()
-        linebuf = StringIO.StringIO()
+
+        if not reGrep is None:
+            match = reGrep.match(tag)
+            if match is None:
+               continue
 
         print_owner(linebuf, owner)
         print_thread(linebuf, thread)
@@ -180,7 +191,11 @@ while True:
 
     elif not matchthread is None:
         tagtype, owner, thread, message = matchthread.groups()
-        linebuf = StringIO.StringIO()
+
+        if not reGrep is None:
+            match = reGrep.match(tag)
+            if match is None:
+               continue
 
         print_owner(linebuf, owner)
         print_thread(linebuf, thread)
@@ -190,7 +205,11 @@ while True:
 
     elif not matchtime is None:
         month, day, hours, minutes, seconds, milliseconds, tagtype, tag, owner, message = matchtime.groups()
-        linebuf = StringIO.StringIO()
+
+        if not reGrep is None:
+            match = reGrep.match(tag)
+            if match is None:
+               continue
 
         print_owner(linebuf, owner)
         print_time(linebuf, month, day, hours, minutes, seconds, milliseconds)
@@ -201,7 +220,11 @@ while True:
 
     elif not matchbrief is None:
         tagtype, tag, owner, message = matchbrief.groups()
-        linebuf = StringIO.StringIO()
+
+        if not reGrep is None:
+            match = reGrep.match(tag)
+            if match is None:
+               continue
 
         print_owner(linebuf, owner)
         print_tag(linebuf, tag)
@@ -210,4 +233,5 @@ while True:
         line = linebuf.getvalue()
 
     print (line)
-    if len(line) == 0: break
+    if len(line) == 0:
+        break
