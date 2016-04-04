@@ -1,5 +1,8 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
+    if [ -n "$__CURRENT_GIT_SUBMODULE" ]; then
+        s+="%{${fg[red]}%}"
+    fi
     s+="$__CURRENT_GIT_NAME"
         s+="%{${fg[cyan]}%}|"
     if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ]; then

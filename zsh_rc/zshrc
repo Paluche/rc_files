@@ -146,6 +146,7 @@ alias gsf='git svn fetch'          # Shortcut
 alias gsh='git show'               # Shortcut
 alias gss='git show --stat'        # Shorter diff for git show
 alias gb='git branch --list -vv'   # Shortcut
+alias gsu='git submodule update'   # Shortcut
 
 # Editors on shell
 alias pico='nano -mw'

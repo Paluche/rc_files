@@ -1,4 +1,5 @@
 unset __CURRENT_GIT_NAME
+unset __CURRENT_GIT_SUBMODULE
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
@@ -12,13 +13,15 @@ local st="$(git status 2>/dev/null)"
 local dir="$(pwd 2>/dev/null)"
 
 if [[ -n "$st" ]]; then
-    while true; do
-        if [ -e $dir/.git ]; then
-            break
-        fi
-        dir="$(dirname $dir 2> /dev/null)"
-    done
+    dir="$(git rev-parse --show-toplevel)"
     __CURRENT_GIT_NAME="$(basename $dir 2> /dev/null)"
+
+    gitdir="$(git rev-parse --git-dir)"
+    gitdir="$(basename $gitdir 2> /dev/null)"
+
+    if [[ $gitdir != ".git" ]]; then
+        __CURRENT_GIT_SUBMODULE=yes
+    fi
 
     local -a arr
     arr=(${(f)st})
