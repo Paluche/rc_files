@@ -12,13 +12,13 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
             s+="◀◀◀◀◀◀◀◀◀◀"
             ;;
             0)
-            s+="◁◁◁◁◁◁◁◁◁◁"
+            s+="$at_blink◁◁◁◁◁◁◁◁◁◁$at_normal"
             ;;
             1)
-            s+="◀◁◁◁◁◁◁◁◁◁"
+            s+="$at_blink◀◁◁◁◁◁◁◁◁◁$at_normal"
             ;;
             2)
-            s+="◀◀◁◁◁◁◁◁◁◁"
+            s+="$at_blink◀◀◁◁◁◁◁◁◁◁$at_normal"
             ;;
             3)
             s+="◀◀◀◁◁◁◁◁◁◁"
