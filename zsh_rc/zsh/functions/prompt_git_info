@@ -3,7 +3,8 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     if [ -n "$__CURRENT_GIT_SUBMODULE" ]; then
         s+="%{${fg[red]}%}"
     fi
-    s+="$__CURRENT_GIT_NAME"
+    local git_name="$(basename $__CURRENT_GIT_TOP_LEVEL 2> /dev/null)"
+    s+="$git_name"
         s+="%{${fg[cyan]}%}|"
     if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ]; then
         s+="%{${fg[magenta]}%}"
@@ -66,6 +67,12 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
         s+="?"
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_NEW_COMMITS" ]; then
+        s+="%{${fg[red]}%}"
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ]; then
+        s+="%{${fg[red]}%}"
     fi
 
     printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[green]}%}" $s "%{${fg[cyan]}%}]"

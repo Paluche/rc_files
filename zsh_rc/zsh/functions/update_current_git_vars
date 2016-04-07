@@ -1,5 +1,7 @@
-unset __CURRENT_GIT_NAME
+unset __CURRENT_GIT_TOP_LEVEL
 unset __CURRENT_GIT_SUBMODULE
+unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
+unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
@@ -13,8 +15,7 @@ local st="$(git status 2>/dev/null)"
 local dir="$(pwd 2>/dev/null)"
 
 if [[ -n "$st" ]]; then
-    dir="$(git rev-parse --show-toplevel)"
-    __CURRENT_GIT_NAME="$(basename $dir 2> /dev/null)"
+    __CURRENT_GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
 
     gitdir="$(git rev-parse --git-dir)"
     gitdir="$(basename $gitdir 2> /dev/null)"
@@ -71,6 +72,13 @@ if [[ -n "$st" ]]; then
 
     if [[ $st =~ 'Changes not staged for commit' ]]; then
         __CURRENT_GIT_BRANCH_IS_DIRTY='1'
+    fi
+
+    if [[ $st =~ 'new commits' ]]; then
+        __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
+    fi
+    if [[ $st =~ 'modified content' ]]; then
+        __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
     fi
     if [[ $st =~ 'Changes to be committed' ]]; then
         __CURRENT_GIT_BRANCH_ADDED_FILES='1'
