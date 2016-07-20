@@ -13,6 +13,7 @@
 
 [core]
     editor      = vim
+    logAllRefUpdates = false
 
 [alias]
     l           = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
