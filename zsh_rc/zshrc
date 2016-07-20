@@ -214,6 +214,10 @@ alias -g T='| tail'
 # lock screen using xscreensaver
 alias lock='xscreensaver-command -lock'
 
+# Make alias
+export NBPROCS=`nproc`
+alias jmake='make -j$NBPROCS'
+
 # Set Options
 ##############################################################################
 # keep quiet
