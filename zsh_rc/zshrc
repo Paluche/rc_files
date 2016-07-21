@@ -294,7 +294,7 @@ fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 autoload -U promptinit
 
-# Need git in english
+# Need git in English
 export LANGUAGE='en_US.UTF-8 git'
 
 # Enable auto-execution of functions.
@@ -386,7 +386,7 @@ export EDITOR="vim"
 # functions
 ##############################################################################
 # extract the files
-extract()
+function extract()
 {
     if [[ -z "$1" ]]; then
         print -P "usage: \e[1;36mextract\e[1;0m < filename >"
@@ -414,7 +414,7 @@ extract()
 }
 
 # Do a wonderful job with adb logcat
-adb_logcat()
+function adb_logcat()
 {
     while :
     do
@@ -422,26 +422,31 @@ adb_logcat()
     done
 }
 
-serial_logcat()
+function serial_logcat()
 {
-    echo "\n\rlogcat -v time" > /dev/ttyUSB0
+    if [[ -z "$1" ]]; then
+        echo "\03logcat -v time" > /dev/ttyUSB0
+    else
+        echo "\03logcat -v time | busybox grep $1 $2" > /dev/ttyUSB0
+    fi
+
     cat /dev/ttyUSB0 | ~/.script/adb_logcat.py
 }
 
-serial_logcat_dump()
+function serial_logcat_dump()
 {
-    echo "\n\rlogcat -v time" > /dev/ttyUSB0
+    echo "\03logcat -v time" > /dev/ttyUSB0
     cat /dev/ttyUSB0 > ~/dump_logcat.txt
 }
 
-serial_dmesg_dump()
+function serial_dmesg_dump()
 {
-    echo "\n\rsu"    > /dev/ttyUSB0
+    echo "\03su"    > /dev/ttyUSB0
     #echo "dmesg"     > /dev/ttyUSB0
     cat /dev/ttyUSB0 > ~/dump_dmesg.txt
 }
 
-common_init()
+function common_init()
 {
     if [ -n "$SSH_CLIENT" ]
     then
