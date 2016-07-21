@@ -226,6 +226,27 @@ autocmd BufNewFile *.h     TSkeletonSetup template.h
 autocmd BufNewFile *.c     TSkeletonSetup template.c
 autocmd BufNewFile *.java  TSkeletonSetup template.java
 autocmd BufNewFile *.scala TSkeletonSetup template.scala
+
+" Supplementary function for tSkeleton
+if !exists('*TSkeleton_C_HEADER_NAME')
+    function! TSkeleton_C_HEADER_NAME()
+        let name = expand("%:t")
+        let nodo = substitute(name, '\.', '_', '')
+        let comp = join( ["_", nodo, "_"], "_")
+        let uppe = toupper(comp)
+        return uppe
+    endf
+endif
+
+if !exists('*TSkeleton_JAVA_PACKAGE')
+    function! TSkeleton_JAVA_PACKAGE()
+        let path = expand("%:p:h")
+        let nosl = substitute(path, '/', '\.', 'g')
+        let pkgp = substitute(nosl, "^\.*src\.", '', 'g')
+        return pkgp
+    endf
+endif
+
 " }}}
 " Spellchecker ---------------------------------------------------- {{{
 set spell spelllang=en_us
