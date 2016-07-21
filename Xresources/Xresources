@@ -133,13 +133,16 @@ URxvt*keysym.Control-Up:       \033[1;5A
 URxvt*keysym.Control-Down:     \033[1;5B
 URxvt*keysym.Control-Left:     \033[1;5D
 URxvt*keysym.Control-Right:    \033[1;5C
-
-URxvt.depth: 32
+URxvt.keysym.Home:             \033[1~
+URxvt.keysym.End:              \033[4~
+URxvt.keysym.KP_Home:          \033[1~
+URxvt.keysym.KP_End:           \033[4~
+URxvt*fade:                    10
 
 URxvt*background:              S_base03
 URxvt*foreground:              S_base2
-URxvt*fading:                  40
-URxvt*fadeColor:               S_base03
+URxvt*fading:                  10
+URxvt*fadecolor:               S_base03
 URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
