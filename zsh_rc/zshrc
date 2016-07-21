@@ -127,6 +127,7 @@ alias cp='cp -r -i'
 # git aliases
 alias gs='git status -s'           # Shorter git status
 alias gd='git diff -w --ignore-blank-lines' # Shortcut / ignore space diff
+alias gdc='git diff --cached'      # Shortcut
 alias ga='git add'                 # Shortcut
 alias gap='git add -p'             # Shortcut
 alias grp='git reset -p'           # Shortcut
@@ -138,13 +139,31 @@ alias gl='git l'                   # Custom log
 alias gll='git log -n 1'           # Shortcut
 alias gr='git reset'               # Shortcut
 alias grh='git reset HEAD'         # Shortcut
-alias gri='git rebase -i'          # Shortcut
+alias gre='git rebase'             # Shortcut
+alias gra='git rebase --abort'     # Shortcut
+alias grc='git rebase --continue'  # Shortcut
 alias gph='git push'               # Shortcut
 alias gpl='git pull'               # Shortcut
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'        # Shorter diff for git show
 alias gb='git branch --list -vv'   # Shortcut
 alias gsu='git submodule update'   # Shortcut
+function git_home()
+{
+    dir="$(git rev-parse --show-toplevel)"
+    if [ -n "$dir" ]; then
+        cd $dir
+    fi
+}
+
+function git_patch()
+{
+    git commit -a -m PATCH
+    if [ $? -eq 0]; then
+        git format-patch HEAD~
+        git reset --hard HEAD~
+    fi
+}
 
 # Editors on shell
 alias pico='nano -mw'
