@@ -2,16 +2,18 @@ unset __CURRENT_GIT_TOP_LEVEL
 unset __CURRENT_GIT_SUBMODULE
 unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
 unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
+unset __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_OPERATION
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
+unset __CURRENT_GIT_SUB_MODULE_IS_DIRTY
 unset __CURRENT_GIT_BRANCH_ADDED_FILES
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
 
-local st="$(git status 2>/dev/null)"
+local st="$(git status --ignore-submodules 2>/dev/null)"
 local dir="$(pwd 2>/dev/null)"
 
 if [[ -n "$st" ]]; then
@@ -56,6 +58,9 @@ if [[ -n "$st" ]]; then
     if [[ $st =~ 'You are currently reverting' ]]; then
         __CURRENT_GIT_BRANCH_OPERATION='reverting'
     fi
+    if [[ $st =~ 'You are in the middle of an am session' ]]; then
+        __CURRENT_GIT_BRANCH_OPERATION='am'
+    fi
     if [[ $st =~ 'You have unmerged paths' ]]; then
         __CURRENT_GIT_BRANCH_OPERATION='merging'
     fi
@@ -74,16 +79,46 @@ if [[ -n "$st" ]]; then
         __CURRENT_GIT_BRANCH_IS_DIRTY='1'
     fi
 
-    if [[ $st =~ 'new commits' ]]; then
-        __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
+    if [[ $st =~ '(new commits)' ]]; then
+        __CURRENT_GIT_SUB_MODULE_IS_DIRTY='1'
     fi
-    if [[ $st =~ 'modified content' ]]; then
-        __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
-    fi
+
     if [[ $st =~ 'Changes to be committed' ]]; then
         __CURRENT_GIT_BRANCH_ADDED_FILES='1'
     fi
-    if [[ $st =~ 'Unmerged paths' ]]; then
+
+    if [[ $st =~ 'Unmerged paths' ]]
+    then
         __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
+    fi
+
+    if [[ $st =~ 'Unmerged paths' ]]
+    then
+        __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
+    fi
+
+    if [[ -e $__CURRENT_GIT_TOP_LEVEL/.gitmodules ]]
+    then
+        local st_sub="$(git status 2>/dev/null)"
+
+        if [[ $st_sub =~ 'Changes to be committed' ]]
+        then
+            __CURRENT_GIT_BRANCH_ADDED_FILES='1'
+        fi
+
+        if [[ $st_sub =~ 'new commits' ]]
+        then
+            __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
+        fi
+
+        if [[ $st_sub =~ 'modified content' ]]
+        then
+            __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
+        fi
+
+        if [[ $st_sub =~ 'untracked content' ]]
+        then
+            __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES='1'
+        fi
     fi
 fi

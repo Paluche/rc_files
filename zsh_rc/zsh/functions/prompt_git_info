@@ -5,18 +5,21 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     fi
     local git_name="$(basename $__CURRENT_GIT_TOP_LEVEL 2> /dev/null)"
     s+="$git_name"
-        s+="%{${fg[cyan]}%}|"
+    s+="%{${fg[cyan]}%}|"
     if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ]; then
-        s+="%{${fg[magenta]}%}"
-    else
-        s+="%{${fg[blue]}%}"
+        s+="%{${fg[red]}%}"
     fi
+    s+="%{${fg[blue]}%}"
     s+="$__CURRENT_GIT_BRANCH"
 
     s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
 
     print_separator=
     case "$__CURRENT_GIT_BRANCH_OPERATION" in
+        am)
+            s+="%{${fg[red]}%}am"
+            print_separator=y
+        ;;
         reverting)
             s+="%{${fg[red]}%}reverting"
             print_separator=y
@@ -62,6 +65,9 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]; then
         s+=""
     fi
+    if [ -n "$__CURRENT_GIT_SUB_MODULE_IS_DIRTY" ]; then
+        s+="%{${fg[red]}%}%{${fg[yellow]}%}"
+    fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ]; then
         s+=""
     fi
@@ -73,6 +79,9 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     fi
     if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ]; then
         s+="%{${fg[red]}%}"
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_UNTRACKED_FILES" ]; then
+        s+="%{${fg[red]}%}?"
     fi
 
     printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[green]}%}" $s "%{${fg[cyan]}%}]"
