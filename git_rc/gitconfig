@@ -19,6 +19,7 @@
     l           = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
     g           = grep -ni --break --heading --color=always
     stak        = stash save -k -u
+    stawp       = stash show -p
     wip         = commit -a -m WIP
     unwip       = reset HEAD~1
 
