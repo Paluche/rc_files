@@ -23,6 +23,7 @@
 
 import os, sys, re, StringIO
 import fcntl, termios, struct
+import getopt
 
 # unpack the current terminal width/height
 data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
@@ -30,76 +31,81 @@ HEIGHT, WIDTH = struct.unpack('hh',data)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
-
-LAST_USED = [RED,GREEN,YELLOW,BLUE,MAGENTA,CYAN,WHITE]
+LAST_USED = [RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE]
 KNOWN_TAGS = {
-    "dalvikvm": BLUE,
-    "Process": BLUE,
-    "ActivityManager": CYAN,
-    "ActivityThread": CYAN,
+    "dalvikvm"        : BLUE,
+    "Process"         : BLUE,
+    "ActivityManager" : CYAN,
+    "ActivityThread"  : CYAN,
 }
 
 def format(fg=None, bg=None, bright=False, bold=False, dim=False, reset=False):
     # manually derived from http://en.wikipedia.org/wiki/ANSI_escape_code#Codes
     codes = []
-    if reset: codes.append("0")
+    if reset:
+        codes.append("0")
     else:
-        if not fg is None: codes.append("3%d" % (fg))
+        if not fg is None:
+            codes.append("3%d" % (fg))
         if not bg is None:
-            if not bright: codes.append("4%d" % (bg))
-            else: codes.append("10%d" % (bg))
-        if bold: codes.append("1")
-        elif dim: codes.append("2")
-        else: codes.append("22")
+            if not bright:
+                codes.append("4%d" % (bg))
+            else:
+                codes.append("10%d" % (bg))
+        if bold:
+            codes.append("1")
+        elif dim:
+            codes.append("2")
+        else:
+            codes.append("22")
     return "\033[%sm" % (";".join(codes))
 
+OWNER_WIDTH    = 7
+THREAD_WIDTH   = 7
+TIME_WIDTH     = 20
+TAG_WIDTH      = 26
+TAGTYPE_WIDTH  = 3
 
-RULES = {
-    #re.compile(r"([\w\.@]+)=([\w\.@]+)"): r"%s\1%s=%s\2%s" % (format(fg=BLUE), format(fg=GREEN), format(fg=BLUE), format(reset=True)),
+TAGTYPEFORMAT = {
+    "V": format(fg=WHITE, bg=BLACK),
+    "D": format(fg=BLACK, bg=BLUE),
+    "I": format(fg=BLACK, bg=GREEN),
+    "W": format(fg=BLACK, bg=YELLOW),
+    "E": format(fg=BLACK, bg=RED),
+    "F": format(fg=RED,   bg=WHITE),
+    "S": format(fg=BLACK, bg=CYAN),
 }
 
-PROCESS_WIDTH          = 6
-THREAD_WIDTH           = 6
-TIME_WIDTH             = 18
-TAG_WIDTH              = 25
-TAGTYPE_WIDTH          = 3
-THREADTIME_HEADER_SIZE = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + THREAD_WIDTH + TIME_WIDTH + 4
-THREAD_HEADER_SIZE     = TAGTYPE_WIDTH + PROCESS_WIDTH + THREAD_WIDTH + 1
-TIME_HEADER_SIZE       = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + TIME_WIDTH + 4
-BRIEF_HEADER_SIZE      = TAGTYPE_WIDTH + TAG_WIDTH + PROCESS_WIDTH + 3
+rebeginning  = re.compile("^--------- beginning of ([^\)]+)([^\(]+)\r$")
+rethreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) ([^\)]+) ([VDIWEFS]) ([^\(]+?): (.*)$")
+retime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
+rethread     = re.compile("^([VDIWEFS])\(([^\)]+):([^\)]+)\) (.*)$")
+rebrief      = re.compile("^([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
+retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
 
-TAGTYPES = {
-    "V": "%s%s%s " % (format(fg=WHITE, bg=BLACK),  "V".center(TAGTYPE_WIDTH), format(reset=True)),
-    "D": "%s%s%s " % (format(fg=BLACK, bg=BLUE),   "D".center(TAGTYPE_WIDTH), format(reset=True)),
-    "I": "%s%s%s " % (format(fg=BLACK, bg=GREEN),  "I".center(TAGTYPE_WIDTH), format(reset=True)),
-    "W": "%s%s%s " % (format(fg=BLACK, bg=YELLOW), "W".center(TAGTYPE_WIDTH), format(reset=True)),
-    "E": "%s%s%s " % (format(fg=BLACK, bg=RED),    "E".center(TAGTYPE_WIDTH), format(reset=True)),
-    "F": "%s%s%s " % (format(fg=RED,   bg=WHITE),  "F".center(TAGTYPE_WIDTH), format(reset=True)),
-}
+def print_owner(linebuf, emptyHeader, owner):
+    # center process owner info
+    owner = owner.strip().center(OWNER_WIDTH)
+    linebuf    .write("%s%s%s" % (format(fg=CYAN, bg=BLACK), owner, format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), " " * OWNER_WIDTH, format(reset=True)))
+    return OWNER_WIDTH
 
-retagthreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) ([^\)]+) ([VDIWEF]) ([^\(]+): (.*)$")
-retagthread     = re.compile("^([VDIWEF])\(([^\)]+):([^\)]+)\) (.*)$")
-retagtime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
-retagbrief      = re.compile("^([VDIWEF])/([^\(]+)\(([^\)]+)\): (.*)$")
+def print_thread(linebuf, emptyHeader, thread):
+    # center thread info
+    thread = thread.strip().center(THREAD_WIDTH)
+    linebuf    .write("%s%s%s" % (format(fg=CYAN, bg=BLACK), thread,             format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), " " * THREAD_WIDTH, format(reset=True)))
+    return THREAD_WIDTH
 
-# to pick up -d or -e
-adb_args = ' '.join(sys.argv[1:])
-
-def indent_wrap(message, indent=0, width=80):
-    wrap_area = width - indent
-    messagebuf = StringIO.StringIO()
-    current = 0
-    while current < len(message):
-        next = min(current + wrap_area, len(message))
-        messagebuf.write(message[current:next])
-        if next < len(message):
-            messagebuf.write("\n%s" % (" " * indent))
-        current = next
-    return messagebuf.getvalue()
+def print_time(linebuf, emptyHeader, m, d, h, mi, s, ms):
+    linebuf    .write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK), m, d, h, mi, s, ms,
+                                                   format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=GREEN, bg=BLACK), " " * TIME_WIDTH, format(reset=True)))
+    return TIME_WIDTH
 
 def allocate_color(tag):
     # this will allocate a unique format for the given tag
-    # since we dont have very many colors, we always keep track of the LRU
+    # since we don't have very many colors, we always keep track of the LRU
     if not tag in KNOWN_TAGS:
         KNOWN_TAGS[tag] = LAST_USED[0]
     color = KNOWN_TAGS[tag]
@@ -107,59 +113,134 @@ def allocate_color(tag):
     LAST_USED.append(color)
     return color
 
-def print_owner(linebuf, owner):
-    # center process info
-    owner = owner.strip().center(PROCESS_WIDTH)
-    linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False), owner, format(reset=True)))
-
-def print_thread(linebuf, thread):
-   # center thread info
-   thread = thread.strip().center(THREAD_WIDTH)
-   linebuf.write(" %s%s%s " % (format(fg=CYAN, bg=BLACK, bright=True), thread, format(reset=True)))
-
-def print_time(linebuf, month, day, hours, minutes, seconds, milliseconds):
-    # print time
-    linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK, bright=False), month, day, hours,
-        minutes, seconds, milliseconds, format(reset=True)))
-
-def print_tag(linebuf, tag):
+def print_tag(linebuf, emptyHeader, tag):
     # right-align tag title and allocate color if needed
     tag   = tag.strip()
     color = allocate_color(tag)
-    tag   = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
-    linebuf.write("%s%s %s" % (format(fg=color, dim=False), tag, format(reset=True)))
+    tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
+    linebuf    .write("%s%s %s" % (format(fg=color), tag,             format(reset=True)))
+    emptyHeader.write("%s%s%s"  % (format(fg=color), " " * TAG_WIDTH, format(reset=True)))
+    return TAG_WIDTH
 
-def print_tagtype(linebuf, tagtype):
-    # write out tagtype colored edge
-    if not tagtype in TAGTYPES:
-        linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK, bright=False),
-            tagtype.center(TAGTYPE_WIDTH), format(reset=True)))
-    else:
-        linebuf.write(TAGTYPES[tagtype])
+def print_tagtype(linebuf, emptyHeader, tagtype):
+    linebuf    .write("%s%s%s " % (TAGTYPEFORMAT[tagtype], tagtype.center(TAGTYPE_WIDTH), format(reset=True)))
+    emptyHeader.write("%s%s%s " % (format(bg=BLACK), " " * TAGTYPE_WIDTH, format(reset=True)))
+    return TAGTYPE_WIDTH + 1
 
-def print_message(linebuf, headersize, message):
-    # insert line wrapping as needed
-    message = indent_wrap(message, headersize, WIDTH)
+def print_msg(linebuf, emptyHeader, headerSize, msg):
+    wrap_area = WIDTH - headerSize
+    current   = 0
 
-    # format tag message using rules
-    for matcher in RULES:
-        replace = RULES[matcher]
-        message = matcher.sub(replace, message)
+    while current < len(msg):
+        next = min(current + wrap_area - 6*msg.count('\t'), len(msg))
 
-    linebuf.write(message)
+        linebuf.write(msg[current:next])
+        if next < len(msg):
+            linebuf.write("\n%s" % (emptyHeader.getvalue()))
+        current = next
+
+def usage():
+    print "This script can be used in two manners, by piping a flux from an "  \
+          "adb logcat command or by itself it uses the options you gave him "  \
+          "and parse and color the flux."
+    print ""
+    print "In piping mode only the following format are handled (-v option):"
+    print "    \"brief\" \"tag\" \"thread\" \"time\" \"threadtime\""
+    print "Use \"brief\" instead of \"process\" their output from the script " \
+          "would have been the same. For the same reason use \"threadtime\" "  \
+          "instead of \"long\"."
+    print "\"raw\" is a useless flux handled by this script, it doesn't have " \
+          "enough information to generate a color distinction."
+    print ""
+    print "In non piping mode you have access to the following options"
+    print "    -v <format>     Sets the log print format, where <format> is "  \
+          "one of: "
+    print ""
+    print "                    \"brief\" \"tag\" \"thread\" \"time\" "         \
+                              "\"threadtime\""
+    print "    -c              Clear (flush) the entire log and exit"
+    print "    -S <device>     Directs command to the device or emulator "     \
+                              "with the given serial number or qualifier. "    \
+                              "Overrides ANDROID_SERIAL environment variable."
+    print ""
+    print "In both mode you have access to the following options:"
+    print "    --help / -h     Print this help"
+    print "    -T <regexp>     Show only logs which tags that match the "      \
+                              "specified regular expression"
+
+    print "    -M <regexp>     Show logs which message match the specified "   \
+                              "regular expression"
+    print "    -A <regexp>     Show logs which tags or message match the "     \
+                              "specified regular expression"
+    print "    -i              Ignore case on the regular expression"
+    sys.exit(2)
+
+# Regular expressions
+reFlags        = None
+reTagFilterExp = None
+reMsgFilterExp = None
+reTagFilter    = None
+reMsgFilter    = None
+
+# adb logcat options
+logcatOptv   = "time"
+logcatOpt    = StringIO.StringIO()
+adbOpt       = StringIO.StringIO()
+
+try:
+    opts, arg = getopt.getopt(sys.argv[1:], "S:hscit:t:A:T:M:v:", ["help"])
+except getopt.GetoptError as err:
+    print str(err)
+    print ""
+    usage()
+
+for o, a in opts:
+    if o in ("-h", "--help"):
+        usage()
+        sys.exit(2)
+    elif o == "-i":
+        reFlags = re.IGNORECASE
+    elif o == "-A":
+        reTagFilterExp = a
+        reMsgFilterExp = a
+    elif o == "-T":
+        reTagFilterExp = a
+    elif o == "-M":
+        reMsgFilterExp = a
+    elif o == "-v":
+        if a in ("brief", "tag", "thread", "time", "threadtime"):
+            logcatOptv = a
+        elif a == "long":
+            logcatOptv = "threadtime"
+        elif a == "process":
+            logcatOptv = "brief"
+        else:
+            print "Bad format."
+            print ""
+            usage()
+    elif o in ("-s", "-c", "-t"):
+        logcatOpt.write(" %s%s" % (o, a))
+    elif o == "-S":
+        adbOpt.write(" -s %s" % a)
+
 
 # if someone is piping in to us, use stdin as input.  if not, invoke adb logcat
 if os.isatty(sys.stdin.fileno()):
-    input = os.popen("adb logcat -v time")
+    input = os.popen("adb%s logcat -v %s%s" % (adbOpt.getvalue(), logcatOptv, logcatOpt.getvalue()))
 else:
     input = sys.stdin
 
-reGrep = None
+if not reTagFilterExp is None:
+    if reFlags is None:
+        reTagFilter = re.compile(reTagFilterExp)
+    else:
+        reTagFilter = re.compile(reTagFilterExp, reFlags)
 
-if len(sys.argv) == 2:
-    reGrep = re.compile(sys.argv[1])
-elif len(sys.argv) == 3 and str(sys.argv[1]) == "-i":
-    reGrep = re.compile(sys.argv[2], re.IGNORECASE)
+if not reMsgFilterExp is None:
+    if reFlags is None:
+        reMsgFilter = re.compile(reMsgFilterExp)
+    else:
+        reMsgFilter = re.compile(reMsgFilterExp, reFlags)
 
 while True:
     try:
@@ -167,71 +248,85 @@ while True:
     except KeyboardInterrupt:
         break
 
-    matchthreadtime = retagthreadtime.match(line)
-    matchthread     = retagthread.match(line)
-    matchtime       = retagtime.match(line)
-    matchbrief      = retagbrief.match(line)
+    matchbeginning  = rebeginning.match(line)
+    matchthreadtime = rethreadtime.match(line)
+    matchthread     = rethread.match(line)
+    matchtime       = retime.match(line)
+    matchbrief      = rebrief.match(line)
+    matchtag        = retag.match(line)
     linebuf         = StringIO.StringIO()
+    emptyHeader     = StringIO.StringIO()
+    headerSize      = 0
+    m               = None
+    d               = None
+    h               = None
+    mi              = None
+    sec             = None
+    ms              = None
+    owner           = None
+    thread          = None
+    tagtype         = None
+    tag             = None
+    msg             = None
 
-    if not matchthreadtime is None:
-        month, day, hours, minutes, seconds, milliseconds, owner, thread, tagtype, tag, message = matchthreadtime.groups()
+    if not matchbeginning is None:
+        msg, l = matchbeginning.groups()
+        print "%s%s%s" % (format(fg=WHITE, bg=BLACK, dim=False),
+                ("Beginning of " + msg + l).center(WIDTH), format(reset=True))
+        continue
 
-        if not reGrep is None:
-            match = reGrep.match(tag)
-            if match is None:
-               continue
-
-        print_owner(linebuf, owner)
-        print_thread(linebuf, thread)
-        print_time(linebuf, month, day, hours, minutes, seconds, milliseconds)
-        print_tag(linebuf, tag)
-        print_tagtype(linebuf, tagtype)
-        print_message(linebuf, THREADTIME_HEADER_SIZE, message)
-        line = linebuf.getvalue()
+    elif not matchthreadtime is None:
+        m, d, h, mi, sec, ms, owner, thread, tagtype, tag, msg = matchthreadtime.groups()
 
     elif not matchthread is None:
-        tagtype, owner, thread, message = matchthread.groups()
-
-        if not reGrep is None:
-            match = reGrep.match(tag)
-            if match is None:
-               continue
-
-        print_owner(linebuf, owner)
-        print_thread(linebuf, thread)
-        print_tagtype(linebuf, tagtype)
-        print_message(linebuf, THREAD_HEADER_SIZE, message)
-        line = linebuf.getvalue()
+        tagtype, owner, thread, msg = matchthread.groups()
 
     elif not matchtime is None:
-        month, day, hours, minutes, seconds, milliseconds, tagtype, tag, owner, message = matchtime.groups()
-
-        if not reGrep is None:
-            match = reGrep.match(tag)
-            if match is None:
-               continue
-
-        print_owner(linebuf, owner)
-        print_time(linebuf, month, day, hours, minutes, seconds, milliseconds)
-        print_tag(linebuf, tag)
-        print_tagtype(linebuf, tagtype)
-        print_message(linebuf, TIME_HEADER_SIZE, message)
-        line = linebuf.getvalue()
+        m, d, h, mi, sec, ms, tagtype, tag, owner, msg = matchtime.groups()
 
     elif not matchbrief is None:
-        tagtype, tag, owner, message = matchbrief.groups()
+        tagtype, tag, owner, msg = matchbrief.groups()
 
-        if not reGrep is None:
-            match = reGrep.match(tag)
-            if match is None:
-               continue
+    elif not matchtag is None:
+        tagtype, tag, msg = matchtag.groups()
 
-        print_owner(linebuf, owner)
-        print_tag(linebuf, tag)
-        print_tagtype(linebuf, tagtype)
-        print_message(linebuf, BRIEF_HEADER_SIZE, message)
-        line = linebuf.getvalue()
+    else:
+        print (line)
+        if len(line) == 0:
+            break
+        continue
 
-    print (line)
-    if len(line) == 0:
-        break
+    # Print parts
+    if not owner is None:
+        headerSize += print_owner(linebuf, emptyHeader, owner)
+
+    if not thread is None:
+        headerSize += print_thread(linebuf, emptyHeader, thread)
+
+    if not m is None:
+        headerSize += print_time(linebuf, emptyHeader, m, d, h, mi, sec, ms)
+
+    if not tag is None:
+        if not reTagFilter is None:
+            matchtagFilter = reTagFilter.match(tag)
+        headerSize += print_tag(linebuf, emptyHeader, tag)
+
+    if not tagtype is None:
+        headerSize += print_tagtype(linebuf, emptyHeader, tagtype)
+
+    if not msg is None:
+        if not reMsgFilter is None:
+            matchMsgFilter = reMsgFilter.match(msg)
+        print_msg(linebuf, emptyHeader, headerSize, msg)
+
+    # Filter on the regular expression
+    if not tag            is None and \
+       not reTagFilter    is None and \
+           matchtagFilter is None and \
+       not msg            is None and \
+       not reMsgFilter    is None and \
+           matchMsgFilter is None:
+            continue
+
+    # Actual print
+    print linebuf.getvalue()
