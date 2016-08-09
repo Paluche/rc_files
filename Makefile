@@ -87,7 +87,7 @@ xflux:                      $(SCRIPT_DIR)/xflux
 	@-ln -sn $< $@
 	@xrdb $@
 
-%/adb_logcat.py: $(CURR_DIR)/adb_logcat/coloredlogcat.pytxt %
+%/adb_logcat.py: $(CURR_DIR)/adb_logcat/adb_logcat.py %
 	@echo Install adb_logcat.py script
 	@-ln -sn $< $@
 
