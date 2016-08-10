@@ -77,8 +77,10 @@ TAGTYPEFORMAT = {
 }
 
 rebeginning  = re.compile("^--------- beginning of ([^\)]+)([^\(]+)\r$")
-rethreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) ([^\)]+) ([VDIWEFS]) ([^\(]+?): (.*)$")
-retime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) ([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
+rethreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) " \
+                          "([^\)]+) ([VDIWEFS]) ([^\(]+?): (.*)$")
+retime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) " \
+                          "([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
 rethread     = re.compile("^([VDIWEFS])\(([^\)]+):([^\)]+)\) (.*)$")
 rebrief      = re.compile("^([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
 retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
@@ -86,21 +88,28 @@ retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
 def print_owner(linebuf, emptyHeader, owner):
     # center process owner info
     owner = owner.strip().center(OWNER_WIDTH)
-    linebuf    .write("%s%s%s" % (format(fg=CYAN, bg=BLACK), owner, format(reset=True)))
-    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), " " * OWNER_WIDTH, format(reset=True)))
+    linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), owner,
+                              format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
+                                  " " * OWNER_WIDTH, format(reset=True)))
     return OWNER_WIDTH
 
 def print_thread(linebuf, emptyHeader, thread):
     # center thread info
     thread = thread.strip().center(THREAD_WIDTH)
-    linebuf    .write("%s%s%s" % (format(fg=CYAN, bg=BLACK), thread,             format(reset=True)))
-    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), " " * THREAD_WIDTH, format(reset=True)))
+    linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), thread,
+                              format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
+                                  " " * THREAD_WIDTH,
+                                  format(reset=True)))
     return THREAD_WIDTH
 
 def print_time(linebuf, emptyHeader, m, d, h, mi, s, ms):
-    linebuf    .write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK), m, d, h, mi, s, ms,
-                                                   format(reset=True)))
-    emptyHeader.write("%s%s%s" % (format(fg=GREEN, bg=BLACK), " " * TIME_WIDTH, format(reset=True)))
+    linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK),
+                                               m, d, h, mi, s, ms,
+                                               format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=GREEN, bg=BLACK),
+                                  " " * TIME_WIDTH, format(reset=True)))
     return TIME_WIDTH
 
 def allocate_color(tag):
@@ -118,13 +127,18 @@ def print_tag(linebuf, emptyHeader, tag):
     tag   = tag.strip()
     color = allocate_color(tag)
     tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
-    linebuf    .write("%s%s %s" % (format(fg=color), tag,             format(reset=True)))
-    emptyHeader.write("%s%s%s"  % (format(fg=color), " " * TAG_WIDTH, format(reset=True)))
+    linebuf.write("%s%s %s" % (format(fg=color), tag, format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg=color), " " * TAG_WIDTH,
+                                  format(reset=True)))
     return TAG_WIDTH
 
 def print_tagtype(linebuf, emptyHeader, tagtype):
-    linebuf    .write("%s%s%s " % (TAGTYPEFORMAT[tagtype], tagtype.center(TAGTYPE_WIDTH), format(reset=True)))
-    emptyHeader.write("%s%s%s " % (format(bg=BLACK), " " * TAGTYPE_WIDTH, format(reset=True)))
+    linebuf.write("%s%s%s " % (TAGTYPEFORMAT[tagtype],
+                               tagtype.center(TAGTYPE_WIDTH),
+                               format(reset=True)))
+
+    emptyHeader.write("%s%s%s " % (format(bg=BLACK), " " * TAGTYPE_WIDTH,
+                                   format(reset=True)))
     return TAGTYPE_WIDTH + 1
 
 def print_msg(linebuf, emptyHeader, headerSize, msg):
@@ -226,7 +240,9 @@ for o, a in opts:
 
 # if someone is piping in to us, use stdin as input.  if not, invoke adb logcat
 if os.isatty(sys.stdin.fileno()):
-    input = os.popen("adb%s logcat -v %s%s" % (adbOpt.getvalue(), logcatOptv, logcatOpt.getvalue()))
+    input = os.popen("adb%s logcat -v %s%s" % (adbOpt.getvalue(),
+                                               logcatOptv,
+                                               logcatOpt.getvalue()))
 else:
     input = sys.stdin
 
@@ -276,7 +292,8 @@ while True:
         continue
 
     elif not matchthreadtime is None:
-        m, d, h, mi, sec, ms, owner, thread, tagtype, tag, msg = matchthreadtime.groups()
+        m, d, h, mi, sec, ms, owner,
+        thread, tagtype, tag, msg = matchthreadtime.groups()
 
     elif not matchthread is None:
         tagtype, owner, thread, msg = matchthread.groups()
