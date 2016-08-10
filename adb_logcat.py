@@ -320,18 +320,14 @@ while True:
         print_msg(linebuf, emptyHeader, headerSize, msg)
 
     # Filter on the regular expression
-    if not reTagFilter    is None and \
-           matchTagFilter is None and \
-       not msg            is None and \
-       not reMsgFilter    is None and \
-           matchMsgFilter is None:
+    if not reTagFilter is None and not reMsgFilter is None:
+        if matchTagFilter is None and matchMsgFilter is None:
             continue
-    elif not reTagFilter    is None and \
-             matchTagFilter is None:
+    elif not reTagFilter is None:
+        if matchTagFilter is None:
             continue
-    elif not reMsgFilter    is None and \
-             matchMsgFilter is None:
-            continue
+    elif not reMsgFilter is None and matchMsgFilter is None:
+        continue
 
     # Actual print
     print linebuf.getvalue()
