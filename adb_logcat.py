@@ -308,7 +308,7 @@ while True:
 
     if not tag is None:
         if not reTagFilter is None:
-            matchTagFilter = reTagFilter.match(tag)
+            matchTagFilter = reTagFilter.search(tag)
         headerSize += print_tag(linebuf, emptyHeader, tag)
 
     if not tagtype is None:
@@ -316,23 +316,20 @@ while True:
 
     if not msg is None:
         if not reMsgFilter is None:
-            matchMsgFilter = reMsgFilter.match(msg)
+            matchMsgFilter = reMsgFilter.search(msg)
         print_msg(linebuf, emptyHeader, headerSize, msg)
 
     # Filter on the regular expression
-    if not tag            is None and \
-       not reTagFilter    is None and \
+    if not reTagFilter    is None and \
            matchTagFilter is None and \
        not msg            is None and \
        not reMsgFilter    is None and \
            matchMsgFilter is None:
             continue
-    elif not tag            is None and \
-         not reTagFilter    is None and \
+    elif not reTagFilter    is None and \
              matchTagFilter is None:
             continue
-    elif not msg            is None and \
-         not reMsgFilter    is None and \
+    elif not reMsgFilter    is None and \
              matchMsgFilter is None:
             continue
 
