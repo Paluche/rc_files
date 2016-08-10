@@ -125,29 +125,34 @@ alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r -i'
 
 # git aliases
-alias gs='git status -s'           # Shorter git status
-alias gd='git diff -w --ignore-blank-lines' # Shortcut / ignore space diff
-alias gdc='git diff --cached'      # Shortcut
-alias ga='git add'                 # Shortcut
-alias gap='git add -p'             # Shortcut
-alias grp='git reset -p'           # Shortcut
-alias gc='git commit'              # Shortcut
-alias gca='git commit -a'          # Shortcut
-alias gch='git checkout'           # Shortcut
-alias gcm='git checkout master'    # Shortcut
-alias gl='git l'                   # Custom log
-alias gll='git log -n 1'           # Shortcut
-alias gr='git reset'               # Shortcut
-alias grh='git reset HEAD'         # Shortcut
-alias gre='git rebase'             # Shortcut
-alias gra='git rebase --abort'     # Shortcut
-alias grc='git rebase --continue'  # Shortcut
-alias gph='git push'               # Shortcut
-alias gpl='git pull'               # Shortcut
+alias ga='git add'                           # Shortcut
+alias gap='git add -p'                       # Shortcut
+alias gb='git branch --list -vv'             # Shortcut
+alias gc='git commit'                        # Shortcut
+alias gca='git commit -a'                    # Shortcut
+alias gcaam='git commit -a --amend'          # Shortcut
+alias gcam='git commit --amend'              # Shortcut
+alias gch='git checkout'                     # Shortcut
+alias gcm='git checkout master'              # Shortcut
+alias gd='git diff -w --ignore-blank-lines'  # Shortcut / ignore space diff
+alias gdc='git diff --cached'                # Shortcut
+alias gl='git l'                             # Custom log
+alias gll='git log -n 1'                     # Shortcut
+alias glp='git log-path'                     # Custom log when using path
+alias gls='git ls'                           # Custom log with stat option
+alias gph='git push'                         # Shortcut
+alias gpl='git pull'                         # Shortcut
+alias gra='git rebase --abort'               # Shortcut
+alias grc='git rebase --continue'            # Shortcut
+alias gre='git rebase'                       # Shortcut
+alias grh='git reset HEAD'                   # Shortcut
+alias grp='git reset -p'                     # Shortcut
+alias gr='git reset'                         # Shortcut
+alias gs='git status -s'                     # Shorter git status
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
-alias gss='git show --stat'        # Shorter diff for git show
-alias gb='git branch --list -vv'   # Shortcut
-alias gsu='git submodule update'   # Shortcut
+alias gss='git show --stat'                  # Shorter diff for git show
+alias gsu='git submodule update'             # Shortcut
+
 function git_home()
 {
     dir="$(git rev-parse --show-toplevel)"
@@ -161,7 +166,7 @@ function git_patch()
     git commit -a -m PATCH
     if [ $? -eq 0]; then
         git format-patch HEAD~
-        git reset --hard HEAD~
+        git reset HEAD~
     fi
 }
 
@@ -207,6 +212,7 @@ alias -s ods='localc'
 alias -s xls='localc'
 alias -s py='python'
 alias -s sh='bash'
+alias -s rb='ruby'
 
 # handling xflux
 alias xflux_au='xflux -l -48.8534100 -g 180'
