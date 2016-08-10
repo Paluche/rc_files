@@ -15,19 +15,22 @@
     editor      = vim
     logAllRefUpdates = false
 
+[help]
+    autocorrect = 1
+
 [alias]
+    ls          = log --stat --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
     l           = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
+    log-path    = log --graph -M --follow --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
     g           = grep -ni --break --heading --color=always
     stak        = stash save -k -u
     stawp       = stash show -p
     wip         = commit -a -m WIP
     unwip       = reset HEAD~1
+    blame-log   = log -p -M --follow --stat --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
 
 [push]
     default     = simple
-
-[ui]
-    color       = true
 
 [pull]
     rebase      = true
@@ -36,4 +39,30 @@
     prune       = true
 
 [merge]
-	tool = meld
+	tool = vimdiff
+
+[diff]
+	tool = vimdiff
+
+[color "diff"]
+    #branch = red
+    meta = blue
+    #context = cyan
+    frag = cyan
+    func = yellow
+
+
+[color "status"]
+    header    = white
+    branch    = blue bold
+    nobranch  = red bold
+    untracked = magenta bold
+    added     = green
+
+[color "branch"]
+      remote = yellow
+
+[color "blame"]
+    author = red
+[gui]
+    fastCopyBlame = true
