@@ -85,29 +85,32 @@ rethread     = re.compile("^([VDIWEFS])\(([^\)]+):([^\)]+)\) (.*)$")
 rebrief      = re.compile("^([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
 retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
 
-def print_owner(linebuf, emptyHeader, owner):
+def print_owner(linebuf, colorless, emptyHeader, owner):
     # center process owner info
     owner = owner.strip().center(OWNER_WIDTH)
     linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), owner,
                               format(reset=True)))
+    colorless.write("%s" % (owner));
     emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
                                   " " * OWNER_WIDTH, format(reset=True)))
     return OWNER_WIDTH
 
-def print_thread(linebuf, emptyHeader, thread):
+def print_thread(linebuf, colorless, emptyHeader, thread):
     # center thread info
     thread = thread.strip().center(THREAD_WIDTH)
     linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), thread,
                               format(reset=True)))
+    colorless.write("%s" % (thread));
     emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
                                   " " * THREAD_WIDTH,
                                   format(reset=True)))
     return THREAD_WIDTH
 
-def print_time(linebuf, emptyHeader, m, d, h, mi, s, ms):
+def print_time(linebuf, colorless, emptyHeader, m, d, h, mi, s, ms):
     linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK),
                                                m, d, h, mi, s, ms,
                                                format(reset=True)))
+    colorless.write(" %s-%s %s:%s:%s.%s " % (m, d, h, mi, s, ms))
     emptyHeader.write("%s%s%s" % (format(fg=GREEN, bg=BLACK),
                                   " " * TIME_WIDTH, format(reset=True)))
     return TIME_WIDTH
@@ -122,26 +125,28 @@ def allocate_color(tag):
     LAST_USED.append(color)
     return color
 
-def print_tag(linebuf, emptyHeader, tag):
+def print_tag(linebuf, colorless, emptyHeader, tag):
     # right-align tag title and allocate color if needed
     tag   = tag.strip()
     color = allocate_color(tag)
     tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
     linebuf.write("%s%s %s" % (format(fg=color), tag, format(reset=True)))
+    colorless.write("%s " % (tag))
     emptyHeader.write("%s%s%s" % (format(fg=color), " " * TAG_WIDTH,
                                   format(reset=True)))
     return TAG_WIDTH
 
-def print_tagtype(linebuf, emptyHeader, tagtype):
+def print_tagtype(linebuf, colorless, emptyHeader, tagtype):
     linebuf.write("%s%s%s " % (TAGTYPEFORMAT[tagtype],
                                tagtype.center(TAGTYPE_WIDTH),
                                format(reset=True)))
+    colorless.write("%s " % (tagtype.center(TAGTYPE_WIDTH)))
 
     emptyHeader.write("%s%s%s " % (format(bg=BLACK), " " * TAGTYPE_WIDTH,
                                    format(reset=True)))
     return TAGTYPE_WIDTH + 1
 
-def print_msg(linebuf, emptyHeader, headerSize, msg):
+def print_msg(linebuf, colorless, emptyHeader, headerSize, msg):
     wrap_area = WIDTH - headerSize
     current   = 0
 
@@ -149,8 +154,11 @@ def print_msg(linebuf, emptyHeader, headerSize, msg):
         next = min(current + wrap_area - 6*msg.count('\t'), len(msg))
 
         linebuf.write(msg[current:next])
+        colorless.write(msg[current:next])
+
         if next < len(msg):
             linebuf.write("\n%s" % (emptyHeader.getvalue()))
+            colorless.write("\n%s" % " " * len(emptyHeader.getvalue()))
         current = next
 
 def usage():
@@ -187,6 +195,7 @@ def usage():
     print "    -A <regexp>     Show logs which tags or message match the "     \
                               "specified regular expression"
     print "    -i              Ignore case on the regular expression"
+    print "    -w <path>       Write output in a file (colorless)"
     sys.exit(2)
 
 # Regular expressions
@@ -195,6 +204,7 @@ reTagFilterExp = None
 reMsgFilterExp = None
 reTagFilter    = None
 reMsgFilter    = None
+writefile      = None
 
 # adb logcat options
 logcatOptv   = "time"
@@ -202,7 +212,7 @@ logcatOpt    = StringIO.StringIO()
 adbOpt       = StringIO.StringIO()
 
 try:
-    opts, arg = getopt.getopt(sys.argv[1:], "S:hscit:t:A:T:M:v:", ["help"])
+    opts, arg = getopt.getopt(sys.argv[1:], "S:hscit:t:A:T:M:v:w:", ["help"])
 except getopt.GetoptError as err:
     print str(err)
     print ""
@@ -236,6 +246,8 @@ for o, a in opts:
         logcatOpt.write(" %s%s" % (o, a))
     elif o == "-S":
         adbOpt.write(" -s %s" % a)
+    elif o == "-w":
+        writefile = open(a, 'a')
 
 
 # if someone is piping in to us, use stdin as input.  if not, invoke adb logcat
@@ -271,6 +283,7 @@ while True:
     matchbrief      = rebrief.match(line)
     matchtag        = retag.match(line)
     linebuf         = StringIO.StringIO()
+    colorless       = StringIO.StringIO()
     emptyHeader     = StringIO.StringIO()
     headerSize      = 0
     m               = None
@@ -289,6 +302,8 @@ while True:
         msg, l = matchbeginning.groups()
         print "%s%s%s" % (format(fg=WHITE, bg=BLACK, dim=False),
                 ("Beginning of " + msg + l).center(WIDTH), format(reset=True))
+        if not writefile is None:
+            writefile.write("%s" % ("Beginning of " + msg + l).center(WIDTH))
         continue
 
     elif not matchthreadtime is None:
@@ -309,32 +324,34 @@ while True:
 
     else:
         print (line)
+        if not writefile is None:
+            writefile.write(line)
         if len(line) == 0:
             break
         continue
 
     # Print parts
     if not owner is None:
-        headerSize += print_owner(linebuf, emptyHeader, owner)
+        headerSize += print_owner(linebuf, colorless, emptyHeader, owner)
 
     if not thread is None:
-        headerSize += print_thread(linebuf, emptyHeader, thread)
+        headerSize += print_thread(linebuf, colorless, emptyHeader, thread)
 
     if not m is None:
-        headerSize += print_time(linebuf, emptyHeader, m, d, h, mi, sec, ms)
+        headerSize += print_time(linebuf, colorless, emptyHeader, m, d, h, mi, sec, ms)
 
     if not tag is None:
         if not reTagFilter is None:
             matchTagFilter = reTagFilter.search(tag)
-        headerSize += print_tag(linebuf, emptyHeader, tag)
+        headerSize += print_tag(linebuf, colorless, emptyHeader, tag)
 
     if not tagtype is None:
-        headerSize += print_tagtype(linebuf, emptyHeader, tagtype)
+        headerSize += print_tagtype(linebuf, colorless, emptyHeader, tagtype)
 
     if not msg is None:
         if not reMsgFilter is None:
             matchMsgFilter = reMsgFilter.search(msg)
-        print_msg(linebuf, emptyHeader, headerSize, msg)
+        print_msg(linebuf, colorless, emptyHeader, headerSize, msg)
 
     # Filter on the regular expression
     if not reTagFilter is None and not reMsgFilter is None:
@@ -348,3 +365,5 @@ while True:
 
     # Actual print
     print linebuf.getvalue()
+    if not writefile is None:
+        writefile.write(colorless.getvalue() + '\n');
