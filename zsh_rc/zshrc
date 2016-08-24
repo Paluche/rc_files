@@ -170,6 +170,8 @@ function git_patch()
     fi
 }
 
+alias git_blame='ruby ~/.script/git_blame.rb'
+
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
