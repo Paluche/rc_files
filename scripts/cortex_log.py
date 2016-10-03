@@ -16,7 +16,7 @@ import datetime
 import getopt
 import serial
 
-def format(fg=None, bg=None, bright=False, bold=False, dim=False, reset=False):
+def format(fg = None, bg = None, bright = False, bold = False, dim = False, reset = False):
     # manually derived from http://en.wikipedia.org/wiki/ANSI_escape_code#Codes
     codes = []
     if reset:
@@ -79,15 +79,15 @@ rersimple   = re.compile("^\r([^\(]+)([^\(]+)$")
 
 # Format function
 def print_time(linebuf, nocolor):
-    linebuf.write("%s%s %s" % (format(fg=GREEN, bg=BLACK, dim=False),
+    linebuf.write("%s%s %s" % (format(fg = GREEN, bg = BLACK, dim = False),
                                datetime.datetime.now().strftime(
                                    "%m-%d %H:%M:%S.%f")[:-3],
-                               format(reset=True)))
+                               format(reset = True)))
     nocolor.write("%s " % (datetime.datetime.now().strftime(
                                "%m-%d %H:%M:%S.%f")[:-3]))
 
 def allocate_color(tag):
-    # this will allocate a unique format for the given tag
+    # This will allocate a unique format for the given tag
     # since we dont have very many colors, we always keep track of the LRU
     if not tag in KNOWN_TAGS:
         KNOWN_TAGS[tag] = LAST_USED[0]
@@ -96,30 +96,30 @@ def allocate_color(tag):
     LAST_USED.append(color)
     return color
 
-def print_tag(linebuf, nocolor, tag, bootline=False):
-    # right-align tag title and allocate color if needed
-    tag   = tag.strip()
+def print_tag(linebuf, nocolor, tag, bootline = False):
+    # Right-align tag title and allocate color if needed
+    tag = tag.strip()
     if bootline:
         color = RED
     else:
         color = allocate_color(tag)
     tag = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
-    linebuf.write("%s%s %s" % (format(fg=color, dim=False), tag,
-                               format(reset=True)))
+    linebuf.write("%s%s %s" % (format(fg = color, dim = False), tag,
+                               format(reset = True)))
     nocolor.write("%s " % (tag))
 
-def print_message(linebuf, nocolor, headersize, message, bootline=False):
-    # insert line wrapping as needed
+def print_message(linebuf, nocolor, headersize, message, bootline = False):
+    # Insert line wrapping as needed
     wrap_area = WIDTH - headersize - 3
     current = 0
     while current < len(message):
         next = min(current + wrap_area, len(message))
-        linebuf.write("%s %s %s" % (format(bg=BLACK, dim=False),
-                                    format(reset=True), message[current:next]))
+        linebuf.write("%s %s %s" % (format(bg = BLACK, dim = False),
+                                    format(reset = True), message[current:next]))
         nocolor.write("  %s" % (message[current:next]))
 
         if bootline:
-            linebuf.write("%s " % (format(reset=True)))
+            linebuf.write("%s " % (format(reset = True)))
             nocolor.write(" ")
 
         if next < len(message):

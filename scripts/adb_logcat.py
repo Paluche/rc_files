@@ -39,7 +39,8 @@ KNOWN_TAGS = {
     "ActivityThread"  : CYAN,
 }
 
-def format(fg=None, bg=None, bright=False, bold=False, dim=False, reset=False):
+def format(fg = None, bg = None, bright = False, bold = False, dim = False,
+           reset = False):
     # manually derived from http://en.wikipedia.org/wiki/ANSI_escape_code#Codes
     codes = []
     if reset:
@@ -60,20 +61,20 @@ def format(fg=None, bg=None, bright=False, bold=False, dim=False, reset=False):
             codes.append("22")
     return "\033[%sm" % (";".join(codes))
 
-OWNER_WIDTH    = 7
-THREAD_WIDTH   = 7
-TIME_WIDTH     = 20
-TAG_WIDTH      = 26
-TAGTYPE_WIDTH  = 3
+OWNER_WIDTH   = 7
+THREAD_WIDTH  = 7
+TIME_WIDTH    = 20
+TAG_WIDTH     = 26
+TAGTYPE_WIDTH = 3
 
 TAGTYPEFORMAT = {
-    "V": format(fg=WHITE, bg=BLACK),
-    "D": format(fg=BLACK, bg=BLUE),
-    "I": format(fg=BLACK, bg=GREEN),
-    "W": format(fg=BLACK, bg=YELLOW),
-    "E": format(fg=BLACK, bg=RED),
-    "F": format(fg=RED,   bg=WHITE),
-    "S": format(fg=BLACK, bg=CYAN),
+    "V": format(fg = WHITE, bg = BLACK),
+    "D": format(fg = BLACK, bg = BLUE),
+    "I": format(fg = BLACK, bg = GREEN),
+    "W": format(fg = BLACK, bg = YELLOW),
+    "E": format(fg = BLACK, bg = RED),
+    "F": format(fg = RED,   bg = WHITE),
+    "S": format(fg = BLACK, bg = CYAN),
 }
 
 rebeginning  = re.compile("^--------- beginning of ([^\)]+)([^\(]+)\r$")
@@ -88,31 +89,31 @@ retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
 def print_owner(linebuf, colorless, emptyHeader, owner):
     # center process owner info
     owner = owner.strip().center(OWNER_WIDTH)
-    linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), owner,
-                              format(reset=True)))
+    linebuf.write("%s%s%s" % (format(fg = CYAN, bg = BLACK), owner,
+                              format(reset = True)))
     colorless.write("%s" % (owner));
-    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
-                                  " " * OWNER_WIDTH, format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg = CYAN, bg = BLACK),
+                                  " " * OWNER_WIDTH, format(reset = True)))
     return OWNER_WIDTH
 
 def print_thread(linebuf, colorless, emptyHeader, thread):
     # center thread info
     thread = thread.strip().center(THREAD_WIDTH)
-    linebuf.write("%s%s%s" % (format(fg=CYAN, bg=BLACK), thread,
-                              format(reset=True)))
+    linebuf.write("%s%s%s" % (format(fg = CYAN, bg = BLACK), thread,
+                              format(reset = True)))
     colorless.write("%s" % (thread));
-    emptyHeader.write("%s%s%s" % (format(fg=CYAN, bg=BLACK),
+    emptyHeader.write("%s%s%s" % (format(fg = CYAN, bg = BLACK),
                                   " " * THREAD_WIDTH,
-                                  format(reset=True)))
+                                  format(reset = True)))
     return THREAD_WIDTH
 
 def print_time(linebuf, colorless, emptyHeader, m, d, h, mi, s, ms):
-    linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg=GREEN, bg=BLACK),
+    linebuf.write("%s %s-%s %s:%s:%s.%s %s" % (format(fg = GREEN, bg = BLACK),
                                                m, d, h, mi, s, ms,
-                                               format(reset=True)))
+                                               format(reset = True)))
     colorless.write(" %s-%s %s:%s:%s.%s " % (m, d, h, mi, s, ms))
-    emptyHeader.write("%s%s%s" % (format(fg=GREEN, bg=BLACK),
-                                  " " * TIME_WIDTH, format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg = GREEN, bg = BLACK),
+                                  " " * TIME_WIDTH, format(reset = True)))
     return TIME_WIDTH
 
 def allocate_color(tag):
@@ -130,20 +131,20 @@ def print_tag(linebuf, colorless, emptyHeader, tag):
     tag   = tag.strip()
     color = allocate_color(tag)
     tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
-    linebuf.write("%s%s %s" % (format(fg=color), tag, format(reset=True)))
+    linebuf.write("%s%s %s" % (format(fg = color), tag, format(reset = True)))
     colorless.write("%s " % (tag))
-    emptyHeader.write("%s%s%s" % (format(fg=color), " " * TAG_WIDTH,
-                                  format(reset=True)))
+    emptyHeader.write("%s%s%s" % (format(fg = color), " " * TAG_WIDTH,
+                                  format(reset = True)))
     return TAG_WIDTH
 
 def print_tagtype(linebuf, colorless, emptyHeader, tagtype):
     linebuf.write("%s%s%s " % (TAGTYPEFORMAT[tagtype],
                                tagtype.center(TAGTYPE_WIDTH),
-                               format(reset=True)))
+                               format(reset = True)))
     colorless.write("%s " % (tagtype.center(TAGTYPE_WIDTH)))
 
-    emptyHeader.write("%s%s%s " % (format(bg=BLACK), " " * TAGTYPE_WIDTH,
-                                   format(reset=True)))
+    emptyHeader.write("%s%s%s " % (format(bg = BLACK), " " * TAGTYPE_WIDTH,
+                                   format(reset = True)))
     return TAGTYPE_WIDTH + 1
 
 def print_msg(linebuf, colorless, emptyHeader, headerSize, msg):
@@ -189,7 +190,6 @@ def usage():
     print "    --help / -h     Print this help"
     print "    -T <regexp>     Show only logs which tags that match the "      \
                               "specified regular expression"
-
     print "    -M <regexp>     Show logs which message match the specified "   \
                               "regular expression"
     print "    -A <regexp>     Show logs which tags or message match the "     \
@@ -300,8 +300,8 @@ while True:
 
     if not matchbeginning is None:
         msg, l = matchbeginning.groups()
-        print "%s%s%s" % (format(fg=WHITE, bg=BLACK, dim=False),
-                ("Beginning of " + msg + l).center(WIDTH), format(reset=True))
+        print "%s%s%s" % (format(fg = WHITE, bg = BLACK, dim = False),
+                ("Beginning of " + msg + l).center(WIDTH), format(reset = True))
         if not writefile is None:
             writefile.write("%s" % ("Beginning of " + msg + l).center(WIDTH))
         continue
