@@ -44,7 +44,14 @@ def usage():
     print ""
     print "   <tty> Specify which tty to use, the script will use "\
           "\'/dev/tty<tty>\'"
-    print "    -w <path>       Write output in a file (nocolor)"
+    print "    -T <regexp>     Show only logs which tags that match the "      \
+                              "specified regular expression"
+    print "    -M <regexp>     Show logs which message match the specified "   \
+                              "regular expression"
+    print "    -A <regexp>     Show logs which tags or message match the "     \
+                              "specified regular expression"
+    print "    -i              Ignore case on the regular expression"
+    print "    -w <path>       Write output in a file (colorless)"
     sys.exit(2)
 
 
@@ -132,7 +139,12 @@ def print_message(linebuf, nocolor, headersize, message, bootline = False):
 ########
 
 # Context
-writefile = None;
+reFlags        = None
+reTagFilterExp = None
+reMsgFilterExp = None
+reTagFilter    = None
+reMsgFilter    = None
+writefile      = None
 
 # If someone is piping in to us, use stdin as input, otherwise use first
 # argument to know which tty you should open
@@ -167,7 +179,7 @@ else:
 
 # Handle options
 try:
-    opts, arg = getopt.getopt(sys.argv[2:], "hw:", ["help"])
+    opts, arg = getopt.getopt(sys.argv[2:], "hw:iA:T:M:", ["help"])
 except getopt.GetoptError as err:
     print str(err)
     print ""
@@ -177,6 +189,15 @@ except getopt.GetoptError as err:
 for o, a in opts:
     if o in ("-h", "--help"):
         usage()
+    elif o == "-i":
+        reFlags = re.IGNORECASE
+    elif o == "-A":
+        reTagFilterExp = a
+        reMsgFilterExp = a
+    elif o == "-T":
+        reTagFilterExp = a
+    elif o == "-M":
+        reMsgFilterExp = a
     elif o == "-w":
         writefile = open(a, 'a')
         if not writefile is None:
@@ -186,7 +207,26 @@ for o, a in opts:
             print ""
             usage()
 
+# Set filtering regular expressions
+if not reTagFilterExp is None:
+    if reFlags is None:
+        reTagFilter = re.compile(reTagFilterExp)
+    else:
+        reTagFilter = re.compile(reTagFilterExp, reFlags)
+
+if not reMsgFilterExp is None:
+    if reFlags is None:
+        reMsgFilter = re.compile(reMsgFilterExp)
+    else:
+        reMsgFilter = re.compile(reMsgFilterExp, reFlags)
+
 # Main loop
+# Flush first line
+try:
+    line = source.readline()
+except KeyboardInterrupt:
+    exit
+
 while True:
     try:
         line = source.readline()
@@ -232,6 +272,21 @@ while True:
         print(line)
         if not writefile is None:
             writefile.write(line)
+        continue
+
+    if not reTagFilter is None:
+        matchTagFilter = reTagFilter.search(tag)
+
+    if not reMsgFilter is None:
+        matchMsgFilter = reMsgFilter.search(message)
+
+    if not reTagFilter is None and not reMsgFilter is None:
+        if matchTagFilter is None and matchMsgFilter is None:
+            continue
+    elif not reTagFilter is None:
+        if matchTagFilter is None:
+            continue
+    elif not reMsgFilter is None and matchMsgFilter is None:
         continue
 
     linebuf = StringIO.StringIO()
