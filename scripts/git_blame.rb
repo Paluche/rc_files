@@ -19,7 +19,7 @@ end
 path         = ARGV[0]
 hash         = ""
 commits      = {}
-line_nb      = 0
+line_nb      = 1
 commit_count = 0
 last_hash    = ""
 

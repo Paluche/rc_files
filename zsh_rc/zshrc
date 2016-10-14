@@ -170,7 +170,11 @@ function git_patch()
     fi
 }
 
-alias git_blame='ruby ~/.script/git_blame.rb'
+function git_blame()
+{
+    echo "ruby ~/.script/git_blame.rb $1 | less -R"
+    ruby ~/.script/git_blame.rb $1 | less -R
+}
 
 # Editors on shell
 alias pico='nano -mw'
