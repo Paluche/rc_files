@@ -10,7 +10,6 @@
 FORMAT    = "%Ccommit%h%Cblue (%ad) %Cgreen%an%F%Cwhite%L %Ccommit%M%BCreset"
 SEPARATOR = 100
 
-
 # Variables
 unless ARGV.length == 1
     puts "Usage: ruby git_blame.rb <path>"
