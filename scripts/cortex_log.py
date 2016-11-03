@@ -220,13 +220,16 @@ if not reMsgFilterExp is None:
     else:
         reMsgFilter = re.compile(reMsgFilterExp, reFlags)
 
-# Main loop
+# Set terminal name so you know the argument used
+sys.stdout.write("\x1b]2;cortex_log %s\x07" % ' '.join(sys.argv[1:]))
+
 # Flush first line
 try:
     line = source.readline()
 except KeyboardInterrupt:
     exit
 
+# Main loop
 while True:
     try:
         line = source.readline()
