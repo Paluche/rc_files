@@ -159,7 +159,7 @@ def print_msg(linebuf, colorless, emptyHeader, headerSize, msg):
 
         if next < len(msg):
             linebuf.write("\n%s" % (emptyHeader.getvalue()))
-            colorless.write("\n%s" % " " * len(emptyHeader.getvalue()))
+            colorless.write("\n%s" % (" " * headerSize))
         current = next
 
 def usage():
