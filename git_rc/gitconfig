@@ -29,6 +29,7 @@
     unwip             = reset HEAD~1
     blame-log         = log -p -M --follow --stat --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
     uncommit          = reset --soft HEAD~1
+    delete-commit     = reset --hard HEAD~1
 
 [push]
     default           = simple
