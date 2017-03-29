@@ -3,15 +3,16 @@ unset __CURRENT_GIT_SUBMODULE
 unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
 unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
 unset __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES
+unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_OPERATION
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
-unset __CURRENT_GIT_SUB_MODULE_IS_DIRTY
 unset __CURRENT_GIT_BRANCH_ADDED_FILES
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
+unset __CURRENT_GIT_NUM_STASHED
 
 local st="$(git status --ignore-submodules 2>/dev/null)"
 local dir="$(pwd 2>/dev/null)"
@@ -20,9 +21,9 @@ if [[ -n "$st" ]]; then
     __CURRENT_GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
 
     gitdir="$(git rev-parse --git-dir)"
-    gitdir="$(basename $gitdir 2> /dev/null)"
+    dotgitdir="$(basename $gitdir 2> /dev/null)"
 
-    if [[ $gitdir != ".git" ]]; then
+    if [[ $dotgitdir != ".git" ]]; then
         __CURRENT_GIT_SUBMODULE=yes
     fi
 
@@ -80,7 +81,7 @@ if [[ -n "$st" ]]; then
     fi
 
     if [[ $st =~ '(new commits)' ]]; then
-        __CURRENT_GIT_SUB_MODULE_IS_DIRTY='1'
+        __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
     fi
 
     if [[ $st =~ 'Changes to be committed' ]]; then
@@ -101,24 +102,34 @@ if [[ -n "$st" ]]; then
     then
         local st_sub="$(git status 2>/dev/null)"
 
-        if [[ $st_sub =~ 'Changes to be committed' ]]
-        then
-            __CURRENT_GIT_BRANCH_ADDED_FILES='1'
-        fi
-
         if [[ $st_sub =~ 'new commits' ]]
         then
             __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
         fi
 
-        if [[ $st_sub =~ 'modified content' ]]
+        if [[ $st_sub == *"(modified content"* ]]
         then
             __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
         fi
 
-        if [[ $st_sub =~ 'untracked content' ]]
+        if [[ $st_sub == *"modified content,"* ]]
+        then
+            __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
+        fi
+
+        if [[ $st_sub == *"untracked content"* ]]
         then
             __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES='1'
         fi
+    fi
+
+    __CURRENT_GIT_NUM_STASHED=0
+    stash_file="$gitdir/logs/refs/stash"
+    if [[ -e "${stash_file}" ]]
+    then
+        while IFS='' read -r wcline || [[ -n "$wcline" ]]
+        do
+            __CURRENT_GIT_NUM_STASHED=$((__CURRENT_GIT_NUM_STASHED+1))
+        done < ${stash_file}
     fi
 fi

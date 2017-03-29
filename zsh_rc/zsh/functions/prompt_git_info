@@ -1,19 +1,29 @@
 if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     local s
+
+    # Git name print
     if [ -n "$__CURRENT_GIT_SUBMODULE" ]; then
         s+="%{${fg[red]}%}"
+    else
+        s+=%{${fg[green]}%}
     fi
+
     local git_name="$(basename $__CURRENT_GIT_TOP_LEVEL 2> /dev/null)"
     s+="$git_name"
+
+    # Current branch name print
     s+="%{${fg[cyan]}%}|"
+
     if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ]; then
         s+="%{${fg[red]}%}"
     fi
+
     s+="%{${fg[blue]}%}"
     s+="$__CURRENT_GIT_BRANCH"
 
     s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
 
+    # Operation status print
     print_separator=
     case "$__CURRENT_GIT_BRANCH_OPERATION" in
         am)
@@ -42,6 +52,8 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
         s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
     fi
 
+
+    # Branch status print
     case "$__CURRENT_GIT_BRANCH_STATUS" in
         ahead)
         s+=""
@@ -65,24 +77,38 @@ if [ -n "$__CURRENT_GIT_BRANCH" ]; then
     if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]; then
         s+=""
     fi
-    if [ -n "$__CURRENT_GIT_SUB_MODULE_IS_DIRTY" ]; then
-        s+="%{${fg[red]}%}%{${fg[yellow]}%}"
-    fi
+
     if [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ]; then
-        s+=""
+        sub+=""
     fi
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ]; then
-        s+="?"
-    fi
-    if [ -n "$__CURRENT_GIT_SUBMODULE_NEW_COMMITS" ]; then
-        s+="%{${fg[red]}%}"
-    fi
-    if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ]; then
-        s+="%{${fg[red]}%}"
-    fi
-    if [ -n "$__CURRENT_GIT_SUBMODULE_UNTRACKED_FILES" ]; then
-        s+="%{${fg[red]}%}?"
+        sub+="?"
     fi
 
-    printf "%s%s%s" "%{${fg[cyan]}%}─[%{${fg[green]}%}" $s "%{${fg[cyan]}%}]"
+    # Submodules status print
+    local sub
+    if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ]; then
+        sub+=""
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_NEW_COMMITS" ]; then
+        sub+=""
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ]; then
+        sub+=""
+    fi
+    if [ -n "$__CURRENT_GIT_SUBMODULE_UNTRACKED_FILES" ]; then
+        sub+="?"
+    fi
+
+    if [ -n "$sub" ]; then
+        s+="%{${fg[cyan]}%}|%{${fg[red]}%}$sub"
+    fi
+
+    # Print current number of stash if there are some
+    if [[ ! $__CURRENT_GIT_NUM_STASHED -eq 0 ]]; then
+        s+="%{${fg[cyan]}%}|%{${fg[white]}%}⚑"
+    fi
+
+    # Make full prompt
+    printf "%s%s%s" "%{${fg[cyan]}%}─[" $s "%{${fg[cyan]}%}]"
 fi
