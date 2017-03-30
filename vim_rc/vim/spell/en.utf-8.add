@@ -39,3 +39,11 @@ adaptor
 misclassify
 endianness
 µs
+RTC
+CC110L
+bootloader
+SPI
+HomeKit
+PWM
+kB
+SoftDevice
