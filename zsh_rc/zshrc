@@ -110,7 +110,6 @@ alias ll='ls -lh'                  # Shortcut
 alias lll='ls -lh | less'          # Shortcut
 alias grep='grep --colour'         # Colors!!
 alias grepg='grep -rni'            # Recursive, line number and case insensitive
-alias ag='ag -i'                   # Case insensitive
 alias tree='tree -C'               # Colors!!
 alias la='ls -a'                   # Shorcut
 alias ms='ls'                      # Fast Finger Rerouting
@@ -122,9 +121,12 @@ alias locate='nocorrect locate -i' # no spelling correction on locate
                                    # case insensitive.
 #alias find='nocorrect find -name'  # no spelling correction on find, find by name.
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
-alias cp='cp -r -i'
+alias cp='cp -r'
+
 
 # git aliases
+alias g='git'
+alias gf='git fetch'                         # Shortcut
 alias ga='git add'                           # Shortcut
 alias gap='git add -p'                       # Shortcut
 alias gb='git branch --list -vv'             # Shortcut
@@ -172,7 +174,6 @@ function git_patch()
 
 function git_blame()
 {
-    echo "ruby ~/.script/git_blame.rb $1 | less -R"
     ruby ~/.script/git_blame.rb $1 | less -R
 }
 
@@ -204,6 +205,8 @@ alias -s xml='vim'
 alias -s iadl='vim'
 alias -s scala='vim'
 alias -s php='vim'
+alias -s ld='vim'
+alias -s d='vim'
 
 # emacs auto launches
 alias -s sv='emacs'
@@ -405,20 +408,20 @@ function extract()
         print -P "       Extract the file specified based on the extension"
     elif [[ -f $1 ]]; then
         case ${(L)1} in
-            *.tar.bz2)  tar -jxvf  $1;;
-            *.tar.gz)   tar -zxvf  $1;;
-            *.tar.xz)   tar -Jxvf  $1;;
-            *.bz2)      bunzip2    $1;;
-            *.gz)       gunzip     $1;;
-            *.jar)      unzip      $1;;
-            *.rar)      unrar x    $1;;
-            *.tar)      tar -xvf   $1;;
-            *.tbz2)     tar -jxvf  $1;;
-            *.tgz)      tar -zxvf  $1;;
-            *.zip)      unzip      $1;;
-            *.Z)        uncompress $1;;
-            *.7z)       7z x       $1;;
-            *)          echo "Unable to extract '$1' :: Unknown extension"
+            *.tar.bz2) tar -jxvf  $1;;
+            *.tar.gz)  tar -zxvf  $1;;
+            *.tar.xz)  tar -Jxvf  $1;;
+            *.bz2)     bunzip2    $1;;
+            *.gz)      gunzip     $1;;
+            *.jar)     unzip      $1;;
+            *.rar)     unrar x    $1;;
+            *.tar)     tar -xvf   $1;;
+            *.tbz2)    tar -jxvf  $1;;
+            *.tgz)     tar -zxvf  $1;;
+            *.zip)     unzip      $1;;
+            *.Z)       uncompress $1;;
+            *.7z)      7z x       $1;;
+            *)         echo "Unable to extract '$1' :: Unknown extension"
         esac
     else
         echo "File ('$1') does not exist!"
@@ -445,24 +448,37 @@ function hexa()
     echo "15 0xf 1111"
 }
 
-# Do a wonderful job with adb logcat
 function adb_logcat()
 {
     while :
     do
-        adb logcat -v time | ~/.script/adb_logcat.py
+        adb logcat -v time | ~/.script/adb_logcat.py $@
     done
 }
 
+function adb_shell()
+{
+    while :
+    do
+        adb wait-for-device shell
+    done
+}
+
+function timestamp()
+{
+    if [ ! $# -eq 1 ]
+    then
+        echo "usage: timestamp time"
+    else
+        python ~/.script/timestamp.py $1
+    fi
+}
+
+
 function serial_logcat()
 {
-    if [[ -z "$1" ]]; then
-        echo "\03logcat -v time" > /dev/ttyUSB0
-    else
-        echo "\03logcat -v time | busybox grep $1 $2" > /dev/ttyUSB0
-    fi
-
-    cat /dev/ttyUSB0 | ~/.script/adb_logcat.py
+    echo "\03logcat -v time" > /dev/ttyUSB0
+    cat /dev/ttyUSB0 | ~/.script/adb_logcat.py $@
 }
 
 function serial_logcat_dump()
@@ -478,6 +494,8 @@ function serial_dmesg_dump()
     cat /dev/ttyUSB0 > ~/dump_dmesg.txt
 }
 
+alias cortex_log='python ~/.script/cortex_log.py'
+
 function common_init()
 {
     if [ -n "$SSH_CLIENT" ]
@@ -488,6 +506,7 @@ function common_init()
     fi
     ssh-add
 }
+
 # Computer's specific configurations
 ##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
