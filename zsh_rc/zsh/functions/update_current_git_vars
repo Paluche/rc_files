@@ -1,9 +1,7 @@
+# Works with git version 2.11.0
+
 unset __CURRENT_GIT_TOP_LEVEL
-unset __CURRENT_GIT_SUBMODULE
-unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
-unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
-unset __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES
-unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
+
 unset __CURRENT_GIT_BRANCH
 unset __CURRENT_GIT_BRANCH_DETACHED
 unset __CURRENT_GIT_BRANCH_STATUS
@@ -12,85 +10,106 @@ unset __CURRENT_GIT_BRANCH_IS_DIRTY
 unset __CURRENT_GIT_BRANCH_ADDED_FILES
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
+
+unset __CURRENT_GIT_SUBMODULE
+unset __CURRENT_GIT_SUBMODULE_ADDED_FILES
+unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
+unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
+unset __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES
+
 unset __CURRENT_GIT_NUM_STASHED
 
 local st="$(git status --ignore-submodules 2>/dev/null)"
 local dir="$(pwd 2>/dev/null)"
 
-if [[ -n "$st" ]]; then
+if [[ -n "$st" ]]
+then
     __CURRENT_GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
 
     gitdir="$(git rev-parse --git-dir)"
     dotgitdir="$(basename $gitdir 2> /dev/null)"
 
-    if [[ $dotgitdir != ".git" ]]; then
+    if [[ $dotgitdir != ".git" ]];
+    then
         __CURRENT_GIT_SUBMODULE=yes
     fi
 
     local -a arr
     arr=(${(f)st})
 
-    if [[ $arr[1] =~ 'Not currently on any branch.' ]]; then
+    if [[ $arr[1] =~ 'Not currently on any branch.' ]]
+    then
         __CURRENT_GIT_BRANCH='no-branch'
-    elif [[ $arr[1] =~ 'rebase' ]]; then
+    elif [[ $arr[1] =~ 'rebase' ]]
+    then
+        __CURRENT_GIT_BRANCH="${arr[1][(w)6]}";
+        __CURRENT_GIT_BRANCH_OPERATION='rebasing'
+    elif [[ $arr[1] =~ 'interactive rebase' ]]
+    then
         __CURRENT_GIT_BRANCH="${arr[1][(w)5]}";
         __CURRENT_GIT_BRANCH_OPERATION='rebasing'
     else
-        if [[ $arr[1] =~ 'detached' ]]; then
+        if [[ $arr[1] =~ 'detached' ]]
+        then
             __CURRENT_GIT_BRANCH_DETACHED='y'
         fi
         __CURRENT_GIT_BRANCH="${arr[1][(w)4]}"
     fi
 
-    if [[ $arr[2] =~ 'Your branch ' ]]; then
-        if [[ $arr[2] =~ 'ahead' ]]; then
+    if [[ $arr[2] =~ 'Your branch ' ]]
+    then
+        if [[ $arr[2] =~ 'ahead' ]]
+        then
             __CURRENT_GIT_BRANCH_STATUS='ahead'
-        elif [[ $arr[2] =~ 'diverged' ]]; then
+        elif [[ $arr[2] =~ 'diverged' ]]
+        then
             __CURRENT_GIT_BRANCH_STATUS='diverged'
-        elif [[ $arr[2] =~ 'behind' ]]; then
+        elif [[ $arr[2] =~ 'behind' ]]
+        then
             __CURRENT_GIT_BRANCH_STATUS='behind'
-        elif [[ $arr[2] =~ 'up-to-date' ]]; then
+        elif [[ $arr[2] =~ 'up-to-date' ]]
+        then
             __CURRENT_GIT_BRANCH_STATUS='up-to-date'
         else
             __CURRENT_GIT_BRANCH_STATUS='error'
         fi
     fi
 
-    if [[ $st =~ 'You are currently reverting' ]]; then
+    if [[ $st =~ 'You are currently reverting' ]]
+    then
         __CURRENT_GIT_BRANCH_OPERATION='reverting'
     fi
-    if [[ $st =~ 'You are in the middle of an am session' ]]; then
+    if [[ $st =~ 'You are in the middle of an am session' ]]
+    then
         __CURRENT_GIT_BRANCH_OPERATION='am'
     fi
-    if [[ $st =~ 'You have unmerged paths' ]]; then
+    if [[ $st =~ 'You have unmerged paths' ]]
+    then
         __CURRENT_GIT_BRANCH_OPERATION='merging'
     fi
-    if [[ $st =~ 'All conflicts fixed but you are still merging' ]]; then
+    if [[ $st =~ 'All conflicts fixed but you are still merging' ]]
+    then
         __CURRENT_GIT_BRANCH_OPERATION='merging'
     fi
-    if [[ $st =~ 'You are currently cherry-picking' ]]; then
+    if [[ $st =~ 'You are currently cherry-picking' ]]
+    then
         __CURRENT_GIT_BRANCH_OPERATION='cherrypicking'
     fi
 
-    if [[ $st =~ 'Untracked files' ]]; then
+    if [[ $st =~ 'Untracked files' ]]
+    then
         __CURRENT_GIT_BRANCH_UNTRACKED_FILES='1'
     fi
 
-    if [[ $st =~ 'Changes not staged for commit' ]]; then
+    if [[ $st =~ 'Changes not staged for commit' ]];
+    then
         __CURRENT_GIT_BRANCH_IS_DIRTY='1'
     fi
 
-    if [[ $st =~ '(new commits)' ]]; then
-        __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
-    fi
 
-    if [[ $st =~ 'Changes to be committed' ]]; then
-        __CURRENT_GIT_BRANCH_ADDED_FILES='1'
-    fi
-
-    if [[ $st =~ 'Unmerged paths' ]]
+    if [[ $st =~ 'Changes to be committed' ]]
     then
-        __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
+        __CURRENT_GIT_BRANCH_ADDED_FILES='1'
     fi
 
     if [[ $st =~ 'Unmerged paths' ]]
