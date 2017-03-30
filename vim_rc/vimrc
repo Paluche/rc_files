@@ -68,49 +68,34 @@ autocmd BufWritePre * :%s/\s\+$//e " Erase endline spaces
 " set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 
 " }}}
-" Colorscheme ----------------------------------------------------- {{{
-" https://github.com/altercation/vim-colors-solarized
-set background=dark
-
-" Solarized options
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-let g:solarized_termcolors=16
-let g:solarized_hitrail=1
-colorscheme solarized
-
-let g:syntastic_c_checkers=['make']
-set foldmethod=marker
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>110v.\+', -1)
-" }}}
 " Version 7.3 (703) ----------------------------------------------- {{{
 if v:version >= 703
-        set colorcolumn=80
-        set undodir=~/.vim-undo
-        set undofile
-        set undolevels=1000  " Max number of changes that can be undone
-        set undoreload=10000 " Max number lines to save for undo on buffer
-                             "  reload
+    set colorcolumn=80
+    set undodir=~/.vim-undo
+    set undofile
+    set undolevels=1000  " Max number of changes that can be undone
+    set undoreload=10000 " Max number lines to save for undo on buffer
+                         "  reload
 
-        " Toggle line numbers in normal mode, set by default
-        set relativenumber
-        function! NumberToggle()
-                if(&relativenumber == 1)
-                        set number
-                else
-                        set relativenumber
-                endif
-        endfunc
+    " Toggle line numbers in normal mode, set by default
+    set relativenumber
+    function! NumberToggle()
+        if (&relativenumber == 1)
+            set number
+        else
+            set relativenumber
+        endif
+    endfunc
 
-        nnoremap <leader>n :call NumberToggle()<CR>
+    nnoremap <leader>n :call NumberToggle()<CR>
 endif
 " }}}
 " Dumb osx -------------------------------------------------------- {{{
 if has("unix")
- let s:uname = system("uname")
- if s:uname == "Darwin\n"
-   set clipboard=unnamed
- endif
+    let s:uname = system("uname")
+    if s:uname == "Darwin\n"
+        set clipboard=unnamed
+    endif
 endif
 " }}}
 " Convenient Mapping ---------------------------------------------- {{{
@@ -180,23 +165,23 @@ map <A-S-Right> <C-W>l
 " " Line and column position and counts.
 " set statusline+=\ (line\ %l\/%L,\ col\ %03c)
 " }}}
-" NERDTree Settings------------------------------------------------ {{{
+" NERDTree Settings-------------------------------------------------------- {{{
 "map <leader>t :NERDTreeToggle<CR>
 "noremap <leader>r:NERDTreeTabsToggle<CR>
 " }}}
-" Omni-completion ------------------------------------------------- {{{
+" Omni-completion --------------------------------------------------------- {{{
 set ofu=syntaxcomplete#Complete
-set tags+=~/.vim/tags/cpp
+" set tags+=~/.vim/tags/cpp
 " set tags+=~/.vim/tags/llvm
 " set tags+=~/.vim/tags/glib
 " set tags+=~/.vim/tags/llvm
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
+let OmniCpp_NamespaceSearch     = 1
+let OmniCpp_GlobalScopeSearch   = 1
+let OmniCpp_ShowAccess          = 1
 let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1      " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
-let OmniCpp_MayCompleteScope = 1    " autocomplete after ::
+let OmniCpp_MayCompleteDot      = 1 " autocomplete after .
+let OmniCpp_MayCompleteArrow    = 1 " autocomplete after ->
+let OmniCpp_MayCompleteScope    = 1 " autocomplete after ::
 
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
@@ -206,9 +191,9 @@ set completeopt=menuone,menu,longest,preview
 set wildmenu
 set wildmode=longest:full
 " }}}
-" LaTeX options --------------------------------------------------- {{{
+" LaTeX options ----------------------------------------------------------- {{{
 if has("gui_macvim")
-        let g:Tex_ViewRule_pdf = 'Preview'
+    let g:Tex_ViewRule_pdf = 'Preview'
 endif
 
 set shellslash
@@ -216,11 +201,11 @@ set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 set background=dark
 " }}}
-" tskeleton options ----------------------------------------------- {{{
-let g:tskelUserName = 'Hubert Lefevre'
-let g:tskelUserCompany = 'Netatmo'
-let g:tskelUserEmail = 'hubelefevre@gmail.com'
-let g:tskelDateFormat = '%Y'
+" tskeleton options ------------------------------------------------------- {{{
+let g:tskelUserName     = 'Hubert Lefevre'
+let g:tskelUserCompany  = 'Netatmo'
+let g:tskelUserEmail    = 'hubelefevre@gmail.com'
+let g:tskelDateFormat   = '%Y'
 
 autocmd BufNewFile *.h     TSkeletonSetup template.h
 autocmd BufNewFile *.c     TSkeletonSetup template.c
@@ -248,14 +233,14 @@ if !exists('*TSkeleton_JAVA_PACKAGE')
 endif
 
 " }}}
-" Spellchecker ---------------------------------------------------- {{{
+" Spellchecker ------------------------------------------------------------ {{{
 set spell spelllang=en_us
 " }}}
-" VIM airline ----------------------------------------------------- {{{
+" VIM airline ------------------------------------------------------------- {{{
 " Theme
-let g:airline_theme="distinguished"
+let g:airline_theme = "distinguished"
 " air-line
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts            = 1
 let g:airline#extensions#tabline#enabled = 1
 
 if !exists('g:airline_symbols')
@@ -263,29 +248,54 @@ if !exists('g:airline_symbols')
 endif
 
 " unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
+let g:airline_left_sep           = '»'
+let g:airline_left_sep           = '▶'
+let g:airline_right_sep          = '«'
+let g:airline_right_sep          = '◀'
+let g:airline_symbols.linenr     = '␊'
+let g:airline_symbols.linenr     = '␤'
+let g:airline_symbols.linenr     = '¶'
+let g:airline_symbols.branch     = '⎇'
+let g:airline_symbols.paste      = 'ρ'
+let g:airline_symbols.paste      = 'Þ'
+let g:airline_symbols.paste      = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 
 " airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
+let g:airline_left_sep           = ''
+let g:airline_left_alt_sep       = ''
+let g:airline_right_sep          = ''
+let g:airline_right_alt_sep      = ''
+let g:airline_symbols.branch     = ''
+let g:airline_symbols.readonly   = ''
+let g:airline_symbols.linenr     = ''
 " }}}
-" Indent guide ---------------------------------------------------- {{{
+" Solarized -------------------------------------------------------- {{{
+" https://github.com/altercation/vim-colors-solarized
+set background=dark
+
+" Solarized options
+let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
+let g:solarized_termcolors=16
+let g:solarized_hitrail=1
+colorscheme solarized
+
+set foldmethod=marker
+au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>100v.\+', -1)
+" }}}
+" Syntastic -------------------------------------------------------- {{{
+let g:syntastic_c_checkers=['make']
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list            = 0
+let g:syntastic_check_on_open            = 0
+let g:syntastic_check_on_wq              = 0
+" }}}
+" Indent guide ------------------------------------------------------------ {{{
 set ts=4 sw=4 et
 let g:indent_guides_auto_colors = 0
 hi IndentGuidesOdd  ctermbg=black
@@ -294,7 +304,7 @@ hi IndentGuidesOdd  ctermbg=black
 noremap <leader>g :IndentGuidesToggle<CR>
 
 " }}}
-" Rainbow parentheses --------------------------------------------- {{{
+" Rainbow parentheses ----------------------------------------------------- {{{
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
     \ ['Darkblue',    'SeaGreen3'],
@@ -318,10 +328,30 @@ let g:rbpt_max = 16
 
 let g:rbpt_loadcmd_toggle = 0
 
-" au VimEnter * RainbowParenthesesToggle
+"au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
 noremap <leader>p :RainbowParenthesesToggle<CR>
+" }}}
+" vim-preview  ------------------------------------------------------------ {{{
+let vim_markdown_preview_github=1
+" }}}
+" gitgutter --------------------------------------------------------------- {{{
+let g:gitgutter_enabled = 1
+" }}}
+" NERDTree git plugin ----------------------------------------------------- {{{
+let s:NERDTreeIndicatorMap = {
+            \ 'Modified'  : '',
+            \ 'Staged'    : '✚',
+            \ 'Untracked' : '?',
+            \ 'Renamed'   : '➜',
+            \ 'Unmerged'  : '',
+            \ 'Deleted'   : '✖',
+            \ 'Dirty'     : '✗',
+            \ 'Clean'     : '',
+            \ 'Ignored'   : '',
+            \ 'Unknown'   : ''
+            \ }
 " }}}
