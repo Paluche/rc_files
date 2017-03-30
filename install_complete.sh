@@ -31,7 +31,7 @@ if command -v zsh >/dev/null; then
     echo -e "${orange}ZSH ${blue}already installed${NC}"
 else
     echo -e "${red}Installing ${orange}ZSH${NC}"
-    sudo apt-get install zsh
+    sudo apt-get -y install zsh
     echo -e "${lpurple}Setting ZSH as the default shell${NC}"
     chsh -s /bin/zsh
 
@@ -50,7 +50,7 @@ if command -v tree >/dev/null; then
     echo -e "${orange}Tree ${blue}already installed${NC}"
 else
     echo -e "${red}Installing ${orange}tree${NC}";
-    sudo apt-get install tree;
+    sudo apt-get -y install tree;
     echo -e "${orange}tree ${green}installed${NC}";
 fi
 
@@ -58,7 +58,7 @@ if command -v acpi >/dev/null; then
     echo -e "${orange}ACPI ${blue}already installed${NC}"
 else
     echo -e "${red}Installing ACPI${NC}"
-    sudo apt-get install acpi
+    sudo apt-get -y install acpi
     echo -e "${orange}ACPI installed${NC}"
 fi
 
@@ -68,24 +68,24 @@ if command -v awesome >/dev/null; then
     echo -e "${orange}Awesome WM ${blue}already installed${NC}"
 else
     echo -e "${red}Installing awesome WM${NC}"
-    sudo apt-get install awesome
+    sudo apt-get -y install awesome
     echo -e "${orange}Awesome WM installed${NC}"
 fi
 
-if command -v gnome-wm >/dev/null; then
-    echo -e "${orange}Gnome WM ${blue}already installed${NC}"
-else
-    echo -e "${red}Installing gnome WM${NC}"
-    sudo apt-get install gnome
-    echo -e "${orange}Gnome WM installed${NC}"
-fi
+#if command -v gnome-wm >/dev/null; then
+#    echo -e "${orange}Gnome WM ${blue}already installed${NC}"
+#else
+#    echo -e "${red}Installing gnome WM${NC}"
+#    sudo apt-get -y install gnome
+#    echo -e "${orange}Gnome WM installed${NC}"
+#fi
 
 # Code editors
 if command -v emacs >/dev/null; then
     echo -e "${orange}Emacs ${blue}already installed${NC}"
 else
     echo -e "${red}Installing emacs WM${NC}"
-    sudo apt-get install emacs
+    sudo apt-get -y install emacs
     echo -e "${orange}Emacs installed${NC}"
 fi
 
@@ -93,7 +93,7 @@ if command -v vim >/dev/null; then
     echo -e "${orange}VIM ${blue}already installed${NC}"
 else
     echo -e "${red}Installing VIM${NC}"
-    sudo apt-get install vim
+    sudo apt-get -y install vim
     echo -e "${orange}VIM installed${NC}"
 fi
 
@@ -102,7 +102,7 @@ if command -v git >/dev/null; then
     echo -e "${orange}GIT ${blue}already installed${NC}"
 else
     echo -e "${red}Installing GIT${NC}"
-    sudo apt-get install git
+    sudo apt-get -y install git
     echo -e "${orange}GIT installed${NC}"
 fi
 
@@ -110,7 +110,7 @@ if command -v gitk >/dev/null; then
     echo -e "${orange}GITK ${blue}already installed${NC}"
 else
     echo -e "${red}Installing GITK${NC}"
-    sudo apt-get install gitk
+    sudo apt-get -y install gitk
     echo -e "${orange}GITK installed${NC}"
 fi
 
@@ -135,7 +135,7 @@ if command -v ag >/dev/null; then
     echo -e "${orange}AG ${blue}already installed${NC}"
 else
     echo -e "${red}Installing AG${NC}"
-    sudo apt-get install silversearcher-ag
+    sudo apt-get -y install silversearcher-ag
     echo -e "${green}AG installed${NC}"
 fi
 
@@ -143,16 +143,21 @@ if command -v urxvt >/dev/null; then
     echo -e "${orange}URxvt ${blue}already installed${NC}"
 else
     echo -e "${red}Installing URxvt${NC}"
-    sudo apt-get install rxvt-unicode-256color
+    sudo apt-get -y install rxvt-unicode-256color
     echo -e "${green}URxvt installed${NC}"
 fi
 
 echo "Copying fonts..."
-cp ./fonts/* ~/.local/share/fonts
+FONT_DIRECTORY=~/.local/share/fonts
+
+if [ ! -d "$FONT_DIRECTORY" ]; then
+    mkdir $FONT_DIRECTORY
+fi
+cp ./fonts/* $FONT_DIRECTORY
 
 # Reset font cache on Linux
 echo "Resetting font cache, this may take a moment..."
-fc-cache -f ~/.local/share/fonts
+fc-cache -f $FONT_DIRECTORY
 
 bundle=./vim_rc/vim/bundle
 # VIM plugins
