@@ -1,6 +1,6 @@
 #!/bin/sh
 
-display_usage() { 
+display_usage() {
     echo "\nUsage:\n$0 [-s|--source=REPO_SOURCE] [-d|--destination=REPO_DESTINATION] [--branch-regex=BRANCH_REGEX] [--tag-regex=TAG_REGEX] [-f|--filter=FILTER_FOLDER] [-r|--rm-folders=RM_FOLDERS] \n"
     exit 0
 }
@@ -48,9 +48,24 @@ case $i in
 esac
 done
 
-if [ -z "$REPO_SOURCE" ]; then echo "Missing REPO_SOURCE argument."; display_usage; else echo "REPO_SOURCE          = ${REPO_SOURCE}"; fi
-if [ -z "$REPO_DESTINATION" ]; then echo "Missing REPO_DESTINATION argument."; display_usage; else echo "REPO_DESTINATION   = ${REPO_DESTINATION}"; fi
-if [ -z "$FILTER_FOLDER" ]; then echo "Missing FILTER_FOLDER argument."; display_usage; else echo "FILTER_FOLDER        = ${FILTER_FOLDER}"; fi
+if [ -z "$REPO_SOURCE" ]; then
+    echo "Missing REPO_SOURCE argument.";
+    display_usage
+else
+    echo "REPO_SOURCE          = ${REPO_SOURCE}"
+fi
+if [ -z "$REPO_DESTINATION" ]; then
+    echo "Missing REPO_DESTINATION argument."
+    display_usage
+else
+    echo "REPO_DESTINATION   = ${REPO_DESTINATION}"
+fi
+if [ -z "$FILTER_FOLDER" ]; then
+    echo "Missing FILTER_FOLDER argument."
+    display_usage
+else
+    echo "FILTER_FOLDER        = ${FILTER_FOLDER}"
+fi
 
 # Create temp folder
 tmp_dir=`mktemp -d`
@@ -65,9 +80,9 @@ cd ./netatmo
 
 # List all remote branches and filter using regex
 if [ -z "$BRANCH_REGEX" ]; then
-    echo "Keeping all branches."; 
+    echo "Keeping all branches.";
     BRANCHES=`git branch --list --remote | tr -d '[[ ]]' | sed "s/^origin\///"`
-else 
+else
     echo "Filter branches with regex ${BRANCH_REGEX}"
     BRANCHES=`git branch --list --remote | egrep $BRANCH_REGEX | tr -d '[[ ]]' | sed "s/^origin\///"`
 fi
@@ -81,8 +96,8 @@ done
 git remote rm origin
 
 if [ -z "$TAG_REGEX" ]; then
-    echo "Keeping all tags."; 
-else 
+    echo "Keeping all tags.";
+else
     # Filter tags using inverted regex
     echo "Filter tags with regex ${TAG_REGEX}"
     TAGS=`git tag | egrep -v $TAG_REGEX`
@@ -105,8 +120,8 @@ for original in $ORIGINALS; do
 done
 
 if [ -z "$RM_FOLDERS" ]; then
-    echo "Keeping all folders."; 
-else 
+    echo "Keeping all folders.";
+else
     # Filter tags using inverted regex
     echo "Filter folders : ${RM_FOLDERS}"
     $run git filter-branch --force --index-filter "git rm -r --cached --ignore-unmatch ${RM_FOLDERS}" --prune-empty --tag-name-filter cat -- --all
