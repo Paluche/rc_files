@@ -1,6 +1,6 @@
 [user]
-	name              = Hubert Lefevre
-	email             = hubelefevre@gmail.com
+    name              = Hubert Lefevre
+    email             = hubelefevre@gmail.com
 
 [color]
     grep              = true
@@ -43,11 +43,11 @@
     recurseSubmodules = true
 
 [merge]
-	tool              = vimdiff
+    tool              = vimdiff
 
 [diff]
-	tool              = vimdiff
-	submodule         = log
+    tool              = vimdiff
+    submodule         = log
 
 [color "diff"]
     #branch           = red
@@ -64,7 +64,7 @@
     added             = green
 
 [color "branch"]
-      remote          = yellow
+    remote            = yellow
 
 [color "blame"]
     author            = red
@@ -73,4 +73,4 @@
     fastCopyBlame     = true
 
 [status]
-	submoduleSummary  = true
+    submoduleSummary  = true
