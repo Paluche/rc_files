@@ -12,18 +12,6 @@ white='\033[0;37m'
 bwhite='\033[1;37m'
 NC='\033[0m' # No Color
 
-echo -e "
-${red}red
-${orange}orange
-${green}green
-${yellow}yellow
-${blue}blue
-${purple}purple
-${lpurple}lpurple
-${cyan}cyan
-${white}white
-${bwhite}bwhite"
-
 curr_dir= pwd
 
 echo -e "${red}WARNING
