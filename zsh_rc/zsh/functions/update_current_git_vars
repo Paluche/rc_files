@@ -8,6 +8,7 @@ unset __CURRENT_GIT_BRANCH_STATUS
 unset __CURRENT_GIT_BRANCH_OPERATION
 unset __CURRENT_GIT_BRANCH_IS_DIRTY
 unset __CURRENT_GIT_BRANCH_ADDED_FILES
+unset __CURRENT_GIT_BRANCH_FILE_DELETED
 unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
 unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
 
@@ -106,6 +107,10 @@ then
         __CURRENT_GIT_BRANCH_IS_DIRTY='1'
     fi
 
+    if [[ $st =~ 'deleted' ]]
+    then
+        __CURRENT_GIT_BRANCH_FILE_DELETED='1'
+    fi
 
     if [[ $st =~ 'Changes to be committed' ]]
     then

@@ -100,6 +100,11 @@ then
         s+=""
     fi
 
+    if [ -n "$__CURRENT_GIT_BRANCH_FILE_DELETED" ]
+    then
+        s+=""
+    fi
+
     if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ];
     then
         s+="?"
