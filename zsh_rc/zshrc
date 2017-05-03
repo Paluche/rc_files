@@ -155,6 +155,15 @@ alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'                  # Shorter diff for git show
 alias gsu='git submodule update'             # Shortcut
 
+# Keep auto-completion working with the aliases
+compdef _git gch=git-checkout
+compdef _git gd=git-diff
+compdef _git gls=git-log
+compdef _git gl=git-log
+compdef _git gre=git-rebase
+compdef _git gsh=git-show
+compdef _git gss=git-show
+
 function git_home()
 {
     dir="$(git rev-parse --show-toplevel)"
