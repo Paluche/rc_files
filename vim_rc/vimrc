@@ -20,7 +20,6 @@ set ruler                " Show where I am in the command area
 set colorcolumn=80      " vertical ruler at 80 characters
 set textwidth=80         " Automatic word wrapping at 80 characters
 set formatoptions+=t     " TODO WHAT IS THAT???
-set listchars=nbsp:.     " Add non breaking space to list
 set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
                          " ↪ (0 = never, 1 = default [multi-window only])
@@ -41,6 +40,10 @@ set tabstop=4            " 4 spaces
 set shiftwidth=4         " 4 spaces
 set softtabstop=4        " 4 spaces
 set expandtab            " Expand tabs to spaces
+set listchars=           " Clear list
+set listchars+=nbsp:.    " Add non breaking space to list
+set listchars+=tab:>-    " > is shown at the beginning, - throughout
+set list
 
 set hlsearch             " highlight my search
 set incsearch            " incremental search
