@@ -724,7 +724,7 @@ syn keyword	cAnsiName	PRIXFAST64 SCNiLEAST64 SCNu64 SCNxPTR
 syn keyword	cAnsiName	PRIXMAX SCNiFAST8 SCNuLEAST8
 syn keyword	cAnsiName	PRIXPTR SCNiFAST16 SCNuLEAST16
 
-syn keyword	cAnsiName	errno environ
+syn keyword	cAnsiName	errno environ optarg
 
 syn keyword	cAnsiName	STDC CX_LIMITED_RANGE
 syn keyword	cAnsiName	STDC FENV_ACCESS
