@@ -146,6 +146,7 @@ URxvt*fadecolor:               S_base03
 URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
+URxvt*pointerBlank:            true
 
 ! black
 URxvt*color0:                  S_base02
