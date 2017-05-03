@@ -126,6 +126,17 @@ then
     then
         local st_sub="$(git status 2>/dev/null)"
 
+        local -a arr_sub
+        arr_sub=(${(f)st})
+
+        if [[ $st_sub =~ 'Changes to be committed' ]]
+        then
+            if [[ ! $st =~ 'Changes to be committed' ]]
+            then
+                __CURRENT_GIT_SUBMODULE_ADDED_FILES='1'
+            fi
+        fi
+
         if [[ $st_sub =~ 'new commits' ]]
         then
             __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
@@ -144,6 +155,14 @@ then
         if [[ $st_sub == *"untracked content"* ]]
         then
             __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES='1'
+        fi
+
+        if [[ $st_sub =~ 'deleted' ]]
+        then
+            if [[ ! $st =~ 'deleted' ]]
+            then
+                __CURRENT_GIT_SUBMODULE_DELETED='1'
+            fi
         fi
     fi
 

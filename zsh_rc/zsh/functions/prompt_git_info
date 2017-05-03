@@ -112,6 +112,11 @@ then
 
     # Submodules status print
     local sub
+    if [ -n "$__CURRENT_GIT_SUBMODULE_ADDED_FILES" ]
+    then
+        sub+="◀"
+    fi
+
     if [ -n "$__CURRENT_GIT_SUBMODULE_NEW_COMMITS" ];
     then
         sub+=""
@@ -125,6 +130,11 @@ then
     if [ -n "$__CURRENT_GIT_SUBMODULE_UNTRACKED_FILES" ];
     then
         sub+="?"
+    fi
+
+    if [ -n "$__CURRENT_GIT_SUBMODULE_FILE_DELETED" ]
+    then
+        sub+=""
     fi
 
     if [ -n "$sub" ];
