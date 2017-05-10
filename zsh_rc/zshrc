@@ -505,6 +505,13 @@ function serial_dmesg_dump()
 
 alias cortex_log='python ~/.script/cortex_log.py'
 
+function markdown_preview()
+{
+    rm /tmp/$1.html
+    markdown_py $1 > /tmp/$1.html
+    firefox /tmp/$1.html
+}
+
 function common_init()
 {
     if [ -n "$SSH_CLIENT" ]
@@ -514,6 +521,20 @@ function common_init()
         xflux_fr
     fi
     ssh-add
+}
+
+function in_rebase_i_correct_author()
+{
+    while git status | head -1 | grep -q 'rebase in progress'
+    do
+        git commit --amend -C HEAD --author='hlefevre@netatmo.com'
+        git rebase --continue
+    done
+}
+
+function git_diff_origin()
+{
+    git diff $__CURRENT_GIT_BRANCH origin/$__CURRENT_GIT_BRANCH
 }
 
 # Computer's specific configurations
