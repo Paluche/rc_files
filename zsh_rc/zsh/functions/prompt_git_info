@@ -1,69 +1,57 @@
-if [ -n "$__CURRENT_GIT_BRANCH" ]
+if [ -n "$__GIT_NAME" ]
 then
     local s
 
+    s+="%{${fg[cyan]}%}"
+    s+="─["
+
     # Git name print
-    if [ -n "$__CURRENT_GIT_SUBMODULE" ];
+    if [ -n "$__SUBMODULE" ]
     then
         s+="%{${fg[red]}%}"
     else
         s+=%{${fg[green]}%}
     fi
 
-    local git_name="$(basename $__CURRENT_GIT_TOP_LEVEL 2> /dev/null)"
-
-    s+="$git_name"
+    s+="$__GIT_NAME"
 
     # Current branch name print
-    s+="%{${fg[cyan]}%}|"
+    s+="%{${fg[cyan]}%}"
+    s+="|"
 
-    if [ -n "$__CURRENT_GIT_BRANCH_DETACHED" ];
+    if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
-        s+="%{${fg[red]}%}"
+        s+="%{${fg[red]}%}"
+        s+=""
     fi
 
     s+="%{${fg[blue]}%}"
-    s+="$__CURRENT_GIT_BRANCH"
-    s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
-
-    # Operation status print
-    print_separator=
-
-    case "$__CURRENT_GIT_BRANCH_OPERATION" in
-        am)
-            s+="%{${fg[red]}%}am"
-            print_separator=y
-            ;;
-
-        reverting)
-            s+="%{${fg[red]}%}reverting"
-            print_separator=y
-            ;;
-
-        rebasing)
-            s+="%{${fg[red]}%}rebasing"
-            print_separator=y
-             ;;
-
-        merging)
-            s+="%{${fg[red]}%}merging"
-            print_separator=y
-            ;;
-
-        cherrypicking)
-            s+="%{${fg[red]}%}cherry-picking"
-            print_separator=y
-            ;;
-    esac
-
-    if [ -n "$print_separator" ]
+    if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
-        s+="%{${fg[cyan]}%}|%{${fg[yellow]}%}"
+        s+="$__GIT_CURRENT_COMMIT_SHA1"
+    else
+        s+="$__GIT_BRANCH_NAME"
     fi
 
+    s+="%{${fg[cyan]}%}"
+    s+="|"
+
+    # Operation status print
+    if [ -n "$__GIT_CURRENT_OPERATION" ]
+    then
+        s+="%{${fg[red]}%}"
+        for op in $__GIT_CURRENT_OPERATION
+        do
+            s+=${op:1}
+        done
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+    fi
+
+    s+="%{${fg[yellow]}%}"
 
     # Branch status print
-    case "$__CURRENT_GIT_BRANCH_STATUS" in
+    case "$__GIT_REMOTE_STATUS" in
         ahead)
             s+=""
             ;;
@@ -85,69 +73,78 @@ then
             ;;
     esac
 
-    if [ -n "$__CURRENT_GIT_BRANCH_ADDED_FILES" ]
+    if [ -n "$__GIT_HAS_MODIF_ADDED" ]
     then
         s+="◀"
     fi
 
-    if [ -n "$__CURRENT_GIT_BRANCH_IS_DIRTY" ]
+    if [ -n "$__GIT_IS_DIRTY" ]
     then
         s+=""
     fi
 
-    if [ -n "$__CURRENT_GIT_BRANCH_UNMERGED_FILES" ];
-    then
-        s+=""
-    fi
-
-    if [ -n "$__CURRENT_GIT_BRANCH_FILE_DELETED" ]
+    if [ -n "$__GIT_HAS_DELETED_FILE" ]
     then
         s+=""
     fi
 
-    if [ -n "$__CURRENT_GIT_BRANCH_UNTRACKED_FILES" ];
+    if [ -n "$__GIT_HAS_UNMERGED_FILES" ];
+    then
+        s+=""
+    fi
+
+    if [ -n "$__GIT_HAS_UNTRACKED_FILES" ];
     then
         s+="?"
     fi
 
     # Submodules status print
     local sub
-    if [ -n "$__CURRENT_GIT_SUBMODULE_ADDED_FILES" ]
+    if [ -n "$__SUBMODULE_ADDED" ]
     then
         sub+="◀"
     fi
 
-    if [ -n "$__CURRENT_GIT_SUBMODULE_NEW_COMMITS" ];
+    if [ -n "$__GIT_HAS_SUBMODULE_DELETED" ]
+    then
+        s+=""
+    fi
+
+    if [ -n "$__SUBMODULE_DIVERGED" ]
     then
         sub+=""
     fi
 
-    if [ -n "$__CURRENT_GIT_SUBMODULE_IS_DIRTY" ];
+    if [ -n "$__SUBMODULE_IS_DIRTY" ]
     then
         sub+=""
     fi
 
-    if [ -n "$__CURRENT_GIT_SUBMODULE_UNTRACKED_FILES" ];
+    if [ -n "$__SUBMODULE_HAS_UNTRACKED_FILES" ]
     then
         sub+="?"
     fi
 
-    if [ -n "$__CURRENT_GIT_SUBMODULE_FILE_DELETED" ]
+    if [ -n "$sub" ]
     then
-        sub+=""
-    fi
-
-    if [ -n "$sub" ];
-    then
-        s+="%{${fg[cyan]}%}|%{${fg[red]}%}$sub"
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+        s+="%{${fg[red]}%}"
+        s+="$sub"
     fi
 
     # Print current number of stash if there are some
-    if [[ ! $__CURRENT_GIT_NUM_STASHED -eq 0 ]];
+    if [ ! $__GIT_NUM_STASHED -eq 0 ]
     then
-        s+="%{${fg[cyan]}%}|%{${fg[white]}%}⚑"
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+        s+="%{${fg[white]}%}"
+        s+="⚑"
     fi
 
-    # Make full prompt
-    printf "%s%s%s" "%{${fg[cyan]}%}─[" $s "%{${fg[cyan]}%}]"
+    s+="%{${fg[cyan]}%}"
+    s+="]"
+
+    # Print git prompt
+    printf "%s" $s
 fi

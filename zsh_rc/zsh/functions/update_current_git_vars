@@ -1,178 +1,210 @@
-# Works with git version 2.11.0
+# Configuration
+local SHA1_SIZE=8
 
-unset __CURRENT_GIT_TOP_LEVEL
+# Exported variables
+unset __GIT_NAME
+unset __GIT_IS_SUBMODULE
 
-unset __CURRENT_GIT_BRANCH
-unset __CURRENT_GIT_BRANCH_DETACHED
-unset __CURRENT_GIT_BRANCH_STATUS
-unset __CURRENT_GIT_BRANCH_OPERATION
-unset __CURRENT_GIT_BRANCH_IS_DIRTY
-unset __CURRENT_GIT_BRANCH_ADDED_FILES
-unset __CURRENT_GIT_BRANCH_FILE_DELETED
-unset __CURRENT_GIT_BRANCH_UNTRACKED_FILES
-unset __CURRENT_GIT_BRANCH_UNMERGED_FILES
+unset __GIT_BRANCH_NAME
+unset __GIT_BRANCH_DETACHED
+unset __GIT_CURRENT_COMMIT_SHA1
+unset __GIT_REMOTE_STATUS
+unset __GIT_IS_DIRTY
+unset __GIT_HAS_DELETED_FILE
+unset __GIT_HAS_MODIF_ADDED
+unset __GIT_HAS_UNMERGED_FILES
+unset __GIT_HAS_UNTRACKED_FILES
+unset __GIT_HAS_SUBMODULE_DELETED
 
-unset __CURRENT_GIT_SUBMODULE
-unset __CURRENT_GIT_SUBMODULE_ADDED_FILES
-unset __CURRENT_GIT_SUBMODULE_NEW_COMMITS
-unset __CURRENT_GIT_SUBMODULE_IS_DIRTY
-unset __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES
+unset __SUBMODULE_ADDED
+unset __SUBMODULE_DIVERGED
+unset __SUBMODULE_IS_DIRTY
+unset __SUBMODULE_HAS_UNTRACKED_FILES
 
-unset __CURRENT_GIT_NUM_STASHED
+unset __GIT_CURRENT_OPERATION
+unset __GIT_NUM_STASHED
 
-local st="$(git status --ignore-submodules 2>/dev/null)"
-local dir="$(pwd 2>/dev/null)"
+# Determinate the git directory
+local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
 
-if [[ -n "$st" ]]
+# If the command failed, then we're not in a git repository
+if [ -n "$git_dir" ]
 then
-    __CURRENT_GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
+    # Get repository name (top folder name containing the repo)
+    local git_top_level="$(git rev-parse --show-toplevel)"
 
-    gitdir="$(git rev-parse --git-dir)"
-    dotgitdir="$(basename $gitdir 2> /dev/null)"
+    __GIT_NAME="$(basename $git_top_level 2> /dev/null)"
 
-    if [[ $dotgitdir != ".git" ]];
+
+    if [ -d "$git_top_level/.git" ]
     then
-        __CURRENT_GIT_SUBMODULE=yes
+        __GIT_IS_SUBMODULE=yes
     fi
 
-    local -a arr
-    arr=(${(f)st})
+    # Determinate entries and branch status
+    local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
 
-    if [[ $arr[1] =~ 'Not currently on any branch.' ]]
-    then
-        __CURRENT_GIT_BRANCH='no-branch'
-    elif [[ $arr[1] =~ 'rebase' ]]
-    then
-        __CURRENT_GIT_BRANCH="${arr[1][(w)6]}";
-        __CURRENT_GIT_BRANCH_OPERATION='rebasing'
-    elif [[ $arr[1] =~ 'interactive rebase' ]]
-    then
-        __CURRENT_GIT_BRANCH="${arr[1][(w)5]}";
-        __CURRENT_GIT_BRANCH_OPERATION='rebasing'
-    else
-        if [[ $arr[1] =~ 'detached' ]]
-        then
-            __CURRENT_GIT_BRANCH_DETACHED='y'
-        fi
-        __CURRENT_GIT_BRANCH="${arr[1][(w)4]}"
-    fi
+    # Output is formatted
+    # # branch.oid <current commit>
+    # # branch.head <HEAD REFERENCE>
+    # # branch.upstream <UPSTREAM REFERENCE>
+    # # branch.ab +<commits ahead> -<commits behind>
+    # <MODIFICATION LIST>
+    #
+    # Modification list as followed:
+    # For ordinary changed entries:
+    #   1 <XY> <sub> <mH> <mI> <mW> <hH> <hI> <path>
+    #
+    # For renamed or copied entries
+    #   2 <XY> <sub> <mH> <mI> <mW> <hH> <hI> <X><score> <path><sep><origPath>
+    #
+    # For unmerged entries
+    #   u <xy> <sub> <m1> <m2> <m3> <mW> <h1> <h2> <h3> <path>
+    #
+    # Untracked items have the following format:
+    #   ? <path>
+    local -a lines
 
-    if [[ $arr[2] =~ 'Your branch ' ]]
-    then
-        if [[ $arr[2] =~ 'ahead' ]]
-        then
-            __CURRENT_GIT_BRANCH_STATUS='ahead'
-        elif [[ $arr[2] =~ 'diverged' ]]
-        then
-            __CURRENT_GIT_BRANCH_STATUS='diverged'
-        elif [[ $arr[2] =~ 'behind' ]]
-        then
-            __CURRENT_GIT_BRANCH_STATUS='behind'
-        elif [[ $arr[2] =~ 'up-to-date' ]]
-        then
-            __CURRENT_GIT_BRANCH_STATUS='up-to-date'
-        else
-            __CURRENT_GIT_BRANCH_STATUS='error'
-        fi
-    fi
+    lines=(${(f)git_status})
 
-    if [[ $st =~ 'You are currently reverting' ]]
-    then
-        __CURRENT_GIT_BRANCH_OPERATION='reverting'
-    fi
-    if [[ $st =~ 'You are in the middle of an am session' ]]
-    then
-        __CURRENT_GIT_BRANCH_OPERATION='am'
-    fi
-    if [[ $st =~ 'You have unmerged paths' ]]
-    then
-        __CURRENT_GIT_BRANCH_OPERATION='merging'
-    fi
-    if [[ $st =~ 'All conflicts fixed but you are still merging' ]]
-    then
-        __CURRENT_GIT_BRANCH_OPERATION='merging'
-    fi
-    if [[ $st =~ 'You are currently cherry-picking' ]]
-    then
-        __CURRENT_GIT_BRANCH_OPERATION='cherrypicking'
-    fi
+    for line in $lines
+    do
+        local -a words
+        words=(${=line})
 
-    if [[ $st =~ 'Untracked files' ]]
-    then
-        __CURRENT_GIT_BRANCH_UNTRACKED_FILES='1'
-    fi
+        case "$words[1]" in
+            \#)
+                case "$words[2]" in
+                    branch.head)
+                        __GIT_BRANCH_NAME=$words[3]
+                        ;;
 
-    if [[ $st =~ 'Changes not staged for commit' ]];
-    then
-        __CURRENT_GIT_BRANCH_IS_DIRTY='1'
-    fi
+                    branch.oid)
+                        local sha1=$words[3]
+                        __GIT_CURRENT_COMMIT_SHA1=${sha1:0:$SHA1_SIZE}
+                        ;;
 
-    if [[ $st =~ 'deleted' ]]
-    then
-        __CURRENT_GIT_BRANCH_FILE_DELETED='1'
-    fi
+                    branch.ab)
+                        if [ $words[3] = "+0" ]
+                        then
+                            if [ $words[4] = "-0" ]
+                            then
+                                __GIT_REMOTE_STATUS='up-to-date'
+                            else
+                                __GIT_REMOTE_STATUS='behind'
+                            fi
+                        else
+                            if [ $words[4] = "-0" ]
+                            then
+                                __GIT_REMOTE_STATUS='ahead'
+                            else
+                                __GIT_REMOTE_STATUS='diverged'
+                            fi
+                        fi
+                        ;;
+                esac
+                ;;
 
-    if [[ $st =~ 'Changes to be committed' ]]
-    then
-        __CURRENT_GIT_BRANCH_ADDED_FILES='1'
-    fi
+            1|2)
+                local XY=$words[2]
+                local sub=$words[3]
 
-    if [[ $st =~ 'Unmerged paths' ]]
-    then
-        __CURRENT_GIT_BRANCH_UNMERGED_FILES='1'
-    fi
+                if [ $sub = "N..." ]
+                then
+                    # Entry isn't a submodule.
+                    if [ ${XY:0:1} != "." ]
+                    then
+                        __GIT_HAS_MODIF_ADDED='1'
+                    fi
 
-    if [[ -e $__CURRENT_GIT_TOP_LEVEL/.gitmodules ]]
-    then
-        local st_sub="$(git status 2>/dev/null)"
+                    case ${XY:1:1} in
+                        M)
+                            __GIT_IS_DIRTY='1'
+                            ;;
+                        D)
+                            __GIT_HAS_DELETED_FILE='1'
+                            ;;
+                    esac
 
-        local -a arr_sub
-        arr_sub=(${(f)st})
+                else
+                    # Entry is a submodule.
+                    if [ ${XY:0:1} != "." ]
+                    then
+                        __SUBMODULE_ADDED='1'
+                    fi
 
-        if [[ $st_sub =~ 'Changes to be committed' ]]
-        then
-            if [[ ! $st =~ 'Changes to be committed' ]]
-            then
-                __CURRENT_GIT_SUBMODULE_ADDED_FILES='1'
-            fi
-        fi
+                    if [ ${XY:1:1} = "D" ]
+                    then
+                        __GIT_HAS_SUBMODULE_DELETED='1'
+                    fi
 
-        if [[ $st_sub =~ 'new commits' ]]
-        then
-            __CURRENT_GIT_SUBMODULE_NEW_COMMITS='1'
-        fi
+                    if [ ${sub:1:1} = "C" ]
+                    then
+                        __SUBMODULE_DIVERGED='1'
+                    fi
 
-        if [[ $st_sub == *"(modified content"* ]]
-        then
-            __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
-        fi
+                    if [ ${sub:2:1} = "M" ]
+                    then
+                        __SUBMODULE_IS_DIRTY='1'
+                    fi
 
-        if [[ $st_sub == *"modified content,"* ]]
-        then
-            __CURRENT_GIT_SUBMODULE_IS_DIRTY='1'
-        fi
+                    if [ ${sub:3:1} = "U" ]
+                    then
+                        __SUBMODULE_UNTRACKED_FILES='1'
+                    fi
+                fi
+                ;;
 
-        if [[ $st_sub == *"untracked content"* ]]
-        then
-            __CURRENT_GIT_SUBMODULE_UNTRACKED_FILES='1'
-        fi
 
-        if [[ $st_sub =~ 'deleted' ]]
-        then
-            if [[ ! $st =~ 'deleted' ]]
-            then
-                __CURRENT_GIT_SUBMODULE_DELETED='1'
-            fi
-        fi
-    fi
+            u)
+                __GIT_HAS_UNMERGED_FILES='1'
+                ;;
 
-    __CURRENT_GIT_NUM_STASHED=0
-    stash_file="$gitdir/logs/refs/stash"
+            \?)
+                __GIT_HAS_UNTRACKED_FILES='1'
+                ;;
+        esac
+    done
+
+    # Find out the number of stashed list
+    __GIT_NUM_STASHED=0
+    stash_file="$git_dir/logs/refs/stash"
     if [[ -e "${stash_file}" ]]
     then
         while IFS='' read -r wcline || [[ -n "$wcline" ]]
         do
-            __CURRENT_GIT_NUM_STASHED=$((__CURRENT_GIT_NUM_STASHED+1))
+            __GIT_NUM_STASHED=$((__GIT_NUM_STASHED+1))
         done < ${stash_file}
+    fi
+
+    # Find out if an operation among 'rebase', 'merge', 'cherry-pick',
+    # 'bisect' and 'am'
+    if [ -d $git_dir/rebase-apply ]
+    then
+        if [ -f $git_dir/rebase-apply/rebasing ]
+        then
+            __GIT_CURRENT_OPERATION+=" rebase"
+        else
+            __GIT_CURRENT_OPERATION+=" am"
+        fi
+
+    elif [ -d $git_dir/rebase-merge ]
+    then
+        __GIT_CURRENT_OPERATION+=" rebase"
+    fi
+
+    if [ -f $git_dir/BISECT_START ]
+    then
+        __GIT_CURRENT_OPERATION+=" bisect"
+    fi
+
+    if [ -f $git_dir/MERGE_HEAD ]
+    then
+        __GIT_CURRENT_OPERATION+=" merge"
+    fi
+
+    if [ -f $git_dir/CHERRY_PICK_HEAD ]
+    then
+        __GIT_CURRENT_OPERATION+=" cherry-pick"
     fi
 fi
