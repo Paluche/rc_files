@@ -186,6 +186,14 @@ function git_blame()
     ruby ~/.script/git_blame.rb $1 | less -R
 }
 
+function git_status()
+{
+    echo -e "\e[0;31mStatus:\e[0m"
+    git status -s
+    echo -e "\n\e[0;31mBranches:\e[0m"
+    git branch --list -vv
+}
+
 # Editors on shell
 alias pico='nano -mw'
 alias nano='nano -mw'
