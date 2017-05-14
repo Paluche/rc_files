@@ -17,8 +17,9 @@ set title                " Change the terminal title
 set encoding=utf-8       " Show utf-8 chars
 set showcmd              " count highlighted
 set ruler                " Show where I am in the command area
-set colorcolumn=80      " vertical ruler at 80 characters
+set colorcolumn=80       " vertical ruler at 80 characters
 set textwidth=80         " Automatic word wrapping at 80 characters
+set foldmethod=marker
 set formatoptions+=t     " TODO WHAT IS THAT???
 set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
@@ -67,9 +68,9 @@ filetype indent on
 
 set fileformats=unix,dos,mac
 
+au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>100v.\+', -1)
 autocmd BufWritePre * :%s/\s\+$//e " Erase endline spaces
 " set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
-
 " }}}
 " Version 7.3 (703) ----------------------------------------------- {{{
 if v:version >= 703
@@ -283,9 +284,6 @@ let g:solarized_contrast = "high"
 let g:solarized_termcolors=16
 let g:solarized_hitrail=1
 colorscheme solarized
-
-set foldmethod=marker
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>100v.\+', -1)
 " }}}
 " Syntastic -------------------------------------------------------- {{{
 let g:syntastic_c_checkers=['make']
