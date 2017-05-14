@@ -25,6 +25,11 @@ set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
                          " ↪ (0 = never, 1 = default [multi-window only])
 
+set listchars=           " Clear list
+set listchars=nbsp:.     " Add non breaking space to list
+set listchars=tab:>-     " Add tab to list
+set list                 " Activate list
+
 set modelines=0          " Don't read first/last lines of file for settings
 set hidden               " Stash unwritten files in buffer
 set vb                   " Don't beep at me
