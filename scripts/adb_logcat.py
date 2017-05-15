@@ -20,6 +20,8 @@
 # written by jeff sharkey, http://jsharkey.org/
 # piping detection and popen() added by other android team members
 # Highlighting of the other logcat format by Hubert Lefevre
+# PID filtering and improvement based on the work of lots of contributors from
+# https://github.com/JakeWharton/pidcat
 
 import os, sys, re, StringIO
 import fcntl, termios, struct
@@ -41,7 +43,7 @@ KNOWN_TAGS = {
 
 def format(fg = None, bg = None, bright = False, bold = False, dim = False,
            reset = False):
-    # manually derived from http://en.wikipedia.org/wiki/ANSI_escape_code#Codes
+    # Manually derived from http://en.wikipedia.org/wiki/ANSI_escape_code#Codes
     codes = []
     if reset:
         codes.append("0")
@@ -77,14 +79,14 @@ TAGTYPEFORMAT = {
     "S": format(fg = BLACK, bg = CYAN),
 }
 
-rebeginning  = re.compile("^--------- beginning of ([^\)]+)([^\(]+)\r$")
+rebeginning  = re.compile("^--------- beginning of ([^\)]+)([^\(]+)$")
 rethreadtime = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+)([^\)]+) " \
-                          "([^\)]+) ([VDIWEFS]) ([^\(]+?): (.*)$")
+                          "([^\)]+) ([VDIWEFS]) ([^\(]+?):(.*)$")
 retime       = re.compile("^(\d+)-(\d+) (\d+):(\d+):(\d+).(\d+) " \
-                          "([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
+                          "([VDIWEFS])/([^\(]+)\(([^\)]+)\):(.*)$")
 rethread     = re.compile("^([VDIWEFS])\(([^\)]+):([^\)]+)\) (.*)$")
-rebrief      = re.compile("^([VDIWEFS])/([^\(]+)\(([^\)]+)\): (.*)$")
-retag        = re.compile("^([VDIWEFS])/([^\(]+?): (.*)$")
+rebrief      = re.compile("^([VDIWEFS])/([^\(]+)\(([^\)]+)\):(.*)$")
+retag        = re.compile("^([VDIWEFS])/([^\(]+?):(.*)$")
 
 def print_owner(linebuf, colorless, emptyHeader, owner):
     # center process owner info
@@ -126,15 +128,24 @@ def allocate_color(tag):
     LAST_USED.append(color)
     return color
 
-def print_tag(linebuf, colorless, emptyHeader, tag):
-    # right-align tag title and allocate color if needed
-    tag   = tag.strip()
+def print_tag(linebuf, colorless, emptyHeader, tag, last_tag):
     color = allocate_color(tag)
-    tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
-    linebuf.write("%s%s %s" % (format(fg = color), tag, format(reset = True)))
-    colorless.write("%s " % (tag))
+
     emptyHeader.write("%s%s%s" % (format(fg = color), " " * TAG_WIDTH,
                                   format(reset = True)))
+
+    if last_tag == tag:
+        linebuf.write("%s%s%s" % (format(fg = color), " " * TAG_WIDTH,
+                                  format(reset = True)))
+        colorless.write(" " * TAG_WIDTH)
+    else:
+        # right-align tag title and allocate color if needed
+        tag   = tag.strip()
+        tag   = tag[-(TAG_WIDTH - 1):].rjust((TAG_WIDTH - 1))
+
+        linebuf.write("%s%s %s" % (format(fg = color), tag, format(reset = True)))
+        colorless.write("%s " % (tag))
+
     return TAG_WIDTH
 
 def print_tagtype(linebuf, colorless, emptyHeader, tagtype):
@@ -161,6 +172,59 @@ def print_msg(linebuf, colorless, emptyHeader, headerSize, msg):
             linebuf.write("\n%s" % (emptyHeader.getvalue()))
             colorless.write("\n%s" % (" " * headerSize))
         current = next
+
+def match_packages(token):
+    if len(package) == 0:
+        return True
+
+    if token in named_processes:
+        return True
+
+    index = token.find(':')
+
+    if index == -1:
+        return (token in catchall_package)
+    else:
+        return (token[:index] in catchall_package)
+
+def parse_death(tag, message):
+    if tag != 'ActivityManager':
+        return None, None
+    kill = PID_KILL.match(message)
+    if kill:
+        pid = kill.group(1)
+        package_line = kill.group(2)
+        if match_packages(package_line) and pid in pids:
+            return pid, package_line
+    leave = PID_LEAVE.match(message)
+    if leave:
+        pid = leave.group(2)
+        package_line = leave.group(1)
+        if match_packages(package_line) and pid in pids:
+            return pid, package_line
+    death = PID_DEATH.match(message)
+    if death:
+        pid = death.group(2)
+        package_line = death.group(1)
+        if match_packages(package_line) and pid in pids:
+            return pid, package_line
+    return None, None
+
+def parse_start_proc(line):
+    start = PID_START_5_1.match(line)
+    if start is not None:
+        line_pid, line_package, target = start.groups()
+        return line_package, target, line_pid, '', ''
+    start = PID_START.match(line)
+    if start is not None:
+        line_package, target, line_pid, line_uid, line_gids = start.groups()
+        return line_package, target, line_pid, line_uid, line_gids
+    start = PID_START_DALVIK.match(line)
+    if start is not None:
+        line_pid, line_package, line_uid = start.groups()
+        return line_package, '', line_pid, line_uid, ''
+    return None
+
 
 def usage():
     print "This script can be used in two manners, by piping a flux from an "  \
@@ -194,9 +258,13 @@ def usage():
                               "regular expression"
     print "    -A <regexp>     Show logs which tags or message match the "     \
                               "specified regular expression"
+    print "    -p <pid>        Filter logs based on package"
+    print "    -P <pid>        Filter logs based on PID"
     print "    -i              Ignore case on the regular expression"
     print "    -w <path>       Write output in a file (colorless)"
     sys.exit(2)
+
+
 
 # Regular expressions
 reFlags        = None
@@ -204,6 +272,7 @@ reTagFilterExp = None
 reMsgFilterExp = None
 reTagFilter    = None
 reMsgFilter    = None
+rePidFilter    = None
 writefile      = None
 
 # adb logcat options
@@ -212,7 +281,7 @@ logcatOpt    = StringIO.StringIO()
 adbOpt       = StringIO.StringIO()
 
 try:
-    opts, arg = getopt.getopt(sys.argv[1:], "S:hscit:t:A:T:M:v:w:", ["help"])
+    opts, arg = getopt.getopt(sys.argv[1:], "S:hscit:t:A:T:M:v:w:P:", ["help"])
 except getopt.GetoptError as err:
     print str(err)
     print ""
@@ -231,6 +300,8 @@ for o, a in opts:
         reTagFilterExp = a
     elif o == "-M":
         reMsgFilterExp = a
+    elif o == "-P":
+        rePidFilter = re.compile(a)
     elif o == "-v":
         if a in ("brief", "tag", "thread", "time", "threadtime"):
             logcatOptv = a
@@ -270,9 +341,11 @@ if not reMsgFilterExp is None:
     else:
         reMsgFilter = re.compile(reMsgFilterExp, reFlags)
 
+last_tag = None
+
 while True:
     try:
-        line = input.readline()
+        line = input.readline().decode('utf-8', 'replace').strip()
     except KeyboardInterrupt:
         break
 
@@ -332,6 +405,8 @@ while True:
 
     # Print parts
     if not owner is None:
+        if not rePidFilter is None:
+            matchPidFilter = rePidFilter.search(owner)
         headerSize += print_owner(linebuf, colorless, emptyHeader, owner)
 
     if not thread is None:
@@ -343,7 +418,8 @@ while True:
     if not tag is None:
         if not reTagFilter is None:
             matchTagFilter = reTagFilter.search(tag)
-        headerSize += print_tag(linebuf, colorless, emptyHeader, tag)
+        headerSize += print_tag(linebuf, colorless, emptyHeader, tag, last_tag)
+        last_tag = tag
 
     if not tagtype is None:
         headerSize += print_tagtype(linebuf, colorless, emptyHeader, tagtype)
@@ -361,6 +437,9 @@ while True:
         if matchTagFilter is None:
             continue
     elif not reMsgFilter is None and matchMsgFilter is None:
+        continue
+
+    if not rePidFilter is None and matchPidFilter is None:
         continue
 
     # Actual print
