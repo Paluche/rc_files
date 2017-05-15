@@ -1,3 +1,5 @@
+# Works with git 2.12.1
+
 # Configuration
 local SHA1_SIZE=8
 
