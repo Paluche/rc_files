@@ -3,7 +3,7 @@ then
     local s
 
     s+="%{${fg[cyan]}%}"
-    s+="─["
+    s+="┝━┥"
 
     # Git name print
     if [ -n "$__SUBMODULE" ]
@@ -17,7 +17,7 @@ then
 
     # Current branch name print
     s+="%{${fg[cyan]}%}"
-    s+="|"
+    s+="│"
 
     if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
@@ -34,7 +34,7 @@ then
     fi
 
     s+="%{${fg[cyan]}%}"
-    s+="|"
+    s+="│"
 
     # Operation status print
     if [ -n "$__GIT_CURRENT_OPERATION" ]
@@ -45,7 +45,7 @@ then
             s+=${op:1}
         done
         s+="%{${fg[cyan]}%}"
-        s+="|"
+        s+="│"
     fi
 
     s+="%{${fg[yellow]}%}"
@@ -128,7 +128,7 @@ then
     if [ -n "$sub" ]
     then
         s+="%{${fg[cyan]}%}"
-        s+="|"
+        s+="│"
         s+="%{${fg[red]}%}"
         s+="$sub"
     fi
@@ -137,13 +137,10 @@ then
     if [ ! $__GIT_NUM_STASHED -eq 0 ]
     then
         s+="%{${fg[cyan]}%}"
-        s+="|"
+        s+="│"
         s+="%{${fg[white]}%}"
         s+="⚑"
     fi
-
-    s+="%{${fg[cyan]}%}"
-    s+="]"
 
     # Print git prompt
     printf "%s" $s

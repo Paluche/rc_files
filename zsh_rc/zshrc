@@ -354,29 +354,30 @@ function setprompt() {
     local i_width i_filler filler
 
     # Introduce the prompt with some design.
-    infoline=( "%{$fg[cyan]%}╭─" )
+    infoline=( "%{$fg[cyan]%}┏━┥" )
 
     # User informations.
-    infoline+=( "[%{$fg[green]%}%n%{$fg[cyan]%}@" )
+    infoline+=( "%{$fg[green]%}%n%{$fg[cyan]%}@" )
 
     if [ -n "$SSH_CLIENT" ]
     then
-        infoline+=( "${fg_red}%m%{$fg[cyan]%}]" )
+        infoline+=( "${fg_red}%m" )
     else
-        infoline+=( "${fg_blue}%m%{$fg[cyan]%}]" )
+        infoline+=( "${fg_blue}%m" )
     fi
 
     # Display time.
-    infoline+=( "─[${fg_lgrey}%T%{$fg[cyan]%}]" )
+    infoline+=( "%{$fg[cyan]%}┝━┥${fg_lgrey}%T" )
 
     # Display the numbers of jobs suspended or running in background.
-    infoline+=( "%(1j.─[${fg_orange}%j%{$fg[cyan]%}].)" )
+    infoline+=( "%(1j.┝━┥${fg_orange}%j.)" )
 
     # Display battery info if your computer has a battery.
     infoline+=( "$(prompt_battery_info)" )
 
     # Display git info.
     infoline+=( "$(prompt_git_info)" )
+    infoline+=( "$fg[cyan]%}│" )
 
     # Append the different parts of the upper line of the prompt.
     llines=${(j::)infoline}
@@ -384,7 +385,7 @@ function setprompt() {
     # Finish the design of the prompt.
     # Display a green arrow that turns red if the return code of the last
     # function is different of zero.
-    llines+=( "%{$fg[cyan]%}╰─%(?:%{$fg[green]%}:%{$fg[red]%})▶${at_normal} " )
+    llines+=( "%{$fg[cyan]%}┗┉%(?:%{$fg[green]%}:%{$fg[red]%})${at_normal} " )
 
     rlines="${at_bold}${fg_orange}%~/ ${at_normal}"
 

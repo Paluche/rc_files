@@ -82,6 +82,5 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
         esac
         ;;
     esac
-    printf "%s%s%s" "%{${fg[cyan]}%}─[" $s "%{${fg[cyan]}%}]"
+    printf "%s%s" "%{${fg[cyan]}%}┝━┥" $s
 fi
-
