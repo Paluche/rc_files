@@ -55,4 +55,3 @@ if [[ -n "$bat" ]]; then
         __CURRENT_BATTERY_LEVEL='2'
     fi
 fi
-

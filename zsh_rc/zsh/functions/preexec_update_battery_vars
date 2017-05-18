@@ -3,5 +3,3 @@ case "$1" in
     __EXECUTED_BATTERY_COMMAND=1
     ;;
 esac
-
-
