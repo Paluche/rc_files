@@ -1,86 +1,70 @@
 if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
     local s
-    case "$__CURRENT_BATTERY_STATUS" in
-        full)
+    if [ "$__CURRENT_BATTERY_STATUS" = "full" ]
+    then
         s+="%{${fg[green]}%}"
-        s+="▶▶▶▶▶▶▶▶▶▶"
-        ;;
-        discharging)
-        s+="%{${fg[blue]}%}"
+        s+="█"
+
+    else
+        if [ "$__CURRENT_BATTERY_STATUS" = "charging" ]
+        then
+            s+="%{${fg[green]}%}"
+        else
+            s+="%{${fg[blue]}%}"
+        fi
+
         case "$__CURRENT_BATTERY_LEVEL" in
             10)
-            s+="◀◀◀◀◀◀◀◀◀◀"
-            ;;
+                s+="█"
+                ;;
+
             0)
-            s+="$at_blink◁◁◁◁◁◁◁◁◁◁$at_normal"
-            ;;
+                s+=" "
+                ;;
+
             1)
-            s+="$at_blink◀◁◁◁◁◁◁◁◁◁$at_normal"
-            ;;
+                if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
+                then
+                    s+="$at_blink"
+                fi
+
+                s+="▁$at_normal"
+                ;;
+
             2)
-            s+="$at_blink◀◀◁◁◁◁◁◁◁◁$at_normal"
-            ;;
+                if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
+                then
+                    s+="$at_blink"
+                fi
+
+                s+="▂$at_normal"
+                ;;
+
             3)
-            s+="◀◀◀◁◁◁◁◁◁◁"
-            ;;
+                s+="▂"
+                ;;
+
             4)
-            s+="◀◀◀◀◁◁◁◁◁◁"
-            ;;
+                s+="▃"
+                ;;
+
             5)
-            s+="◀◀◀◀◀◁◁◁◁◁"
-            ;;
+                s+="▄"
+                ;;
+
             6)
-            s+="◀◀◀◀◀◀◁◁◁◁"
-            ;;
+                s+="▅"
+                ;;
             7)
-            s+="◀◀◀◀◀◀◀◁◁◁"
-            ;;
+                s+="▆"
+                ;;
             8)
-            s+="◀◀◀◀◀◀◀◀◁◁"
-            ;;
+                s+="▇"
+                ;;
             9)
-            s+="◀◀◀◀◀◀◀◀◀◁"
-            ;;
+                s+="█"
+                ;;
         esac
-        ;;
-        charging)
-        s+="%{${fg[green]}%}"
-        case "$__CURRENT_BATTERY_LEVEL" in
-            10)
-            s+="▶▶▶▶▶▶▶▶▶▶"
-            ;;
-            0)
-            s+="▷▷▷▷▷▷▷▷▷▷"
-            ;;
-            1)
-            s+="▶▷▷▷▷▷▷▷▷▷"
-            ;;
-            2)
-            s+="▶▶▷▷▷▷▷▷▷▷"
-            ;;
-            3)
-            s+="▶▶▶▷▷▷▷▷▷▷"
-            ;;
-            4)
-            s+="▶▶▶▶▷▷▷▷▷▷"
-            ;;
-            5)
-            s+="▶▶▶▶▶▷▷▷▷▷"
-            ;;
-            6)
-            s+="▶▶▶▶▶▶▷▷▷▷"
-            ;;
-            7)
-            s+="▶▶▶▶▶▶▶▷▷▷"
-            ;;
-            8)
-            s+="▶▶▶▶▶▶▶▶▷▷"
-            ;;
-            9)
-            s+="▶▶▶▶▶▶▶▶▶▷"
-            ;;
-        esac
-        ;;
-    esac
+    fi
     printf "%s%s" "%{${fg[cyan]}%}┝━┥" $s
 fi
