@@ -33,10 +33,16 @@ local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
 if [ -n "$git_dir" ]
 then
     # Get repository name (top folder name containing the repo)
-    local git_top_level="$(git rev-parse --show-toplevel)"
+    # We'll need the path to the top level directory of the repository anyway
+    # so get the information now.
+    git_top_level="$(git rev-parse --show-toplevel)"
 
     __GIT_NAME="$(basename $git_top_level 2> /dev/null)"
 
+    # If the .git present at the git_top_level is a file then we're in a
+    # submodule inside a repository. This is for this reason we need to get the
+    # path to the git directory and the path to the top level. The git directory
+    # might not be simply $git_top_level/.git
     if [ ! -d $git_top_level/.git ]
     then
         __GIT_IS_SUBMODULE=yes
@@ -74,18 +80,18 @@ then
         words=(${=line})
 
         case "$words[1]" in
-            \#)
+            \#) # Branch information start with this word.
                 case "$words[2]" in
-                    branch.head)
+                    branch.head) # Get branch head reference name
                         __GIT_BRANCH_NAME=$words[3]
                         ;;
 
-                    branch.oid)
+                    branch.oid) # Get SHA1 of the HEAD
                         local sha1=$words[3]
                         __GIT_CURRENT_COMMIT_SHA1=${sha1:0:$SHA1_SIZE}
                         ;;
 
-                    branch.ab)
+                    branch.ab) # Determinate status to remote.
                         if [ $words[3] = "+0" ]
                         then
                             if [ $words[4] = "-0" ]
@@ -169,7 +175,9 @@ then
 
     # Find out the number of stashed list
     __GIT_NUM_STASHED=0
+
     stash_file="$git_dir/logs/refs/stash"
+
     if [[ -e "${stash_file}" ]]
     then
         while IFS='' read -r wcline || [[ -n "$wcline" ]]
@@ -179,7 +187,7 @@ then
     fi
 
     # Find out if an operation among 'rebase', 'merge', 'cherry-pick',
-    # 'bisect' and 'am'
+    # 'bisect' and 'am' is currently in progress.
     if [ -d $git_dir/rebase-apply ]
     then
         if [ -f $git_dir/rebase-apply/rebasing ]
