@@ -36,6 +36,15 @@ then
     s+="%{${fg[cyan]}%}"
     s+="|"
 
+
+    if [ -n "$__GIT_CURRENT_TAG" ]
+    then
+        s+="%{${fg[yellow]}%}"
+        s+="$__GIT_CURRENT_TAG"
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+    fi
+
     # Operation status print
     if [ -n "$__GIT_CURRENT_OPERATION" ]
     then

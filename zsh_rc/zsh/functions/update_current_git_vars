@@ -25,6 +25,7 @@ unset __SUBMODULE_HAS_UNTRACKED_FILES
 
 unset __GIT_CURRENT_OPERATION
 unset __GIT_NUM_STASHED
+unset __GIT_CURRENT_TAG
 
 # Determinate the git directory
 local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
@@ -216,4 +217,7 @@ then
     then
         __GIT_CURRENT_OPERATION+=" cherry-pick"
     fi
+
+    # Get the current tag we're on if there is one associated with the commit.
+    __GIT_CURRENT_TAG=$(git describe --tags --exact-match 2>& /dev/null)
 fi
