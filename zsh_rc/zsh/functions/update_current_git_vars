@@ -52,12 +52,15 @@ then
     # Determinate entries and branch status
     local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
 
-    # Output is formatted
+    # Output is formatted as:
     # # branch.oid <current commit>
     # # branch.head <HEAD REFERENCE>
     # # branch.upstream <UPSTREAM REFERENCE>
     # # branch.ab +<commits ahead> -<commits behind>
     # <MODIFICATION LIST>
+    #
+    # The <HEAD REFERENCE> has for value '(detached)' if you're detached from
+    # any reference.
     #
     # Modification list as followed:
     # For ordinary changed entries:
