@@ -6,7 +6,7 @@ then
     s+="┝━┥"
 
     # Git name print
-    if [ -n "$__SUBMODULE" ]
+    if [ -n "$__GIT_IS_SUBMODULE" ]
     then
         s+="%{${fg[red]}%}"
     else

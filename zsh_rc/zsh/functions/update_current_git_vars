@@ -37,8 +37,7 @@ then
 
     __GIT_NAME="$(basename $git_top_level 2> /dev/null)"
 
-
-    if [ -d "$git_top_level/.git" ]
+    if [ ! -d $git_top_level/.git ]
     then
         __GIT_IS_SUBMODULE=yes
     fi
