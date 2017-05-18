@@ -161,7 +161,7 @@ then
 
                     if [ ${sub:3:1} = "U" ]
                     then
-                        __SUBMODULE_UNTRACKED_FILES='1'
+                        __SUBMODULE_HAS_UNTRACKED_FILES='1'
                     fi
                 fi
                 ;;
