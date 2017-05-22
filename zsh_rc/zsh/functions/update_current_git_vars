@@ -22,6 +22,7 @@ unset __SUBMODULE_ADDED
 unset __SUBMODULE_DIVERGED
 unset __SUBMODULE_IS_DIRTY
 unset __SUBMODULE_HAS_UNTRACKED_FILES
+unset __SUBMODULE_IS_UNMERGED
 
 unset __GIT_CURRENT_OPERATION
 unset __GIT_NUM_STASHED
@@ -166,9 +167,15 @@ then
                 fi
                 ;;
 
-
             u)
-                __GIT_HAS_UNMERGED_FILES='1'
+                if [ $sub = "N..." ]
+                then
+                    # Entry isn't a submodule.
+                    __GIT_HAS_UNMERGED_FILES='1'
+                else
+                    # Entry is a submodule.
+                    __SUBMODULE_IS_UNMERGED='1'
+                fi
                 ;;
 
             \?)

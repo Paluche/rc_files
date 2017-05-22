@@ -15,16 +15,31 @@ then
 
     s+="$__GIT_NAME"
 
+    # Operation status print
+    if [ -n "$__GIT_CURRENT_OPERATION" ]
+    then
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+        s+="%{${fg[red]}%}"
+        for op in $__GIT_CURRENT_OPERATION
+        do
+            s+=${op:1}
+        done
+        s+="%{${fg[cyan]}%}"
+    fi
+
+    # Print tag which we're on, if one.
+    if [ -n "$__GIT_CURRENT_TAG" ]
+    then
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+        s+="%{${fg[yellow]}%}"
+        s+="$__GIT_CURRENT_TAG"
+    fi
+
     # Current branch name print
     s+="%{${fg[cyan]}%}"
     s+="|"
-
-    if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
-    then
-        s+="%{${fg[red]}%}"
-        s+=""
-    fi
-
     s+="%{${fg[blue]}%}"
     if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
@@ -33,90 +48,82 @@ then
         s+="$__GIT_BRANCH_NAME"
     fi
 
+    # Print branch remote status. We always print it.
     s+="%{${fg[cyan]}%}"
     s+="|"
-
-
-    if [ -n "$__GIT_CURRENT_TAG" ]
+    s+="%{${fg[red]}%}"
+    if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
-        s+="%{${fg[yellow]}%}"
-        s+="$__GIT_CURRENT_TAG"
-        s+="%{${fg[cyan]}%}"
-        s+="|"
+        #s+=""
+        s+=""
+    else
+        case "$__GIT_REMOTE_STATUS" in
+            ahead)
+                s+=""
+                ;;
+
+            diverged)
+                s+=""
+                ;;
+
+            behind)
+                s+=""
+                ;;
+
+            up-to-date)
+                s+="✔"
+                ;;
+
+            *)
+                s+=""
+                ;;
+        esac
     fi
 
-    # Operation status print
-    if [ -n "$__GIT_CURRENT_OPERATION" ]
-    then
-        s+="%{${fg[red]}%}"
-        for op in $__GIT_CURRENT_OPERATION
-        do
-            s+=${op:1}
-        done
-        s+="%{${fg[cyan]}%}"
-        s+="|"
-    fi
-
-    s+="%{${fg[yellow]}%}"
-
-    # Branch status print
-    case "$__GIT_REMOTE_STATUS" in
-        ahead)
-            s+=""
-            ;;
-
-        diverged)
-            s+=""
-            ;;
-
-        behind)
-            s+=""
-            ;;
-
-        up-to-date)
-            s+="✔"
-            ;;
-
-        *)
-            s+=""
-            ;;
-    esac
-
+    # Print local repository status if there is changes.
+    # Print it in the same case as remote status. So no separator here
+    local loc
     if [ -n "$__GIT_HAS_MODIF_ADDED" ]
     then
-        s+="◀"
+        loc+="◀"
     fi
 
     if [ -n "$__GIT_IS_DIRTY" ]
     then
-        s+=""
+        loc+=""
     fi
 
     if [ -n "$__GIT_HAS_DELETED_FILE" ]
     then
-        s+=""
+        loc+=""
     fi
 
     if [ -n "$__GIT_HAS_UNMERGED_FILES" ];
     then
-        s+=""
+        loc+=""
     fi
 
     if [ -n "$__GIT_HAS_UNTRACKED_FILES" ];
     then
-        s+="?"
+        loc+="?"
     fi
 
-    # Submodules status print
+    if [ -n "$loc" ]
+    then
+        s+="%{${fg[cyan]}%}"
+        s+="|"
+        s+="%{${fg[yellow]}%}"
+        s+=$loc
+    fi
+
+    # Print local submodules status if there is changes.
+    # Print it in the same case as remote status and local status. Same thing,
+    # no separator here.
     local sub
+
     if [ -n "$__SUBMODULE_ADDED" ]
     then
         sub+="◀"
-    fi
-
-    if [ -n "$__GIT_HAS_SUBMODULE_DELETED" ]
-    then
-        s+=""
     fi
 
     if [ -n "$__SUBMODULE_DIVERGED" ]
@@ -124,9 +131,19 @@ then
         sub+=""
     fi
 
+    if [ -n "$__GIT_HAS_SUBMODULE_DELETED" ]
+    then
+        sub+=""
+    fi
+
     if [ -n "$__SUBMODULE_IS_DIRTY" ]
     then
         sub+=""
+    fi
+
+    if [ -n "$__SUBMODULE_IS_UNMERGED" ];
+    then
+        sub+=""
     fi
 
     if [ -n "$__SUBMODULE_HAS_UNTRACKED_FILES" ]
@@ -139,10 +156,10 @@ then
         s+="%{${fg[cyan]}%}"
         s+="|"
         s+="%{${fg[red]}%}"
-        s+="$sub"
+        s+=$sub
     fi
 
-    # Print current number of stash if there are some
+    # If we have stashes pending, show it.
     if [ ! $__GIT_NUM_STASHED -eq 0 ]
     then
         s+="%{${fg[cyan]}%}"
