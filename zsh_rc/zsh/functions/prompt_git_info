@@ -3,7 +3,7 @@ then
     local s
 
     s+="%{${fg[cyan]}%}"
-    s+="┝━┥"
+    s+="┣━┫"
 
     # Git name print
     if [ -n "$__GIT_IS_SUBMODULE" ]

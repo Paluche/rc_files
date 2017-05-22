@@ -354,7 +354,7 @@ function setprompt() {
     local i_width i_filler filler
 
     # Introduce the prompt with some design.
-    infoline=( "%{$fg[cyan]%}┏━┥" )
+    infoline=( "%{$fg[cyan]%}┏━┫" )
 
     # User informations.
     infoline+=( "%{$fg[green]%}%n%{$fg[cyan]%}@" )
@@ -367,17 +367,17 @@ function setprompt() {
     fi
 
     # Display time.
-    infoline+=( "%{$fg[cyan]%}┝━┥${fg_lgrey}%T" )
+    infoline+=( "%{$fg[cyan]%}┣━┫${fg_lgrey}%T" )
 
     # Display the numbers of jobs suspended or running in background.
-    infoline+=( "%(1j.┝━┥${fg_orange}%j.)" )
+    infoline+=( "%(1j.┣━┫${fg_orange}%j.)" )
 
     # Display battery info if your computer has a battery.
     infoline+=( "$(prompt_battery_info)" )
 
     # Display git info.
     infoline+=( "$(prompt_git_info)" )
-    infoline+=( "$fg[cyan]%}│" )
+    infoline+=( "$fg[cyan]%}┃" )
 
     # Append the different parts of the upper line of the prompt.
     llines=${(j::)infoline}
