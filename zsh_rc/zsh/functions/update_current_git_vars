@@ -51,7 +51,8 @@ then
     fi
 
     # Determinate entries and branch status
-    local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
+    local git_status
+    git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
 
     # Output is formatted as:
     # # branch.oid <current commit>
