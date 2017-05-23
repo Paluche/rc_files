@@ -51,7 +51,7 @@ then
     # Print branch remote status. We always print it.
     s+="%{${fg[cyan]}%}"
     s+="|"
-    s+="%{${fg[red]}%}"
+    s+="%{${fg_orange}%}"
     if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
         #s+=""
