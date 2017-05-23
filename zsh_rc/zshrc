@@ -370,7 +370,7 @@ function setprompt() {
     infoline+=( "%{$fg[cyan]%}┣━┫${fg_lgrey}%T" )
 
     # Display the numbers of jobs suspended or running in background.
-    infoline+=( "%(1j.┣━┫${fg_orange}%j.)" )
+    infoline+=( "%(1j.%{$fg[cyan]%}┣━┫${fg_orange}%j.)" )
 
     # Display battery info if your computer has a battery.
     infoline+=( "$(prompt_battery_info)" )
