@@ -169,6 +169,8 @@ then
                 ;;
 
             u)
+                local sub=$words[3]
+
                 if [ $sub = "N..." ]
                 then
                     # Entry isn't a submodule.
