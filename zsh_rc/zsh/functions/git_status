@@ -28,15 +28,16 @@
 
 local git_status
 local -a lines
+local -a words
+local str
+local XY
+local sub
 
 git_status=$(git status --porcelain=v2 2> /dev/null)
 lines=(${(f)git_status})
 
 for line in $lines
 do
-    local -a words
-    local str
-
     words=(${=line})
     str=""
 
@@ -46,8 +47,6 @@ do
             ;;
 
         1|2|u)
-            local XY
-            local sub
 
             XY=$words[2]
             sub=$words[3]
@@ -120,11 +119,11 @@ do
 
         \?)
             str+="${fg[cyan]}"
-            str+="??      "
+            str+="?? ???? "
             str+="${fg[white]}"
             str+="$words[2]"
             ;;
     esac
 
-    echo $str
+    echo "$str"
 done

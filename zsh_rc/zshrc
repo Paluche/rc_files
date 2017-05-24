@@ -125,7 +125,7 @@ alias cp='cp -r'
 
 
 # git aliases
-alias g='git'
+alias gs='git_status'
 alias gf='git fetch'                         # Shortcut
 alias ga='git add'                           # Shortcut
 alias gap='git add -p'                       # Shortcut
@@ -185,7 +185,7 @@ function git_blame()
     ruby ~/.script/git_blame.rb $1 | less -R
 }
 
-function git_status()
+function git_status_full()
 {
     echo -e "\e[0;31mStatus:\e[0m"
     git status -s
