@@ -51,29 +51,32 @@ do
             XY=$words[2]
             sub=$words[3]
 
+            str+=${fg[green]}
+
             if [ ${XY:0:1} = "." ]
             then
                 str+=" "
             else
-                str+=${fg[green]}
                 str+=${XY:0:1}
             fi
+
+            str+=${fg[red]}
 
             if [ ${XY:1:1} = "." ]
             then
                 str+=" "
             else
-                str+=${fg[red]}
                 str+=${XY:1:1}
             fi
 
             str+=" "
 
+            str+="${fg[blue]}"
+
             if [ ${sub:0:1} = "N" ]
             then
                 str+=" "
             else
-                str+="${fg[red]}"
                 str+="${sub:0:1}"
             fi
 
@@ -81,7 +84,6 @@ do
             then
                 str+=" "
             else
-                str+="${fg[blue]}"
                 str+="${sub:1:1}"
             fi
 
@@ -89,7 +91,6 @@ do
             then
                 str+=" "
             else
-                str+="${fg[green]}"
                 str+="${sub:2:1}"
             fi
 
@@ -97,7 +98,6 @@ do
             then
                 str+=" "
             else
-                str+="${fg[cyan]}"
                 str+="${sub:3:1}"
             fi
 
