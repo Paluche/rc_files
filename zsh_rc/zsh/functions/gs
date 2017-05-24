@@ -1,17 +1,7 @@
 # Determinate entries and branch status
-local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
-
-# Output is formatted as:
-# # branch.oid <current commit>
-# # branch.head <HEAD REFERENCE>
-# # branch.upstream <UPSTREAM REFERENCE>
-# # branch.ab +<commits ahead> -<commits behind>
-# <MODIFICATION LIST>
+# We'll use 'git status --porcelain=v2 --branch'
 #
-# The <HEAD REFERENCE> has for value '(detached)' if you're detached from
-# any reference.
-#
-# Modification list as followed:
+# Output is as follow:
 # For ordinary changed entries:
 #   1 <XY> <sub> <mH> <mI> <mW> <hH> <hI> <path>
 #
@@ -24,7 +14,7 @@ local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
 # Untracked items have the following format:
 #   ? <path>
 #
-# We want to output to be colored and reduced to:
+# We want to our output to be colored and reduced to:
 # For lines starting with '1' with 'u'
 # <XY> <sub> <path>
 #
@@ -36,24 +26,31 @@ local git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
 #
 # <sub> is N... When not a submodule. S... when it is one.
 
-
+local git_status
 local -a lines
 
+git_status=$(git status --porcelain=v2 2> /dev/null)
 lines=(${(f)git_status})
 
 for line in $lines
 do
     local -a words
+    local str
+
     words=(${=line})
-    local str=""
+    str=""
 
     case "$words[1]" in
         \#)
             continue
             ;;
+
         1|2|u)
-            local XY=$words[2]
-            local sub=$words[3]
+            local XY
+            local sub
+
+            XY=$words[2]
+            sub=$words[3]
 
             if [ ${XY:0:1} = "." ]
             then
