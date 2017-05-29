@@ -165,11 +165,24 @@ compdef _git gss=git-show
 
 function git_home()
 {
-    dir="$(git rev-parse --show-toplevel)"
-    if [ -n "$dir" ]; then
-        cd $dir
+    if [ -n "$__GIT_TOP_LEVEL" ]
+    then
+        cd $__GIT_TOP_LEVEL
+    else
+        echo -e "\e[31mNot in a repository"
     fi
 }
+
+function vimgit()
+{
+    if [ -n "$__GIT_TOP_LEVEL" ]
+    then
+        vim $__GIT_TOP_LEVEL/$1
+    else
+        vim $1
+    fi
+}
+
 
 function git_patch()
 {
@@ -192,6 +205,15 @@ function git_status_full()
     echo -e "\n\e[0;31mBranches:\e[0m"
     git branch --list -vv
 }
+
+function git_diff_origin()
+{
+    if [ -n "$__GIT_BRANCH_NAME" ]
+    then
+        git diff origin/$__GIT_BRANCH_NAME
+    fi
+}
+
 
 # Editors on shell
 alias pico='nano -mw'
@@ -538,11 +560,6 @@ function in_rebase_i_correct_author()
         git commit --amend -C HEAD --author='hlefevre@netatmo.com'
         git rebase --continue
     done
-}
-
-function git_diff_origin()
-{
-    git diff $__CURRENT_GIT_BRANCH origin/$__CURRENT_GIT_BRANCH
 }
 
 # Computer's specific configurations
