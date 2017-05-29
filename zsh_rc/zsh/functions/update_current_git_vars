@@ -4,6 +4,7 @@
 local SHA1_SIZE=8
 
 # Exported variables
+unset __GIT_TOP_LEVEL
 unset __GIT_NAME
 unset __GIT_IS_SUBMODULE
 
@@ -37,15 +38,15 @@ then
     # Get repository name (top folder name containing the repo)
     # We'll need the path to the top level directory of the repository anyway
     # so get the information now.
-    git_top_level="$(git rev-parse --show-toplevel)"
+    __GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
 
-    __GIT_NAME="$(basename $git_top_level 2> /dev/null)"
+    __GIT_NAME="$(basename $__GIT_TOP_LEVEL 2> /dev/null)"
 
-    # If the .git present at the git_top_level is a file then we're in a
+    # If the .git present at the git top level is a file then we're in a
     # submodule inside a repository. This is for this reason we need to get the
     # path to the git directory and the path to the top level. The git directory
-    # might not be simply $git_top_level/.git
-    if [ ! -d $git_top_level/.git ]
+    # might not be simply $__GIT_TOP_LEVEL/.git
+    if [ ! -d $__GIT_TOP_LEVEL/.git ]
     then
         __GIT_IS_SUBMODULE=yes
     fi
