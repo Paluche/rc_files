@@ -28,11 +28,30 @@ fetch_git()
 
     $run git fetch
     $run git gc
+
+    # Check for remote gone in repository.
     $run git branch -vv | grep ": gone"
     if [ $? -eq 0 ]
     then
         echo -e "\e[31mGone remote detected for repo: \e[33m$path"
     fi
+
+    # Check for remote gone in repository's submodules.
+    submodule="unknown"
+
+    while read -r line
+    do
+
+        if [[ $line =~ "Entering" ]]
+        then
+            ar=($line)
+            submodule=${ar[1]}
+            submodule=${submodule:1:-1}
+        elif [[ $line =~ ": gone" ]]
+        then
+            echo -e "\e[31mGone remote detected for repo: \e[33m$path/$submodule"
+        fi
+    done < <(git submodule foreach git branch -vv)
 
     echo -ne "\e[0m"
 
