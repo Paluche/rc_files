@@ -74,8 +74,12 @@ then
                 s+="✔"
                 ;;
 
-            *)
+            gone)
                 s+=""
+                ;;
+
+            local)
+                s+=""
                 ;;
         esac
     fi

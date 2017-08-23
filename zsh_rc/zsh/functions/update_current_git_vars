@@ -80,6 +80,8 @@ then
 
     lines=(${(f)git_status})
 
+    has_upstream="n"
+
     for line in $lines
     do
         local -a words
@@ -95,6 +97,10 @@ then
                     branch.oid) # Get SHA1 of the HEAD
                         local sha1=$words[3]
                         __GIT_CURRENT_COMMIT_SHA1=${sha1:0:$SHA1_SIZE}
+                        ;;
+
+                    branch.upstream)
+                        has_upstream="y"
                         ;;
 
                     branch.ab) # Determinate status to remote.
@@ -186,6 +192,18 @@ then
                 ;;
         esac
     done
+
+    # Set __GIT_REMOTE_STATUS to a value if it hasn't been set.
+    # If has_upstream is "y" then it means the remote is gone.
+    if [ -z $__GIT_REMOTE_STATUS ]
+    then
+        if [[ $has_upstream == "y" ]]
+        then
+            __GIT_REMOTE_STATUS='gone'
+        else
+            __GIT_REMOTE_STATUS='local'
+        fi
+    fi
 
     # Find out the number of stashed list
     __GIT_NUM_STASHED=0
