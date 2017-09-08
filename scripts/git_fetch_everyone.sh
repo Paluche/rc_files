@@ -28,6 +28,7 @@ fetch_git()
 
     $run git fetch
     $run git gc
+    $run git submodule foreach 'git gc'
 
     # Check for remote gone in repository.
     $run git branch -vv | grep ": gone"
