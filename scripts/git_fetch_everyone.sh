@@ -42,7 +42,6 @@ fetch_git()
 
     while read -r line
     do
-
         if [[ $line =~ "Entering" ]]
         then
             ar=($line)
