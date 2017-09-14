@@ -4,7 +4,7 @@ display_usage() {
     echo ""
     echo "Usage:"
     echo "$0 [-s|--source=REPO_SOURCE] [-d|--destination=REPO_DESTINATION] \
-[--branch-regex=BRANCH_REGEX] [--tag-regex=TAG_REGEX] \
+[-b|--branch-regex=BRANCH_REGEX] [-t|--tag-regex=TAG_REGEX] \
 [-f|--filter=FILTER_FOLDER] [-r|--rm-folders=RM_FOLDERS]"
     echo ""
 
@@ -22,11 +22,11 @@ case $i in
     REPO_SOURCE="${i#*=}"
     shift # past argument=value
     ;;
-    --branch-regex=*)
+    -b=*|--branch-regex=*)
     BRANCH_REGEX="${i#*=}"
     shift # past argument=value
     ;;
-    --tag-regex=*)
+    -t=*|--tag-regex=*)
     TAG_REGEX="${i#*=}"
     shift # past argument=value
     ;;
