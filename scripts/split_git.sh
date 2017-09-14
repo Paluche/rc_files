@@ -8,7 +8,7 @@ display_usage() {
 [-f|--filter=FILTER_FOLDER] [-r|--rm-folders=RM_FOLDERS]"
     echo ""
 
-    exit 0
+    exit 2
 }
 
 run=
