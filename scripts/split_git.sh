@@ -77,9 +77,9 @@ echo "###### Cloning in : ${tmp_dir}"
 cd $tmp_dir
 
 # Clone source repo
-git clone $REPO_SOURCE netatmo
+git clone $REPO_SOURCE git_to_split
 
-cd ./netatmo
+cd ./git_to_split
 
 # List all remote branches and filter using regex
 if [ -z "$BRANCH_REGEX" ]; then
