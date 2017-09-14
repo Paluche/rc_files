@@ -69,6 +69,12 @@ fi
 if [ ! -z "$FILTER_FOLDER" ]; then
     echo "FILTER_FOLDER      = ${FILTER_FOLDER}"
 fi
+if [ ! -z "$RM_FOLDERS" ]; then
+    echo "RM_FOLDERS         = ${RM_FOLDERS}"
+fi
+if [ ! -z "$BRANCH_REGEX" ]; then
+    echo "BRANCH_REGEX       = ${BRANCH_REGEX}"
+fi
 
 # Create temp folder
 tmp_dir=`mktemp -d`
