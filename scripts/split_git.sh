@@ -58,7 +58,7 @@ if [ -z "$REPO_SOURCE" ]; then
     echo "Missing REPO_SOURCE argument.";
     display_usage
 else
-    echo "REPO_SOURCE          = ${REPO_SOURCE}"
+    echo "REPO_SOURCE        = ${REPO_SOURCE}"
 fi
 if [ -z "$REPO_DESTINATION" ]; then
     echo "Missing REPO_DESTINATION argument."
