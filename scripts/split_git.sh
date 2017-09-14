@@ -1,7 +1,13 @@
 #!/bin/sh
 
 display_usage() {
-    echo "\nUsage:\n$0 [-s|--source=REPO_SOURCE] [-d|--destination=REPO_DESTINATION] [--branch-regex=BRANCH_REGEX] [--tag-regex=TAG_REGEX] [-f|--filter=FILTER_FOLDER] [-r|--rm-folders=RM_FOLDERS] \n"
+    echo ""
+    echo "Usage:"
+    echo "$0 [-s|--source=REPO_SOURCE] [-d|--destination=REPO_DESTINATION] \
+[--branch-regex=BRANCH_REGEX] [--tag-regex=TAG_REGEX] \
+[-f|--filter=FILTER_FOLDER] [-r|--rm-folders=RM_FOLDERS]"
+    echo ""
+
     exit 0
 }
 
