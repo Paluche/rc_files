@@ -70,10 +70,10 @@ if [ ! -z "$FILTER_FOLDER" ]; then
     echo "FILTER_FOLDER      = ${FILTER_FOLDER}"
 fi
 if [ ! -z "$RM_FOLDERS" ]; then
-    echo "RM_FOLDERS         = ${RM_FOLDERS}"
+    echo "RM_FOLDERS         = ${RM_FOLDERS[@]}"
 fi
 if [ ! -z "$BRANCH_REGEX" ]; then
-    echo "BRANCH_REGEX       = ${BRANCH_REGEX}"
+    echo "BRANCH_REGEX       = ${BRANCH_REGEX[@]}"
 fi
 
 # Create temp folder
@@ -134,8 +134,9 @@ if [ -z "$RM_FOLDERS" ]; then
     echo "Keeping all folders.";
 else
     # Filter tags using inverted regex
-    echo "Filter folders : ${RM_FOLDERS}"
-    $run git filter-branch --force --index-filter "git rm -r --cached --ignore-unmatch ${RM_FOLDERS}" --prune-empty --tag-name-filter cat -- --all
+    echo "Removing folders : ${RM_FOLDERS[@]}"
+    $run git filter-branch --force --index-filter "git rm -r --cached \
+    --ignore-unmatch ${RM_FOLDERS[@]}" --prune-empty --tag-name-filter cat -- --all
 fi
 
 $run git reset --hard
