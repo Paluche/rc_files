@@ -155,13 +155,33 @@ alias gss='git show --stat'                  # Shorter diff for git show
 alias gsu='git submodule update'             # Shortcut
 
 # Keep auto-completion working with the aliases
+compdef _git gs=git-status
+compdef _git gf=git-fetch
+compdef _git ga=git-add
+compdef _git gap=git-add
+compdef _git gc=git-commit
+compdef _git gca=git-commit
+compdef _git gcaam=git-commit
+compdef _git gcam=git-commit
 compdef _git gch=git-checkout
 compdef _git gd=git-diff
-compdef _git gls=git-log
+compdef _git gdc=git-diff
 compdef _git gl=git-log
+compdef _git gll=git-log
+compdef _git gls=git-ls
+compdef _git gph=git-push
+compdef _git gpl=git-pull
+compdef _git gra=git-rebase
+compdef _git grc=git-rebase
 compdef _git gre=git-rebase
+compdef _git grh=git-reset
+compdef _git grp=git-reset
+compdef _git gr=git-reset
 compdef _git gsh=git-show
 compdef _git gss=git-show
+compdef _git gsu=git-submodule
+compdef _git gre=git-rebase
+compdef _git gbd=git-branch
 
 function git_home()
 {
