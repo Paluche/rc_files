@@ -129,7 +129,6 @@ alias gs='git_status'
 alias gf='git fetch'                         # Shortcut
 alias ga='git add'                           # Shortcut
 alias gap='git add -p'                       # Shortcut
-alias gb='git branch --list -vv'             # Shortcut
 alias gc='git commit'                        # Shortcut
 alias gca='git commit -a'                    # Shortcut
 alias gcaam='git commit -a --amend'          # Shortcut
@@ -153,6 +152,10 @@ alias gr='git reset -q'                      # Quiet shortcut
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'                  # Shorter diff for git show
 alias gsu='git submodule update'             # Shortcut
+alias gb='TODO git-branch-status/git-branch-status -l'
+alias gba='TODO git-branch-status/git-branch-status -a'
+alias gbd='git branch -D'
+
 
 # Keep auto-completion working with the aliases
 compdef _git gs=git-status
