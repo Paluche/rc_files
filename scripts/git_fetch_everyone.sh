@@ -37,6 +37,11 @@ fetch_git()
         echo -e "\e[31mGone remote detected for repo: \e[33m$path"
     fi
 
+    if [[ -e $path/.git/logs/refs/stash ]]
+    then
+        echo -e "\e[1;31mStash detected for repo: \e[0;33m$path"
+    fi
+
     # Check for remote gone in repository's submodules.
     submodule="unknown"
 
