@@ -14,6 +14,13 @@ run=
 # End of configuration #
 ########################
 
+if [ "$1" == "--gc" ]
+then
+    DO_GC=1
+else
+    DO_GC=0
+fi
+
 # For every folder listed in GIT_DIRS
 
 fetch_git()
@@ -27,8 +34,12 @@ fetch_git()
     echo -ne "\e[34m"
 
     $run git fetch
-    $run git gc
-    $run git submodule foreach 'git gc'
+
+    if [ $DO_GC -eq 1 ]
+    then
+        $run git gc
+        $run git submodule foreach 'git gc'
+    fi
 
     # Check for remote gone in repository.
     $run git branch -vv | grep ": gone"
