@@ -48,6 +48,7 @@ fetch_git()
         echo -e "\e[31mGone remote detected for repo: \e[33m$path"
     fi
 
+    # Check for stash in repository
     if [[ -e $path/.git/logs/refs/stash ]]
     then
         echo -e "\e[1;31mStash detected for repo: \e[0;33m$path"
@@ -68,6 +69,9 @@ fetch_git()
             echo -e "\e[31mGone remote detected for repo: \e[33m$path/$submodule"
         fi
     done < <(git submodule foreach git branch -vv)
+
+    # Check for stash in repository's submodules.
+    $run git submodule foreach -q 'if [ -e $(git rev-parse --git-dir)/logs/refs/stash ]; then echo "\033[1;31mStash detected for submodule: \033[0;33m$toplevel/$path"; fi; exit 0'
 
     echo -ne "\e[0m"
 
