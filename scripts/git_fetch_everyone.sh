@@ -54,6 +54,13 @@ fetch_git()
         echo -e "\e[1;31mStash detected for repo: \e[0;33m$path"
     fi
 
+    git merge-base --is-ancestor origin/master master
+
+    if [ ! $? -eq 0 ]
+    then
+        echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$path"
+    fi
+
     # Check for remote gone in repository's submodules.
     submodule="unknown"
 
