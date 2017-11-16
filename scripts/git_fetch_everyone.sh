@@ -58,7 +58,17 @@ fetch_git()
 
     if [ ! $? -eq 0 ]
     then
-        echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$path"
+        echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$path\e[34m"
+
+        CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
+
+        if [ "$CUR_BRANCH" == "master" ] && [ $NB_CHANGES -eq 0 ]
+        then
+            git rebase
+            git submodule update
+            echo -e "\e[1;31mMaster automatically updated\e[0;33m"
+        fi
     fi
 
     # Check for remote gone in repository's submodules.
@@ -73,7 +83,7 @@ fetch_git()
             submodule=${submodule:1:-1}
         elif [[ $line =~ ": gone" ]]
         then
-            echo -e "\e[31mGone remote detected for repo: \e[33m$path/$submodule"
+            echo -e "\e[32mGone remote detected for repo: \e[33m$path/$submodule"
         fi
     done < <(git submodule foreach git branch -vv)
 
