@@ -15,6 +15,17 @@ GIT_DIRS=""
 DO_GC=0
 
 
+usage()
+{
+    echo "usage: `basename $0` [-g] [-c] [-h]
+    -g    Force to run \`git gc\` on each handled repository.
+    -c    Force just the check part of the script (no fetch).
+    -h    Print this help.
+    "
+
+    exit 1
+}
+
 while getopts gch opt
 do
     case "$opt" in
@@ -22,6 +33,7 @@ do
            ;;
 
         *) echo "Unknown option $opt ${OPTARG}\n"
+           usage
            ;;
      esac
 done
@@ -129,3 +141,5 @@ handle_folder()
 for folder in $GIT_DIRS; do
     handle_folder ~/$folder
 done
+
+exit 0
