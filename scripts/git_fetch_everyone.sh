@@ -13,6 +13,7 @@ GIT_DIRS=""
 ########################
 
 DO_GC=0
+DO_FETCH=1
 
 
 usage()
@@ -30,6 +31,9 @@ while getopts gch opt
 do
     case "$opt" in
         g) DO_GC=1
+           ;;
+
+        c) DO_FETCH=0
            ;;
 
         *) echo "Unknown option $opt ${OPTARG}\n"
@@ -51,7 +55,10 @@ fetch_git()
 
     echo -ne "\e[34m"
 
-    git fetch
+    if [ $DO_FETCH -eq 1 ]
+    then
+        git fetch
+    fi
 
     if [ $DO_GC -eq 1 ]
     then
