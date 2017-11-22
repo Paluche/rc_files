@@ -7,8 +7,6 @@
 
 GIT_DIRS=""
 
-#run=echo
-run=
 
 ########################
 # End of configuration #
@@ -33,16 +31,16 @@ fetch_git()
 
     echo -ne "\e[34m"
 
-    $run git fetch
+    git fetch
 
     if [ $DO_GC -eq 1 ]
     then
-        $run git gc
-        $run git submodule foreach 'git gc'
+        git gc
+        git submodule foreach 'git gc'
     fi
 
     # Check for remote gone in repository.
-    $run git branch -vv | grep ": gone"
+    git branch -vv | grep ": gone"
     if [ $? -eq 0 ]
     then
         echo -e "\e[31mGone remote detected for repo: \e[33m$path"
@@ -88,7 +86,7 @@ fetch_git()
     done < <(git submodule foreach git branch -vv)
 
     # Check for stash in repository's submodules.
-    $run git submodule foreach -q 'if [ -e $(git rev-parse --git-dir)/logs/refs/stash ]; then echo "\033[1;31mStash detected for submodule: \033[0;33m$toplevel/$path"; fi; exit 0'
+    git submodule foreach -q 'if [ -e $(git rev-parse --git-dir)/logs/refs/stash ]; then echo "\033[1;31mStash detected for submodule: \033[0;33m$toplevel/$path"; fi; exit 0'
 
     echo -ne "\e[0m"
 
