@@ -12,12 +12,20 @@ GIT_DIRS=""
 # End of configuration #
 ########################
 
-if [ "$1" == "--gc" ]
-then
-    DO_GC=1
-else
-    DO_GC=0
-fi
+DO_GC=0
+
+
+while getopts gch opt
+do
+    case "$opt" in
+        g) DO_GC=1
+           ;;
+
+        *) echo "Unknown option $opt ${OPTARG}\n"
+           ;;
+     esac
+done
+
 
 # For every folder listed in GIT_DIRS
 
