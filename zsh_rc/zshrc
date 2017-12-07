@@ -439,6 +439,32 @@ function setprompt() {
 
 precmd_functions+='setprompt'
 
+case $TERM in
+    (*xterm* | rxvt-unicode-256color)
+        # Write some info to terminal title.
+        # This is seen when the shell prompts for input.
+        function precmd_settitle
+        {
+            if [ -n "$SSH_CLIENT" ]
+            then
+                print -Pn "\e]0;zsh %n@%m: %(1j,%j job%(2j|s|); ,)%~\a"
+            else
+                print -Pn "\e]0;zsh: %(1j,%j job%(2j|s|); ,)%~\a"
+            fi
+        }
+        # Write command and args to terminal title.
+        # This is seen while the shell waits for a command to complete.
+        function preexec_settitle
+        {
+            printf "\033]0;%s\a" "$1"
+        }
+
+        precmd_functions+='precmd_settitle'
+        preexec_functions+='preexec_settitle'
+
+        ;;
+esac
+
 # Historic
 ##############################################################################
 export HISTSIZE=2000
