@@ -182,7 +182,7 @@ compdef _git grp=git-reset
 compdef _git gr=git-reset
 compdef _git gsh=git-show
 compdef _git gss=git-show
-compdef _git gsu=git-submodule
+compdef _git gsu=git-submodule-update
 compdef _git gre=git-rebase
 compdef _git gbd=git-branch
 
