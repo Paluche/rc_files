@@ -454,7 +454,12 @@ case $TERM in
         # This is seen while the shell waits for a command to complete.
         function preexec_settitle
         {
-            printf "\033]0;%s\a" "$1"
+            if [ -n "$SSH_CLIENT" ]
+            then
+                printf "\033]0;zsh %n@%m: %s\a" "$1"
+            else
+                printf "\033]0;zsh: %s\a" "$1"
+            fi
         }
 
         precmd_functions+='precmd_settitle'

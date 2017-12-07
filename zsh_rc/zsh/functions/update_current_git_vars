@@ -28,6 +28,14 @@ unset __GIT_CURRENT_OPERATION
 unset __GIT_NUM_STASHED
 unset __GIT_CURRENT_TAG
 
+if [ -n "$SSH_CLIENT" ]
+then
+    print -Pn "\e]0;zsh %n@%m:%(1j,%j job%(2j|s|); ,) %~ (Git-prompt working)\a"
+else
+    print -Pn "\e]0;zsh:%(1j,%j job%(2j|s|); , )%~ (Git-prompt working)\a"
+fi
+
+
 # Determinate the git directory
 local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
 
