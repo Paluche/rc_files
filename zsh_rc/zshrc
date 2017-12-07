@@ -285,9 +285,6 @@ alias -s py='python3'
 alias -s sh='bash'
 alias -s rb='ruby'
 
-# handling xflux
-alias xflux_au='xflux -l -48.8534100 -g 180'
-alias xflux_fr='xflux -l 48.8534100 -g 2.3'
 alias test='cd ./test'
 
 # Other
@@ -597,8 +594,6 @@ function common_init()
     if [ -n "$SSH_CLIENT" ]
     then
         eval `ssh-agent -s`
-    else
-        xflux_fr
     fi
     ssh-add
 }
