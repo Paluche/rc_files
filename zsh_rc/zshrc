@@ -445,20 +445,20 @@ case $TERM in
         {
             if [ -n "$SSH_CLIENT" ]
             then
-                print -Pn "\e]0;zsh %n@%m: %(1j,%j job%(2j|s|); ,)%~\a"
+                print -Pn "\e]0;zsh %n@%m: %d\a"
             else
-                print -Pn "\e]0;zsh: %(1j,%j job%(2j|s|); ,)%~\a"
+                print -Pn "\e]0;zsh: %d\a"
             fi
         }
-        # Write command and args to terminal title.
-        # This is seen while the shell waits for a command to complete.
+
+        # This is seen when the shell runs a command
         function preexec_settitle
         {
             if [ -n "$SSH_CLIENT" ]
             then
-                printf "\033]0;zsh %n@%m: %s\a" "$1"
+                printf "\033]0;zsh %s@%s: %s - %s\a" "$USERNAME" "$HOST" "$PWD" "$1"
             else
-                printf "\033]0;zsh: %s\a" "$1"
+                printf "\033]0;zsh: %s - %s\a" "$PWD" "$1"
             fi
         }
 

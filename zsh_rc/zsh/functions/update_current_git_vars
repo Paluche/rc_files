@@ -28,13 +28,6 @@ unset __GIT_CURRENT_OPERATION
 unset __GIT_NUM_STASHED
 unset __GIT_CURRENT_TAG
 
-if [ -n "$SSH_CLIENT" ]
-then
-    print -Pn "\e]0;zsh %n@%m:%(1j,%j job%(2j|s|); ,) %~ (Git-prompt working)\a"
-else
-    print -Pn "\e]0;zsh:%(1j,%j job%(2j|s|); , )%~ (Git-prompt working)\a"
-fi
-
 
 # Determinate the git directory
 local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
@@ -42,6 +35,15 @@ local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
 # If the command failed, then we're not in a git repository
 if [ -n "$git_dir" ]
 then
+    # Write some info to terminal title. To indicate git prompt is working
+    if [ -n "$SSH_CLIENT" ]
+
+    then
+        print -Pn "\e]0;zsh %n@%m: %d%(1j,; %j job%(2j|s|),) \a"
+    else
+        print -Pn "\e]0;zsh: %d%(1j,; %j job%(2j|s|); ,) \a"
+    fi
+
     # Get repository name (top folder name containing the repo)
     # We'll need the path to the top level directory of the repository anyway
     # so get the information now.
