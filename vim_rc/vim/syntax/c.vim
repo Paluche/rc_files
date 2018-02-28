@@ -292,8 +292,8 @@ if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
   if exists("c_gnu")
     syn keyword cConstant __GNUC__ __FUNCTION__ __PRETTY_FUNCTION__ __func__
   endif
-  syn keyword cConstant __LINE__ __FILE__ __DATE__ __TIME__ __STDC__
-  syn keyword cConstant __STDC_VERSION__
+  syn keyword cConstant __LINE__ __FILEPATH__ __FILE__ __DATE__ __TIME__ __STDC__
+  syn keyword cConstant __STDC_VERSION__ __VA_ARGS__ __FUNCTION__
   syn keyword cConstant CHAR_BIT MB_LEN_MAX MB_CUR_MAX
   syn keyword cConstant UCHAR_MAX UINT_MAX ULONG_MAX USHRT_MAX
   syn keyword cConstant CHAR_MIN INT_MIN LONG_MIN SHRT_MIN
@@ -515,7 +515,9 @@ unlet s:cpo_save
 
 " Common ANSI-standard functions
 syn keyword cAnsiFunction	MULU_ DIVU_ MODU_ MUL_ DIV_ MOD_
-syn keyword cAnsiFunction	main typeof
+ syn keyword cAnsiFunction	main typeof
+" syn keyword cAnsiFunction	open close read write lseek dup dup2
+" syn keyword cAnsiFunction	fcntl ioctl
 syn keyword cAnsiFunction	wctrans towctrans towupper
 syn keyword cAnsiFunction	towlower wctype iswctype
 syn keyword cAnsiFunction	iswxdigit iswupper iswspace
