@@ -19,13 +19,15 @@
     autocorrect       = 1
 
 [alias]
-    ls                = log --stat --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %Cred%d%n%Creset%x09%s%n'
+    sub-reset         = "!f() { git submodule update --init --recursive --remote; git submodule update --recursive; }; f"
+    rm                = rm -r
+    ls                = log --stat --decorate --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %Cred%d%n%Creset%x09%s%n'
     l                 = log --graph --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %Cred%d%n%Creset%x09%s%n'
     log-path          = log --graph -M --follow --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %Cred%d%n%Creset%x09%s%n'
     g                 = grep -ni --break --heading --color=always
     stak              = stash save -k -u
     stawp             = stash show -p
-    wip               = commit -a -m WIP
+    wip               = commit -a -m [ci\\ skip]\\ WIP
     unwip             = reset HEAD~1
     blame-log         = log -p -M --follow --stat --date=local --pretty=format:'%C(yellow)%h%Cblue %ad%Cgreen %an %n%Creset%x09%s%n'
     uncommit          = reset --soft HEAD~1
