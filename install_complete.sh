@@ -181,3 +181,4 @@ git clone https://github.com/gregsexton/gitv                    $bundle/gitv
 git clone https://github.com/kien/rainbow_parentheses.vim       $bundle/rainbow_parentheses
 git clone https://github.com/vim-scripts/taglist.vim            $bundle/taglist
 git clone https://github.com/Xuyuanp/nerdtree-git-plugin        $bundle/nerdtree-git-plugin
+git clone https://github.com/godlygeek/tabular                  $bundle/tabular
