@@ -63,3 +63,5 @@ Uninitialize
 mutex
 checksum
 param
+UART
+BenQ
