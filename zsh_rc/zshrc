@@ -122,6 +122,7 @@ alias locate='nocorrect locate -i' # no spelling correction on locate
 #alias find='nocorrect find -name'  # no spelling correction on find, find by name.
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r'
+alias py='python3'
 
 
 # git aliases
@@ -133,10 +134,12 @@ alias gc='git commit'                        # Shortcut
 alias gca='git commit -a'                    # Shortcut
 alias gcaam='git commit -a --amend'          # Shortcut
 alias gcam='git commit --amend'              # Shortcut
+alias gcf='git commit --fixup'               # Shortcut
 alias gch='git checkout'                     # Shortcut
 alias gcm='git checkout master'              # Shortcut
 alias gd='git diff -w --ignore-blank-lines'  # Shortcut / ignore space diff
 alias gdc='git diff --cached'                # Shortcut
+alias gbl='git blame-log'                    # Shortcut
 alias gl='git l'                             # Custom log
 alias gll='git log -n 1'                     # Shortcut
 alias glp='git log-path'                     # Custom log when using path
@@ -151,9 +154,9 @@ alias grp='git reset -p'                     # Shortcut
 alias gr='git reset -q'                      # Quiet shortcut
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'                  # Shorter diff for git show
-alias gsu='git submodule update'             # Shortcut
-alias gb='TODO git-branch-status/git-branch-status -l'
-alias gba='TODO git-branch-status/git-branch-status -a'
+alias gsu='git submodule update --recursive' # Shortcut
+alias gb='/home/hlefevre/autre/git-branch-status/git-branch-status -l'
+alias gba='/home/hlefevre/autre/git-branch-status/git-branch-status -a'
 alias gbd='git branch -D'
 
 
@@ -237,6 +240,40 @@ function git_diff_origin()
     fi
 }
 
+function gbf()
+{
+    /home/hlefevre/autre/git-branch-status/git-branch-status -l
+
+    echo ""
+
+    git submodule foreach "/home/hlefevre/autre/git-branch-status/git-branch-status -l && echo "
+}
+
+function gcfp()
+{
+    git commit --fixup `git log -n 1 --pretty=format:%H $1`
+}
+
+function git_locate()
+{
+    if [ -n "$__GIT_TOP_LEVEL" ]
+    then
+        locate $1 | grep $__GIT_TOP_LEVEL
+    else
+        echo -e "\e[31mNot in a repository"
+    fi
+}
+
+function git_find()
+{
+    if [ -n "$__GIT_TOP_LEVEL" ]
+    then
+        find $__GIT_TOP_LEVEL -name $1
+    else
+        echo -e "\e[31mNot in a repository"
+    fi
+}
+
 
 # Editors on shell
 alias pico='nano -mw'
@@ -246,6 +283,7 @@ alias nano='nano -mw'
 alias -s html='firefox'
 
 # For vim auto launches
+compdef _git gre=git-rebase
 alias -s c='vim'
 alias -s h='vim'
 alias -s o='vim'
@@ -269,6 +307,7 @@ alias -s php='vim'
 alias -s ld='vim'
 alias -s d='vim'
 alias -s yml='vim'
+alias -s in='vim'
 
 # emacs auto launches
 alias -s sv='emacs'
