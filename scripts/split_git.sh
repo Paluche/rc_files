@@ -67,7 +67,7 @@ else
     echo "REPO_DESTINATION   = ${REPO_DESTINATION}"
 fi
 if [ ! -z "$FILTER_FOLDER" ]; then
-    echo "FILTER_FOLDER      = ${FILTER_FOLDER}"
+    echo "FILTER_FOLDER      = ${FILTER_FOLDER[@]}"
 fi
 if [ ! -z "$RM_FOLDERS" ]; then
     echo "RM_FOLDERS         = ${RM_FOLDERS[@]}"
@@ -119,7 +119,7 @@ fi
 
 # Actually filter the repo
 if [ ! -z "$FILTER_FOLDER" ]; then
-$run git filter-branch --tag-name-filter cat --prune-empty --subdirectory-filter $FILTER_FOLDER -- --all
+$run git filter-branch --tag-name-filter cat --prune-empty --subdirectory-filter ${FILTER_FOLDER[@]} -- --all
 fi
 
 $run git reset --hard
