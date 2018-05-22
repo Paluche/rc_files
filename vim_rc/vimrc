@@ -74,7 +74,14 @@ filetype indent on
 set fileformats=unix,dos,mac
 
 au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>100v.\+', -1)
-autocmd BufWritePre * :%s/\s\+$//e " Erase endline spaces
+
+" Remove any trailing whitespace
+autocmd BufWritePre * :%s/\s\+$//e
+
+" In the case of git diff, context line being empty should have 1 trailing
+" whitespace.
+autocmd BufWritePre *.diff :%s/^$/ /e
+
 " set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 " }}}
 " Version 7.3 (703) ----------------------------------------------- {{{
