@@ -8,7 +8,7 @@
 
 -- {{{ Main
 theme = {}
-theme.wallpaper_cmd = { "awsetbg /usr/share/awesome/themes/zenburn/zenburn-background.png" }
+theme.wallpaper = "/home/hlefevre/Wallpapers/42374725534_a653d1b7cb_k.jpg"
 -- }}}
 
 -- {{{ Styles
