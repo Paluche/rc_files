@@ -43,7 +43,7 @@ zsh:        save_zsh        $(ZSHRC_DIR)/.zshrc           $(ZSH_DIR)/.zsh
 emacs:      save_emacs      $(EMACS_DIR)/.emacs           $(EMACS_D_DIR)/.emacs.d
 awesome: 	save_awesome    $(AWESOME_DIR)/awesome
 xresources: save_xresources $(XRESOURCES_DIR)/.Xresources
-adb_logcat:                 $(SCRIPT_DIR)/adb_logcat.py
+adb_logcat:                 ~/.adb_logcat.py
 xflux:                      $(SCRIPT_DIR)/xflux
 
 #########
@@ -87,7 +87,7 @@ xflux:                      $(SCRIPT_DIR)/xflux
 	@-ln -sn $< $@
 	@xrdb $@
 
-%/adb_logcat.py: $(CURR_DIR)/adb_logcat/adb_logcat.py %
+%/.adb_logcat.py: $(CURR_DIR)/adb_logcat.py %
 	@echo Install adb_logcat.py script
 	@-ln -sn $< $@
 
