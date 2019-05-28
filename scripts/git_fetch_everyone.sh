@@ -43,17 +43,15 @@ do
 done
 
 
-# For every folder listed in GIT_DIRS
-
-fetch_git()
+handle_repo()
 {
-    cd $1 > /dev/null
+    repo_path=`realpath $1/$2`
 
-    path="$(pwd)"
+    cd $repo_path > /dev/null
 
-    echo -e $path
+    repo_name="$(basename $repo_path 2> /dev/null)"
 
-    echo -ne "\e[34m"
+    echo -e "\e[0m$repo_name\t\e[31m$repo_path\e[34m"
 
     if [ $DO_FETCH -eq 1 ]
     then
@@ -70,20 +68,19 @@ fetch_git()
     git branch -vv | grep ": gone"
     if [ $? -eq 0 ]
     then
-        echo -e "\e[31mGone remote detected for repo: \e[33m$path"
+        echo -e "\e[31mGone remote detected for repo: \e[33m$repo_path\e[31m "
     fi
 
     # Check for stash in repository
-    if [[ -e $path/.git/logs/refs/stash ]]
+    if [[ -e $repo_path/.git/logs/refs/stash ]]
     then
-        echo -e "\e[1;31mStash detected for repo: \e[0;33m$path"
+        echo -e "\e[1;31mStash detected for repo: \e[0;33m$repo_path\e[31m "
     fi
 
     git merge-base --is-ancestor origin/master master
 
     if [ ! $? -eq 0 ]
     then
-        echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$path\e[34m"
 
         CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
         NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
@@ -92,7 +89,9 @@ fetch_git()
         then
             git rebase
             git submodule update
-            echo -e "\e[1;31mMaster automatically updated\e[0;33m"
+            echo -e "\e[1;31mMaster automatically updated"
+        else
+            echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$repo_path"
         fi
     fi
 
@@ -108,7 +107,7 @@ fetch_git()
             submodule=${submodule:1:-1}
         elif [[ $line =~ ": gone" ]]
         then
-            echo -e "\e[32mGone remote detected for repo: \e[33m$path/$submodule"
+            echo -e "\e[32mGone remote detected for repo: \e[33m$repo_path/$submodule"
         fi
     done < <(git submodule foreach git branch -vv)
 
@@ -117,35 +116,37 @@ fetch_git()
 
     echo -ne "\e[0m"
 
-    cd - > /dev/null
+    cd $1 > /dev/null
 }
 
 
 # $1 path to folder to handle
 go_through_subfolders()
 {
-    $run cd $1
+    cd $1
     local list=`ls $1`
     for d in $list
     do
         if [ -d $1/$d ]
         then
-            handle_folder $1/$d
+            handle_folder $1 $d
         fi
     done
 }
 
 handle_folder()
 {
-    if [ -e $1/.git ]
+    if [ -e $1/$2/.git ]
     then
-        fetch_git $1
+        handle_repo $1 $2
     else
-        go_through_subfolders $1
+        go_through_subfolders $1/$2
     fi
 }
 
-for folder in $GIT_DIRS; do
+# Update data base
+for folder in $GIT_DIRS
+do
     handle_folder ~/$folder
 done
 
