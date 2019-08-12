@@ -122,7 +122,7 @@ alias locate='nocorrect locate -i' # no spelling correction on locate
 #alias find='nocorrect find -name'  # no spelling correction on find, find by name.
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r'
-alias py='python3'
+alias py='ipython3'
 
 
 # git aliases
