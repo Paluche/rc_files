@@ -18,8 +18,9 @@ set encoding=utf-8       " Show utf-8 chars
 set showcmd              " count highlighted
 set ruler                " Show where I am in the command area
 set colorcolumn=80       " vertical ruler at 80 characters
-set textwidth=80         " Automatic word wrapping at 80 characters
+set textwidth=79         " Automatic word wrapping at 80 characters
 set foldmethod=marker
+
 set formatoptions+=t     " TODO WHAT IS THAT???
 set showmode             " -- INSERT (appreciation)-- :)
 set laststatus=2         " always show the status line
