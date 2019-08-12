@@ -104,10 +104,10 @@ zstyle ':completion:*' menu select
 # Aliases
 ##############################################################################
 alias ssh='ssh -X'                 # Automatic graphic interface with ssh
-alias more=less                    # For old people
+alias more=less -R                 # For old people
 alias l="ls -AFhl -g"              # Shortcut
 alias ll='ls -lh'                  # Shortcut
-alias lll='ls -lh | less'          # Shortcut
+alias lll='ls -lh | less -R'       # Shortcut
 alias grep='grep --colour'         # Colors!!
 alias grepg='grep -rni'            # Recursive, line number and case insensitive
 alias tree='tree -C'               # Colors!!
