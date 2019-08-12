@@ -65,3 +65,17 @@ checksum
 param
 UART
 BenQ
+initializer
+illuminance
+Namespace
+uninitialization
+VCC
+uninitializing
+uninitialize
+destructor
+getters
+changelog
+Getter
+milliVolts
+endian
+decrypt
