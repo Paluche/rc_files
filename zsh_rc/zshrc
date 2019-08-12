@@ -204,9 +204,9 @@ function vimgit()
 {
     if [ -n "$__GIT_TOP_LEVEL" ]
     then
-        vim $__GIT_TOP_LEVEL/$1
+        vim $__GIT_TOP_LEVEL/$1 $2
     else
-        vim $1
+        vim $1 $2
     fi
 }
 
@@ -214,7 +214,8 @@ function vimgit()
 function git_patch()
 {
     git commit -a -m PATCH
-    if [ $? -eq 0]; then
+    if [ $? -eq 0 ]
+    then
         git format-patch HEAD~
         git reset HEAD~
     fi
@@ -225,19 +226,19 @@ function git_blame()
     ruby ~/.script/git_blame.rb $1 | less -R
 }
 
-function git_status_full()
+function gsf()
 {
-    echo -e "\e[0;31mStatus:\e[0m"
-    git status -s
-    echo -e "\n\e[0;31mBranches:\e[0m"
-    git branch --list -vv
+    cd $__GIT_TOP_LEVEL
+    echo "Enterning '$__GIT_NAME'"
+    git_status
+    git submodule foreach 'zsh /home/hlefevre/.zsh/functions/git_status'
 }
 
 function git_diff_origin()
 {
     if [ -n "$__GIT_BRANCH_NAME" ]
     then
-        git diff origin/$__GIT_BRANCH_NAME
+        git diff origin/$__GIT_BRANCH_NAME $@
     fi
 }
 
@@ -315,6 +316,7 @@ alias -s ld='vim'
 alias -s d='vim'
 alias -s yml='vim'
 alias -s in='vim'
+alias -s json='vim'
 
 # emacs auto launches
 alias -s sv='emacs'
@@ -341,10 +343,11 @@ alias aptitude='sudo aptitude'
 alias j='jobs'
 # color
 alias diff='colordiff'
+alias less='less -R'
 # Global aliases (expand whatever their position)
 # e.g. find . E L
 alias -g G='| grep'
-alias -g L='| less'
+alias -g L='| less -R'
 alias -g H='| head'
 alias -g S='| sort'
 alias -g T='| tail'
@@ -437,7 +440,8 @@ export PROMPT
 export RPROMPT
 
 # The prompt
-function setprompt() {
+function setprompt()
+{
     local -a infoline llines rlines
     local i_width i_filler filler
 
@@ -455,7 +459,7 @@ function setprompt() {
     fi
 
     # Display time.
-    infoline+=( "%{$fg[cyan]%}┣━┫${fg_lgrey}%T" )
+    infoline+=( "%{$fg[cyan]%}┣━┫${fg_white}%T" )
 
     # Display the numbers of jobs suspended or running in background.
     infoline+=( "%(1j.%{$fg[cyan]%}┣━┫${fg_orange}%j.)" )
@@ -649,13 +653,15 @@ function common_init()
     ssh-add
 }
 
-function in_rebase_i_correct_author()
+function git_rebase_correct_author()
 {
-    while git status | head -1 | grep -q 'rebase in progress'
-    do
-        git commit --amend -C HEAD --author='hlefevre@netatmo.com'
-        git rebase --continue
-    done
+    if [[ -z "$1" ]]
+    then
+        branch=master
+    else
+        branch=$1
+    fi
+    git rebase -x "git commit --amend --author hlefevre@netatmo.com" $branch
 }
 
 # Computer's specific configurations
