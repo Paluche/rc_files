@@ -6,6 +6,7 @@
 # Paths from ~/
 
 GIT_DIRS=""
+REPO_AS_SUB=""
 
 
 ########################
@@ -51,7 +52,7 @@ handle_repo()
 
     repo_name="$(basename $repo_path 2> /dev/null)"
 
-    echo -e "\e[0m$repo_name\t\e[31m$repo_path\e[34m"
+    echo -e "\e[0m$repo_name \e[31m$repo_path\e[34m"
 
     if [ $DO_FETCH -eq 1 ]
     then
@@ -76,6 +77,16 @@ handle_repo()
     then
         echo -e "\e[1;31mStash detected for repo: \e[0;33m$repo_path\e[31m "
     fi
+
+    # Don't update master for submodules, or repo behaving like submodules.
+    for path in $REPO_AS_SUB
+    do
+        if [[ $path == "$repo_path" ]]
+        then
+            echo -ne "\e[0m"
+            return
+        fi
+    done
 
     git merge-base --is-ancestor origin/master master
 
