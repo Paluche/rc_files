@@ -123,6 +123,7 @@ alias locate='nocorrect locate -i' # no spelling correction on locate
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r'
 alias py='ipython3'
+alias control-center='env XDG_CURRENT_DESKTOP=GNOME gnome-control-center&'
 
 
 # git aliases
@@ -154,7 +155,7 @@ alias grp='git reset -p'                     # Shortcut
 alias gr='git reset -q'                      # Quiet shortcut
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'                  # Shorter diff for git show
-alias gsu='git submodule update --recursive' # Shortcut
+alias gsu='git submodule update --recursive --init' # Shortcut
 alias gb='/home/hlefevre/autre/git-branch-status/git-branch-status -l'
 alias gba='/home/hlefevre/autre/git-branch-status/git-branch-status -a'
 alias gbd='git branch -D'
