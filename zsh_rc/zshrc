@@ -255,6 +255,12 @@ function gcfp()
     git commit --fixup `git log -n 1 --pretty=format:%H $1`
 }
 
+function gacfp()
+{
+    git add $1
+    gcfp $1
+}
+
 function git_locate()
 {
     if [ -n "$__GIT_TOP_LEVEL" ]
