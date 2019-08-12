@@ -81,3 +81,6 @@
 
 [rebase]
     autoSquash = true
+
+[flake8]
+    strict = true
