@@ -37,7 +37,6 @@ if [ -n "$git_dir" ]
 then
     # Write some info to terminal title. To indicate git prompt is working
     if [ -n "$SSH_CLIENT" ]
-
     then
         print -Pn "\e]0;zsh %n@%m: %d%(1j,; %j job%(2j|s|),) \a"
     else

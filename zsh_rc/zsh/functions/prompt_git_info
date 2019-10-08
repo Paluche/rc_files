@@ -14,32 +14,31 @@ then
     fi
 
     s+="$__GIT_NAME"
+    s+="%{${fg[cyan]}%}"
+    s+="|"
 
     # Operation status print
     if [ -n "$__GIT_CURRENT_OPERATION" ]
     then
-        s+="%{${fg[cyan]}%}"
-        s+="|"
-        s+="%{${fg[red]}%}"
         for op in $__GIT_CURRENT_OPERATION
         do
+            s+="%{${fg[red]}%}"
             s+=${op:1}
+            s+="%{${fg[cyan]}%}"
+            s+="|"
         done
-        s+="%{${fg[cyan]}%}"
     fi
 
     # Print tag which we're on, if one.
     if [ -n "$__GIT_CURRENT_TAG" ]
     then
-        s+="%{${fg[cyan]}%}"
-        s+="|"
         s+="%{${fg[yellow]}%}"
         s+="$__GIT_CURRENT_TAG"
+        s+="%{${fg[cyan]}%}"
+        s+="|"
     fi
 
     # Current branch name print
-    s+="%{${fg[cyan]}%}"
-    s+="|"
     s+="%{${fg[blue]}%}"
     if [ "$__GIT_BRANCH_NAME" = "(detached)" ]
     then
