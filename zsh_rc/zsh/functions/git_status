@@ -33,8 +33,14 @@ local str
 local XY
 local sub
 
+autoload colors; colors
+
 git_status=$(git status --porcelain=v2 2> /dev/null)
 lines=(${(f)git_status})
+if [ -f .git/FETCH_HEAD ]
+then
+    echo "Fetch time: $(stat -c %y .git/FETCH_HEAD | cut -c6-16)"
+fi
 
 for line in $lines
 do
