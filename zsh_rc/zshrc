@@ -123,6 +123,7 @@ alias locate='nocorrect locate -i' # no spelling correction on locate
 alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r'
 alias py='ipython3'
+alias gnome-control-center='env XDG_CURRENT_DESKTOP=GNOME gnome-control-center'
 alias control-center='env XDG_CURRENT_DESKTOP=GNOME gnome-control-center&'
 
 
