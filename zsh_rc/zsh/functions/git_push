@@ -7,11 +7,9 @@ then
     then
         # Consider the user wants to put on the only remote available
         echo "Automatically setting upstream"
-        git push --set-upstream origin $__GIT_BRANCH_NAME $@
-
-        exit $?
+        git push --set-upstream ${REMOTES[1]} $__GIT_BRANCH_NAME $@
     fi
+else
+    # Just do git push
+    git push $@
 fi
-
-# Just do git push
-git push $@
