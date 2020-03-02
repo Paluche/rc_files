@@ -374,7 +374,6 @@ setopt prompt_percent
 setopt prompt_subst                # allow function for prompt
 setopt rm_star_wait                # Don't do anything stupid Like delete all
 setopt chase_links                 # converts links to real path
-setopt noclobber                   # don't allow > to clobber files
 setopt complete_aliases
 setopt extended_glob
 setopt no_flow_control
