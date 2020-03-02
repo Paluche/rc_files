@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 
 '''
     Copyright 2009, The Android Open Source Project
@@ -25,9 +25,12 @@ import os, sys, re, StringIO
 import fcntl, termios, struct
 import getopt
 
-# unpack the current terminal width/height
-data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
-HEIGHT, WIDTH = struct.unpack('hh',data)
+# unpack the current terminal width
+try:
+    data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
+    _, WIDTH = struct.unpack('hh',data)
+except IOError:
+    WIDTH = 134
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
