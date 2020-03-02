@@ -408,6 +408,8 @@ bindkey '^[[1;5D' backward-word    # Ctrl + LEFT
 bindkey '^[[1;5C' forward-word     # Ctrl + RIGHT
 bindkey '\e[1~' beginning-of-line  # Debut
 bindkey '\e[4~' end-of-line        # fin
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
 
 # Prompt
 ##############################################################################
