@@ -2,6 +2,9 @@
     name              = Hubert Lefevre
     email             = hubelefevre@gmail.com
 
+[commit]
+    verbose           = true
+
 [color]
     grep              = true
     diff              = true
