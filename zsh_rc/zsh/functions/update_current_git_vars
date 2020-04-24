@@ -1,7 +1,30 @@
 # Works with git 2.12.1
 
+# Previous state
+
+
+case $__GIT_GITLAB_STRATEGY in
+    always)
+        unset PREVIOUS_BRANCH_NAME
+        ;;
+
+    on_change)
+        local PREVIOUS_TOP_LEVEL=$__GIT_TOP_LEVEL
+        local PREVIOUS_BRANCH_NAME=$__GIT_BRANCH_NAME
+        ;;
+
+    once)
+        unset PREVIOUS_BRANCH_NAME
+        export __GIT_GITLAB_STRATEGY='on_change'
+        ;;
+esac
+
+
 # Configuration
 local SHA1_SIZE=8
+GET_GIT_NAME="/home/hlefevre/.script/git_prompt.py"
+GET_GITLAB_INFO="/home/hlefevre/.script/get_gitlab_info.py"
+
 
 # Exported variables
 unset __GIT_TOP_LEVEL
@@ -9,7 +32,7 @@ unset __GIT_NAME
 unset __GIT_IS_SUBMODULE
 
 unset __GIT_BRANCH_NAME
-unset __GIT_CURRENT_COMMIT_SHA1
+unset __GIT_COMMIT_SHA1
 unset __GIT_REMOTE_STATUS
 unset __GIT_IS_DIRTY
 unset __GIT_HAS_DELETED_FILE
@@ -24,13 +47,13 @@ unset __SUBMODULE_IS_DIRTY
 unset __SUBMODULE_HAS_UNTRACKED_FILES
 unset __SUBMODULE_IS_UNMERGED
 
-unset __GIT_CURRENT_OPERATION
+unset __GIT_OPERATION
 unset __GIT_NUM_STASHED
-unset __GIT_CURRENT_TAG
+unset __GIT_TAG
 
 
 # Determinate the git directory
-local git_dir="$(git rev-parse --git-dir 2> /dev/null)"
+local git_dir="$(git rev-parse --absolute-git-dir 2> /dev/null)"
 
 # If the command failed, then we're not in a git repository
 if [ -n "$git_dir" ]
@@ -43,12 +66,25 @@ then
         print -Pn "\e]0;zsh: %d%(1j,; %j job%(2j|s|); ,) \a"
     fi
 
-    # Get repository name (top folder name containing the repo)
-    # We'll need the path to the top level directory of the repository anyway
-    # so get the information now.
-    __GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
+    if [ $(git rev-parse --is-inside-git-dir) = "true" ]
+    then
+        export __GIT_TOP_LEVEL="$(dirname "${git_dir}")"
+    else
+        # Get repository name (top folder name containing the repo)
+        # We'll need the path to the top level directory of the repository anyway
+        # so get the information now.
+        export __GIT_TOP_LEVEL="$(git rev-parse --show-toplevel)"
+        export CI_PROJECT_DIR=$__GIT_TOP_LEVEL
+    fi
 
-    __GIT_NAME="$(basename $__GIT_TOP_LEVEL 2> /dev/null)"
+    if [ "$PREVIOUS_TOP_LEVEL" != "$__GIT_TOP_LEVEL" ]
+    then
+        unset PREVIOUS_BRANCH_NAME
+    fi
+
+    export __GIT_NAME="$(python3 "${GET_GIT_NAME}" $(git -C $__GIT_TOP_LEVEL config --get remote.origin.url))"
+    export CI_PROJECT_PATH=$__GIT_NAME
+    export CI_PROJECT_NAME=${__GIT_NAME##*/}
 
     # If the .git present at the git top level is a file then we're in a
     # submodule inside a repository. This is for this reason we need to get the
@@ -59,9 +95,9 @@ then
         __GIT_IS_SUBMODULE=yes
     fi
 
-    # Determinate entries and branch status
+    # Determinate entries and branch status.
     local git_status
-    git_status=$(git status --porcelain=v2 --branch 2> /dev/null)
+    git_status=$(git -C $__GIT_TOP_LEVEL status --porcelain=v2 --branch 2> /dev/null)
 
     # Output is formatted as:
     # # branch.oid <current commit>
@@ -100,15 +136,19 @@ then
             \#) # Branch information start with this word.
                 case "$words[2]" in
                     branch.head) # Get branch head reference name
-                        __GIT_BRANCH_NAME=$words[3]
+                        export __GIT_BRANCH_NAME=$words[3]
+                        export CI_COMMIT_REF_NAME=$__GIT_BRANCH_NAME
                         ;;
 
                     branch.oid) # Get SHA1 of the HEAD
-                        local sha1=$words[3]
-                        __GIT_CURRENT_COMMIT_SHA1=${sha1:0:$SHA1_SIZE}
+                        __GIT_COMMIT_SHA1=$words[3]
+                        export CI_COMMIT_SHA=$__GIT_COMMIT_SHA1
+                        __GIT_COMMIT_SHA1_SHORT=${sha1:0:$SHA1_SIZE}
                         ;;
 
                     branch.upstream)
+                        __GIT_REMOTE_REF=$words[3]
+                        export __GIT_REMOTE_COMMIT_SHA1=$(git rev-parse $__GIT_REMOTE_REF 2> /dev/null)
                         has_upstream="y"
                         ;;
 
@@ -117,16 +157,16 @@ then
                         then
                             if [ $words[4] = "-0" ]
                             then
-                                __GIT_REMOTE_STATUS='up-to-date'
+                                export __GIT_REMOTE_STATUS='up-to-date'
                             else
-                                __GIT_REMOTE_STATUS='behind'
+                                export __GIT_REMOTE_STATUS='behind'
                             fi
                         else
                             if [ $words[4] = "-0" ]
                             then
-                                __GIT_REMOTE_STATUS='ahead'
+                                export __GIT_REMOTE_STATUS='ahead'
                             else
-                                __GIT_REMOTE_STATUS='diverged'
+                                export __GIT_REMOTE_STATUS='diverged'
                             fi
                         fi
                         ;;
@@ -208,9 +248,18 @@ then
     then
         if [[ $has_upstream == "y" ]]
         then
-            __GIT_REMOTE_STATUS='gone'
+            export __GIT_REMOTE_STATUS='gone'
         else
-            __GIT_REMOTE_STATUS='local'
+            export __GIT_REMOTE_STATUS='local'
+        fi
+    fi
+
+    # Get the GitLab information
+    if [ "$__GIT_GITLAB_STRATEGY" != "never" ]
+    then
+        if [ "$PREVIOUS_BRANCH_NAME" != "$__GIT_BRANCH_NAME" ]
+        then
+            __GIT_GITLAB=$(python3 $GET_GITLAB_INFO --prompt 2> /dev/null)
         fi
     fi
 
@@ -233,31 +282,34 @@ then
     then
         if [ -f $git_dir/rebase-apply/rebasing ]
         then
-            __GIT_CURRENT_OPERATION+=" rebase"
+            __GIT_OPERATION+=" rebase"
         else
-            __GIT_CURRENT_OPERATION+=" am"
+            __GIT_OPERATION+=" am"
         fi
 
     elif [ -d $git_dir/rebase-merge ]
     then
-        __GIT_CURRENT_OPERATION+=" rebase"
+        __GIT_OPERATION+=" rebase"
     fi
 
     if [ -f $git_dir/BISECT_START ]
     then
-        __GIT_CURRENT_OPERATION+=" bisect"
+        __GIT_OPERATION+=" bisect"
     fi
 
     if [ -f $git_dir/MERGE_HEAD ]
     then
-        __GIT_CURRENT_OPERATION+=" merge"
+        __GIT_OPERATION+=" merge"
     fi
 
     if [ -f $git_dir/CHERRY_PICK_HEAD ]
     then
-        __GIT_CURRENT_OPERATION+=" cherry-pick"
+        __GIT_OPERATION+=" cherry-pick"
     fi
 
     # Get the current tag we're on if there is one associated with the commit.
-    __GIT_CURRENT_TAG=$(git describe --tags --exact-match 2>& /dev/null)
+    __GIT_TAG=$(git -C $__GIT_TOP_LEVEL describe --tags --exact-match 2>& /dev/null)
+    # export CI_COMMIT_REF_NAME=$__GIT_TAG
+else
+    unset __GIT_GITLAB
 fi
