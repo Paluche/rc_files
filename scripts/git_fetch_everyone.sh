@@ -19,7 +19,7 @@ DO_FETCH=1
 
 usage()
 {
-    echo "usage: `basename $0` [-g] [-c] [-h]
+    echo "usage: $(basename "${0}") [-g] [-c] [-h]
     -g    Force to run \`git gc\` on each handled repository.
     -c    Force just the check part of the script (no fetch).
     -h    Print this help.
@@ -37,7 +37,7 @@ do
         c) DO_FETCH=0
            ;;
 
-        *) echo "Unknown option $opt ${OPTARG}\n"
+        *) echo "Unknown option $opt ${OPTARG}"
            usage
            ;;
      esac
@@ -46,11 +46,11 @@ done
 
 handle_repo()
 {
-    repo_path=`realpath $1/$2`
+    repo_path=$(realpath "${1}/${2}")
 
-    cd $repo_path > /dev/null
+    cd "$repo_path" > /dev/null || exit 1
 
-    repo_name="$(basename $repo_path 2> /dev/null)"
+    repo_name="$(basename "${repo_path}" 2> /dev/null)"
 
     echo -e "\e[0m$repo_name \e[31m$repo_path\e[34m"
 
@@ -66,8 +66,7 @@ handle_repo()
     fi
 
     # Check for remote gone in repository.
-    git branch -vv | grep ": gone"
-    if [ $? -eq 0 ]
+    if git branch -vv | grep ": gone"
     then
         echo -e "\e[31mGone remote detected for repo: \e[33m$repo_path\e[31m "
     fi
@@ -88,21 +87,21 @@ handle_repo()
         fi
     done
 
-    git merge-base --is-ancestor origin/master master
-
-    if [ ! $? -eq 0 ]
+    if git merge-base --is-ancestor origin/master master 2&> /dev/null
     then
-
-        CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-        NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
-
-        if [ "$CUR_BRANCH" == "master" ] && [ $NB_CHANGES -eq 0 ]
+        if [ "$(git merge-base origin/master master)" != "$(git merge-base --independent master)" ]
         then
-            git rebase
-            git submodule update
-            echo -e "\e[1;31mMaster automatically updated"
-        else
-            echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$repo_path"
+            CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
+
+            if [ "$CUR_BRANCH" == "master" ] && [ "$NB_CHANGES" -eq 0 ]
+            then
+                git rebase
+                git submodule update
+                echo -e "\e[1;31mMaster automatically updated"
+            else
+                echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$repo_path"
+            fi
         fi
     fi
 
@@ -127,38 +126,41 @@ handle_repo()
 
     echo -ne "\e[0m"
 
-    cd $1 > /dev/null
+    cd "$1" || exit 1
 }
 
 
 # $1 path to folder to handle
 go_through_subfolders()
 {
-    cd $1
-    local list=`ls $1`
+    cd "$1" || exit 1
+    local list
+
+    list=$(ls "$1")
+
     for d in $list
     do
-        if [ -d $1/$d ]
+        if [ -d "$1/$d" ]
         then
-            handle_folder $1 $d
+            handle_folder "$1" "$d"
         fi
     done
 }
 
 handle_folder()
 {
-    if [ -e $1/$2/.git ]
+    if [ -e "$1/$2/.git" ]
     then
-        handle_repo $1 $2
+        handle_repo "$1" "$2"
     else
-        go_through_subfolders $1/$2
+        go_through_subfolders "$1/$2"
     fi
 }
 
 # Update data base
 for folder in $GIT_DIRS
 do
-    handle_folder ~/$folder
+    handle_folder "$HOME/$folder"
 done
 
 exit 0
