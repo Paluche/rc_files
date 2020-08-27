@@ -82,7 +82,15 @@ then
         unset PREVIOUS_BRANCH_NAME
     fi
 
-    export __GIT_NAME="$(python3 "${GET_GIT_NAME}" $(git -C $__GIT_TOP_LEVEL config --get remote.origin.url))"
+    GIT_URL=$(git -C $__GIT_TOP_LEVEL config --get remote.origin.url)
+
+    if [ -n "${GIT_URL}" ]
+    then
+        export __GIT_NAME="$(python3 "${GET_GIT_NAME}" "${GIT_URL}")"
+    else
+        export __GIT_NAME="$(basename ${git_dir})"
+    fi
+
     export CI_PROJECT_PATH=$__GIT_NAME
     export CI_PROJECT_NAME=${__GIT_NAME##*/}
 
