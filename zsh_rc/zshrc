@@ -594,7 +594,7 @@ function adb_logcat()
 {
     while :
     do
-        adb logcat -v time | python ~/.script/adb_logcat.py $@
+        adb logcat -v time | ~/.script/adb_logcat.py $@
     done
 }
 
@@ -620,7 +620,7 @@ function timestamp()
 function serial_logcat()
 {
     echo "\03logcat -v time" > /dev/ttyUSB0
-    cat /dev/ttyUSB0 | python ~/.script/adb_logcat.py $@
+    cat /dev/ttyUSB0 | ~/.script/adb_logcat.py $@
 }
 
 function serial_logcat_dump()
