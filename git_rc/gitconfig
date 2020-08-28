@@ -87,3 +87,7 @@
 
 [flake8]
     strict = true
+
+[advice]
+    detachedHead = false
+    addEmptyPathspec = false
