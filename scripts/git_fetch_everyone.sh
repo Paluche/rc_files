@@ -15,6 +15,7 @@ REPO_AS_SUB=""
 
 DO_GC=0
 DO_FETCH=1
+DO_CLEAN=0
 
 
 usage()
@@ -22,19 +23,23 @@ usage()
     echo "usage: $(basename "${0}") [-g] [-c] [-h]
     -g    Force to run \`git gc\` on each handled repository.
     -c    Force just the check part of the script (no fetch).
+    -C    Force a \`clean -fdx\` on all the repositories.
     -h    Print this help.
     "
 
     exit 1
 }
 
-while getopts gch opt
+while getopts gcCh opt
 do
     case "$opt" in
         g) DO_GC=1
            ;;
 
         c) DO_FETCH=0
+           ;;
+
+        C) DO_CLEAN=1
            ;;
 
         *) echo "Unknown option $opt ${OPTARG}"
@@ -57,6 +62,12 @@ handle_repo()
     if [ $DO_FETCH -eq 1 ]
     then
         git fetch
+    fi
+
+    if [ $DO_CLEAN -eq 1 ]
+    then
+        sudo git clean -fdx
+        git submodule foreach -q 'sudo git clean -fdx'
     fi
 
     if [ $DO_GC -eq 1 ]
