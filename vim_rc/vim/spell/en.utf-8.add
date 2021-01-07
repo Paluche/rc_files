@@ -79,3 +79,4 @@ Getter
 milliVolts
 endian
 decrypt
+namespace
