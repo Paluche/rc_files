@@ -851,6 +851,7 @@ let s:extmap = {
 \".pir": "pir",
 \".pl": "perl",
 \".po": "po",
+\".ipy": "python",
 \".py": "python",
 \".pytb": "pytb",
 \".pyx": "pyx",
