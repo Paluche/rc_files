@@ -61,7 +61,7 @@ handle_repo()
 
     if [ $DO_FETCH -eq 1 ]
     then
-        git fetch
+        git fetch -f --prune-tags --prune
     fi
 
     if [ $DO_CLEAN -eq 1 ]
@@ -98,23 +98,35 @@ handle_repo()
         fi
     done
 
-    if git merge-base --is-ancestor origin/master master 2&> /dev/null
-    then
-        if [ "$(git merge-base origin/master master)" != "$(git merge-base --independent master)" ]
-        then
-            CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-            NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
+    NB_CHANGES=$(git status --porcelain=v2 --ignore-submodules | wc -l)
 
-            if [ "$CUR_BRANCH" == "master" ] && [ "$NB_CHANGES" -eq 0 ]
+    if ! git merge-base --is-ancestor origin/master master
+    then
+        CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+        if [ "$CUR_BRANCH" == "master" ] && [ "${NB_CHANGES}" == "0" ]
+        then
+            if git rebase
             then
-                git rebase
-                git submodule update
+              if git submodule update
+              then
                 echo -e "\e[1;31mMaster automatically updated"
+              else
+                echo -e "\e[1;33mError updating submodules"
+              fi
             else
-                echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$repo_path"
+              echo -e "\e[1;33mError rebasing master"
             fi
+        else
+            echo -e "\e[1;31mNew commits on Master for repo: \e[0;33m$repo_path\e[0m"
         fi
     fi
+
+    if [ "${NB_CHANGES}" != "0" ]
+    then
+      echo -e "\e[1;31mLocal pending changes for repo: \e[0;33m$repo_path\e[0m"
+    fi
+
 
     # Check for remote gone in repository's submodules.
     submodule="unknown"
@@ -123,17 +135,23 @@ handle_repo()
     do
         if [[ $line =~ "Entering" ]]
         then
-            ar=($line)
+            # shellcheck disable=SC2206
+            ar=(${line})
             submodule=${ar[1]}
             submodule=${submodule:1:-1}
         elif [[ $line =~ ": gone" ]]
         then
-            echo -e "\e[32mGone remote detected for repo: \e[33m$repo_path/$submodule"
+            echo -e "\e[32mGone remote detected for repo: \e[33m$repo_path/$submodule\e[0m"
         fi
     done < <(git submodule foreach git branch -vv)
 
     # Check for stash in repository's submodules.
-    git submodule foreach -q 'if [ -e $(git rev-parse --git-dir)/logs/refs/stash ]; then echo "\033[1;31mStash detected for submodule: \033[0;33m$toplevel/$path"; fi; exit 0'
+    # shellcheck disable=SC2016
+    git submodule foreach -q \
+      'if [ -e $(git rev-parse --git-dir)/logs/refs/stash ];
+    then echo "\033[1;31mStash detected for submodule: \033[0;33m$toplevel/$path";
+    fi;
+    exit 0'
 
     echo -ne "\e[0m"
 
