@@ -371,3 +371,9 @@ let s:NERDTreeIndicatorMap = {
             \ 'Unknown'   : ''
             \ }
 " }}}
+" Pydocstring plugin ------------------------------------------------------ {{{
+let g:pydocstring_doc_path='/home/hlefevre/lib/venv/bin/doq'
+" }}}
+" rust plugin ------------------------------------------------------------- {{{
+let g:rustfmt_autosave = 1
+" }}}
