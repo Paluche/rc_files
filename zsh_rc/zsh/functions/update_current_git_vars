@@ -63,7 +63,7 @@ then
 
     if [ -n "${GIT_URL}" ]
     then
-        export __GIT_NAME="$(python3 "${GET_GIT_NAME}" "${GIT_URL}")"
+        export __GIT_NAME="$(~/work/rc_files/scripts/python/git_prompt.py "${GIT_URL}")"
     else
         export __GIT_NAME="$(basename ${git_dir})"
     fi
@@ -253,7 +253,7 @@ then
     fi
 
     # Find out if an operation among 'rebase', 'merge', 'cherry-pick',
-    # 'bisect' and 'am' is currently in progress.
+    # 'bisect', 'am', 'revert" is currently in progress.
     if [ -d $git_dir/rebase-apply ]
     then
         if [ -f $git_dir/rebase-apply/rebasing ]
@@ -276,6 +276,11 @@ then
     if [ -f $git_dir/MERGE_HEAD ]
     then
         __GIT_OPERATION+=" merge"
+    fi
+
+    if [ -f $git_dir/REVERT_HEAD ]
+    then
+        __GIT_OPERATION+=" revert"
     fi
 
     if [ -f $git_dir/CHERRY_PICK_HEAD ]
