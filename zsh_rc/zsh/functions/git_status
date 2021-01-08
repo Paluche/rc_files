@@ -35,101 +35,108 @@ local sub
 
 autoload colors; colors
 
-git_status=$(git status --porcelain=v2 2> /dev/null)
-lines=(${(f)git_status})
-if [ -f .git/FETCH_HEAD ]
+if [ -n "$__GIT_TOP_LEVEL" ]
 then
-    echo "Fetch time: $(stat -c %y .git/FETCH_HEAD | cut -c6-16)"
+    git_status=$(git status --porcelain=v2 2> /dev/null)
+    lines=(${(f)git_status})
+
+    if [ -f $__GIT_TOP_LEVEL/.git/FETCH_HEAD ]
+    then
+        echo "Fetch time: $(stat -c %y $__GIT_TOP_LEVEL/.git/FETCH_HEAD | cut -c6-16)"
+    fi
+
+    #python3 /home/hlefevre/.script/get_gitlab_info.py
+
+    for line in $lines
+    do
+        words=(${=line})
+        str=""
+
+        case "$words[1]" in
+            \#)
+                continue
+                ;;
+
+            1|2|u)
+
+                XY=$words[2]
+                sub=$words[3]
+
+                str+=${fg[green]}
+
+                if [ ${XY:0:1} = "." ]
+                then
+                    str+=" "
+                else
+                    str+=${XY:0:1}
+                fi
+
+                str+=${fg[red]}
+
+                if [ ${XY:1:1} = "." ]
+                then
+                    str+=" "
+                else
+                    str+=${XY:1:1}
+                fi
+
+                str+=" "
+
+                str+="${fg[blue]}"
+
+                if [ ${sub:0:1} = "N" ]
+                then
+                    str+=" "
+                else
+                    str+="${sub:0:1}"
+                fi
+
+                if [ ${sub:1:1} = "." ]
+                then
+                    str+=" "
+                else
+                    str+="${sub:1:1}"
+                fi
+
+                if [ ${sub:2:1} = "." ]
+                then
+                    str+=" "
+                else
+                    str+="${sub:2:1}"
+                fi
+
+                if [ ${sub:3:1} = "." ]
+                then
+                    str+=" "
+                else
+                    str+="${sub:3:1}"
+                fi
+
+                str+="${fg[white]}"
+                str+=" "
+
+                if [ $words[1] = "2" ]
+                then
+                    str+="$words[11]"
+                    str+=" -> "
+                    str+="$words[10]"
+                elif [ $words[1] = "1" ]
+                then
+                    str+="$words[9]"
+                else
+                    str+="$words[11]"
+                fi
+                ;;
+
+            \?)
+                str+="${fg[cyan]}"
+                str+="?? ???? "
+                str+="${fg[white]}"
+                str+="$words[2]"
+                ;;
+        esac
+
+        echo "$str"
+
+    done
 fi
-
-for line in $lines
-do
-    words=(${=line})
-    str=""
-
-    case "$words[1]" in
-        \#)
-            continue
-            ;;
-
-        1|2|u)
-
-            XY=$words[2]
-            sub=$words[3]
-
-            str+=${fg[green]}
-
-            if [ ${XY:0:1} = "." ]
-            then
-                str+=" "
-            else
-                str+=${XY:0:1}
-            fi
-
-            str+=${fg[red]}
-
-            if [ ${XY:1:1} = "." ]
-            then
-                str+=" "
-            else
-                str+=${XY:1:1}
-            fi
-
-            str+=" "
-
-            str+="${fg[blue]}"
-
-            if [ ${sub:0:1} = "N" ]
-            then
-                str+=" "
-            else
-                str+="${sub:0:1}"
-            fi
-
-            if [ ${sub:1:1} = "." ]
-            then
-                str+=" "
-            else
-                str+="${sub:1:1}"
-            fi
-
-            if [ ${sub:2:1} = "." ]
-            then
-                str+=" "
-            else
-                str+="${sub:2:1}"
-            fi
-
-            if [ ${sub:3:1} = "." ]
-            then
-                str+=" "
-            else
-                str+="${sub:3:1}"
-            fi
-
-            str+="${fg[white]}"
-            str+=" "
-
-            if [ $words[1] = "2" ]
-            then
-                str+="$words[11]"
-                str+=" -> "
-                str+="$words[10]"
-            elif [ $words[1] = "1" ]
-            then
-                str+="$words[9]"
-            else
-                str+="$words[11]"
-            fi
-            ;;
-
-        \?)
-            str+="${fg[cyan]}"
-            str+="?? ???? "
-            str+="${fg[white]}"
-            str+="$words[2]"
-            ;;
-    esac
-
-    echo "$str"
-done
