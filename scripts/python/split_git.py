@@ -7,7 +7,7 @@
 import re
 import sys
 import os
-from subprocess import run
+from subprocess import run, STDOUT
 from getpass import getpass
 from tempfile import TemporaryDirectory
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
@@ -383,6 +383,23 @@ def list_paths(repo, parsed_paths_to_keep):
     return list(paths_to_keep), list(paths_to_delete)
 
 
+def git_run(repo_dir, verbose, *args):
+    """git_run.
+
+    :param repo_dir:
+    :param verbose:
+    :param args:
+    """
+    cmd_args = ['git', '-C', repo_dir]
+
+    cmd_args.extend(args)
+
+    if verbose:
+        print('Running:', ' '.join(cmd_args))
+
+    run(cmd_args, check=True)  #, stdout=(STDOUT if verbose else None))
+
+
 def parse_args(prog, args):
     """parse_args. Parse the arguments provided by the script.
 
@@ -497,6 +514,13 @@ def parse_args(prog, args):
              f'{default_id_rsa_pub}.'
     )
 
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        dest='verbose',
+        help='Be verbose'
+    )
+
     parsed = parser.parse_args(args)
 
     if not any((parsed.branch_regexps,
@@ -561,56 +585,56 @@ def main(prog, args):
         print(repo.listall_references())
 
         if len(paths_to_keep) == 1:
-            run(['git',
-                 '-C', tmp_src_dir,
-                 'filter-branch',
-                 '--tag-name-filter',
-                 'cat',
-                 '--prune-empty',
-                 '--subdirectory-filter', paths_to_keep[0],
-                 '--all'],
-                 check=True)
-            run(['git', '-C', tmp_src_dir, 'reset', '--hard'], check=True)
+            git_run(tmp_src_dir, parsed.verbose,
+                    'filter-branch',
+                    '--tag-name-filter',
+                    'cat',
+                    '--prune-empty',
+                    '--subdirectory-filter', paths_to_keep[0],
+                    '--all')
+            git_run(tmp_src_dir, parsed.verbose, 'reset', '--hard')
 
         if len(paths_to_keep) > 1 and len(paths_to_delete) > 1:
             # Filter tags using inverted regex
-            run(['git',
-                 '-C', tmp_src_dir,
-                 'filter-branch',
-                 '--force',
-                 '--index-filter',
-                 '"git rm -r --cached --ignore-unmatch {}"'.format(
-                     ' '.join(paths_to_delete)
-                 ),
-                 '--prune-empty',
-                 '--tag-name-filter',
-                 'cat',
-                 '--',
-                 '--all'],
-                 check=True)
-            run(['git', '-C', tmp_src_dir, 'reset', '--hard'], check=True)
+            git_run(tmp_src_dir,
+                    parsed.verbose,
+                    'filter-branch',
+                    '--force',
+                    '--index-filter',
+                    '"git rm -r --cached --ignore-unmatch {}"'.format(
+                        ' '.join(paths_to_delete)
+                    ),
+                    '--prune-empty',
+                    '--tag-name-filter',
+                    'cat',
+                    '--',
+                    '--all')
+            git_run(tmp_src_dir, parsed.verbose, 'reset', '--hard')
 
-        # Clean up the mess
-        run(['git',
-             '-C', tmp_src_dir,
-             'reflog,',
-             'expire,',
-             '--expire=now,',
-             '--all'],
-             check=True)
+        git_run(tmp_src_dir,
+                parsed.verbose,
+                'reflog',
+                'expire',
+                '--expire=now',
+                '--all')
 
-        run(['git', '-C', tmp_src_dir, 'gc', '--aggressive,', '--prune=now'],
-            check=True)
+        git_run(tmp_src_dir,
+                parsed.verbose,
+                'gc',
+                '--aggressive',
+                '--prune=now')
 
         # Create destination repository
         if os.path.exists(os.path.dirname(parsed.destination)):
             init_repository(parsed.destination, True)
 
-        # Add new origin and push master
-        remote = repo.remotes.add('origin', parsed.destination).push()
+        # Create new origin.
+        remote = repo.remotes.create('origin', parsed.destination)
 
-        # push all branches and tags to be kept.
-        remote.push(branches_to_keep + tags_to_keep)
+        # Push all branches and tags to be kept.
+        remote.push([f'{REFS_REMOTE_PREFIX}{branch}'
+                     for branch in branches_to_keep])
+        remote.push([f'{REFS_TAGS_PREFIX}{tag}' for tag in tags_to_keep])
 
     return 0
 

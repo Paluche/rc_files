@@ -7,25 +7,16 @@ Xft.rgba:       rgb
 Xft.hintstyle:  hintslight
 
 ! Solarized ------------------------------------------------------------------
-! Color scheme for the X Window System
-!
-! http://ethanschoonover.com/solarized
-
 
 ! Common
 #define S_yellow        #b58900
-#define S_lyellow       #b58922
 #define S_orange        #cb4b16
 #define S_red           #dc322f
 #define S_magenta       #d33682
 #define S_violet        #6c71c4
 #define S_blue          #268bd2
-#define S_lblue         #2a8ada
 #define S_cyan          #2aa198
-#define S_lcyan         #2fafaf
 #define S_green         #859900
-#define S_lgreen        #909f22
-
 
 ! Dark
 #define S_base03        #002b36
@@ -48,73 +39,32 @@ Xft.hintstyle:  hintslight
 ! #define S_base2         #073642
 ! #define S_base3         #002b36
 
+*background:              S_base03
+*foreground:              S_base0
+*fading:                  40
+*fadeColor:               S_base03
+*cursorColor:             S_base1
+*pointerColorBackground:  S_base01
+*pointerColorForeground:  S_base1
 
-! To only apply colors to your terminal, for example, prefix
-! the color assignment statement with its name. Example:
+*color0:                  S_base02
+*color1:                  S_red
+*color2:                  S_green
+*color3:                  S_yellow
+*color4:                  S_blue
+*color5:                  S_magenta
+*color6:                  S_cyan
+*color7:                  S_base2
+*color9:                  S_orange
+*color8:                  S_base03
+*color10:                 S_base01
+*color11:                 S_base00
+*color12:                 S_base0
+*color13:                 S_violet
+*color14:                 S_base1
+*color15:                 S_base3
 
-! xterm ----------------------------------------------------------------------
-
-xterm*termName:           xterm-256color
-xterm*VT100.geometry:     80x25
-! xterm*faceName:           Inconsolata:style=Medium:size=9
-! xterm*faceName: xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro:pixelsize=13:antialias=true:hinting=true
-! xterm*faceName: xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Black:pixelsize=13:antialias=true:hinting=true
-! xterm*faceName: xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Light:pixelsize=13:antialias=true:hinting=true
-! xterm*faceName: xft:Sauce\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true,xft:Sauce\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true
-xterm*faceName: Sauce\ Code\ Pro\ Semibold
-xterm*faceSize: 9
-xterm*dynamicColors:      true
-xterm*utf8:               2
-xterm*eightBitInput:      true
-xterm*saveLines:          4096
-xterm*scrollKey:          true
-xterm*scrollTtyOutput:    false
-xterm*scrollBar:          false
-xterm*rightScrollBar:     false
-xterm*jumpScroll:         true
-xterm*multiScroll:        true
-
-xterm*background:              S_base03
-xterm*foreground:              S_base2
-xterm*fading:                  40
-xterm*fadeColor:               S_base03
-xterm*cursorColor:             S_base1
-xterm*pointerColorBackground:  S_base01
-xterm*pointerColorForeground:  S_base1
-
-! black
-xterm*color0:                  S_base02
-! red
-xterm*color1:                  S_red
-! green
-xterm*color2:                  S_green
-! yellow
-xterm*color3:                  S_yellow
-! blue
-xterm*color4:                  S_blue
-! magenta
-xterm*color5:                  S_magenta
-! cyan
-xterm*color6:                  S_cyan
-! lgrey
-xterm*color7:                  S_base2
-! grey
-xterm*color8:                  S_base03
-! light red
-xterm*color9:                  S_orange
-! light green
-xterm*color10:                 S_lgreen
-! light yellow
-xterm*color11:                 S_base00
-! light blue
-xterm*color12:                 S_lblue
-! violet
-xterm*color13:                 S_violet
-! light cyan
-xterm*color14:                 S_base1
-! white
-xterm*color15:                 S_base3
-! xterm ----------------------------------------------------------------------
+! URxvt ----------------------------------------------------------------------
 
 URxvt*VT100.geometry:          80x25
 URxvt*font:                    xft:SauceCodePro\ Nerd\ Font\ Mono:pixelsize=12
@@ -147,36 +97,3 @@ URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
 URxvt*pointerBlank:            true
-
-! black
-URxvt*color0:                  S_base02
-! red
-URxvt*color1:                  S_red
-! green
-URxvt*color2:                  S_green
-! yellow
-URxvt*color3:                  S_yellow
-! blue
-URxvt*color4:                  S_blue
-! magenta
-URxvt*color5:                  S_magenta
-! cyan
-URxvt*color6:                  S_cyan
-! lgrey
-URxvt*color7:                  S_base2
-! grey
-URxvt*color8:                  S_base03
-! light red
-URxvt*color9:                  S_orange
-! light green
-URxvt*color10:                 S_lgreen
-! light yellow
-URxvt*color11:                 S_base00
-! light blue
-URxvt*color12:                 S_lblue
-! violet
-URxvt*color13:                 S_violet
-! light cyan
-URxvt*color14:                 S_base1
-! white
-URxvt*color15:                 S_base3

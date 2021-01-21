@@ -29,6 +29,7 @@ unset __GIT_NUM_STASHED
 unset __GIT_TAG
 
 
+
 # Determinate the git directory
 local git_dir="$(git rev-parse --absolute-git-dir 2> /dev/null)"
 

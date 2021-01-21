@@ -114,13 +114,13 @@ alias tree='tree -C'               # Colors!!
 alias la='ls -a'                   # Shorcut
 alias ms='ls'                      # Fast Finger Rerouting
 alias sl='ls'                      # Fast Finger Rerouting
-alias rm='nocorrect rm -r'         # Recursive remove automatic
-alias mv='nocorrect mv -i'         # no spelling correction on mv
-alias make='nocorrect make'        # no spelling correction on make
-alias locate='nocorrect locate -i' # no spelling correction on locate
+alias rm='rm -r'         # Recursive remove automatic
+alias mv='mv -i'         # no spelling correction on mv
+alias make='make'        # no spelling correction on make
+alias locate='locate -i' # no spelling correction on locate
                                    # case insensitive.
-#alias find='nocorrect find -name'  # no spelling correction on find, find by name.
-alias mkdir='nocorrect mkdir -p'   # no spelling correction on mkdir
+#alias find='find -name'  # no spelling correction on find, find by name.
+alias mkdir='mkdir -p'   # no spelling correction on mkdir
 alias cp='cp -r'
 alias py='ipython3'
 alias gnome-control-center='env XDG_CURRENT_DESKTOP=GNOME gnome-control-center'
@@ -156,9 +156,11 @@ alias gr='git reset -q'                      # Quiet shortcut
 alias gsh='git show -b --ignore-blank-lines' # Shortcut / ignore space diff
 alias gss='git show --stat'                  # Shorter diff for git show
 alias gsu='git submodule update --recursive --init' # Shortcut
-alias gb='/home/hlefevre/autre/git-branch-status/git-branch-status -l'
-alias gba='/home/hlefevre/autre/git-branch-status/git-branch-status -a'
+alias gb='/home/hlefevre/work/git-branch-status/git-branch-status -l'
+alias gba='/home/hlefevre/work/git-branch-status/git-branch-status -a'
 alias gbd='git branch -D'
+alias Logic='/opt/Logic\ 1.2.18\ \(64-bit\)/Logic'
+alias flake8="python3 -m flake8"
 
 
 # Keep auto-completion working with the aliases
@@ -190,6 +192,7 @@ compdef _git gsu=git-submodule-update
 compdef _git gre=git-rebase
 compdef _git gbd=git-branch
 
+
 function git_home()
 {
     if [ -n "$__GIT_TOP_LEVEL" ]
@@ -197,6 +200,27 @@ function git_home()
         cd $__GIT_TOP_LEVEL
     else
         echo -e "\e[31mNot in a repository"
+        return 1
+    fi
+}
+
+function viam()
+{
+    if [ -n "$__GIT_TOP_LEVEL" ]
+    then
+        files=($(git diff-tree --no-commit-id --name-only -r HEAD))
+
+        if [ ${#files} -eq 0 ]
+        then
+            echo -e "\e[31mNo modified files in HEAD"
+            return &
+        fi
+
+        vim ${files[@]}
+
+    else
+        echo -e "\e[31mNot in a repository"
+        return 1
     fi
 }
 
@@ -244,11 +268,11 @@ function git_diff_origin()
 
 function gbf()
 {
-    /home/hlefevre/autre/git-branch-status/git-branch-status -l
+    /home/hlefevre/work/git-branch-status/git-branch-status -l
 
     echo ""
 
-    git submodule foreach "/home/hlefevre/autre/git-branch-status/git-branch-status -l && echo "
+    git submodule foreach "/home/hlefevre/work/git-branch-status/git-branch-status -l && echo "
 }
 
 function gcfp()
@@ -282,6 +306,52 @@ function git_find()
     fi
 }
 
+alias cd_nrf_projects='cd /home/hlefevre/work/nrf_projects'
+
+alias cd_core='cd /home/hlefevre/netatmo/core'
+alias cd_emb-system='cd /home/hlefevre/netatmo/core/emb-system'
+alias cd_ci-tools='cd /home/hlefevre/netatmo/core/ci-tools'
+alias cd_constants='cd /home/hlefevre/netatmo/core/constants'
+alias cd_dblib-v2='cd /home/hlefevre/netatmo/core/dblib-v2'
+alias cd_generic='cd /home/hlefevre/netatmo/core/generic'
+alias cd_generic-embedded='cd /home/hlefevre/netatmo/core/generic-embedded'
+alias cd_pyet='cd /home/hlefevre/netatmo/core/python-emb-tools'
+alias cd_mdns-responder='cd /home/hlefevre/netatmo/core/mdns-responder'
+alias cd_lan-comm='cd /home/hlefevre/netatmo/core/lan-comm'
+alias cd_vendor='cd /home/hlefevre/netatmo/core/vendor'
+alias cd_vendor_nordic_hk='cd /home/hlefevre/netatmo/core/vendor/embedded/Nordic/nRF5_SDK_HK'
+alias cd_crypto='cd /home/hlefevre/netatmo/core/crypto'
+
+alias cd_embedded='cd /home/hlefevre/netatmo/embedded'
+alias cd_nsd='cd /home/hlefevre/netatmo/embedded/nsd'
+alias cd_ndl='cd /home/hlefevre/netatmo/embedded/ndl'
+alias cd_nis='cd /home/hlefevre/netatmo/embedded/nis'
+alias cd_nco='cd /home/hlefevre/netatmo/embedded/nco'
+alias cd_nordic='cd /home/hlefevre/netatmo/embedded/nordic'
+alias cd_update_v3='cd /home/hlefevre/netatmo/embedded/update-v3'
+alias cd_firmware='cd /home/hlefevre/netatmo/embedded/firmware'
+alias cd_templates='cd /home/hlefevre/netatmo/embedded/templates'
+alias cd_netcom-port='cd /home/hlefevre/netatmo/embedded/netcom-port'
+alias cd_networking='cd /home/hlefevre/netatmo/embedded/networking'
+alias cd_linux-system='cd /home/hlefevre/netatmo/embedded/linux-system'
+
+alias cd_cam='cd /home/hlefevre/netatmo/camera/camera'
+alias cd_rfnsc='cd /home/hlefevre/netatmo/camera/camera/build/targets/common/patches/common/linux/drivers/netatmo/rfnsc/'
+alias cd_NetatmoCommon='cd /home/hlefevre/netatmo/camera/camera/modules/netatmo/NetatmoCommon/src/com/netatmo'
+alias cd_WelcomeManager='cd /home/hlefevre/netatmo/camera/camera/modules/netatmo/WelcomeManager/src/com/netatmo'
+alias cd_PresenceManager='cd /home/hlefevre/netatmo/camera/camera/modules/netatmo/PresenceManager/src/com/netatmo'
+
+alias cd_rc_files='cd /home/hlefevre/work/rc_files'
+
+alias netatmo_log='python3 /home/hlefevre/netatmo/core/python-emb-tools/python/bin/netatmo-log.py'
+
+function segger_log
+{
+    killall JLinkExe
+    JLinkExe -if SWD -device nrf52 -speed 50000 -autoconnect 1 -commanderscript /home/hlefevre/netatmo/embedded/nordic/tools/nrf52.jlink &
+    read a
+    python3 /home/hlefevre/netatmo/core/python-emb-tools/python/bin/netatmo-log.py -H localhost:19021 -f time,uptime $@
+}
 
 # Editors on shell
 alias pico='nano -mw'
@@ -297,6 +367,7 @@ alias -s h='vim'
 alias -s o='vim'
 alias -s md='vim'
 alias -s cpp='vim'
+alias -s rs='vim'
 alias -s hpp='vim'
 alias -s vim='vim'
 alias -s mk='vim'
@@ -329,11 +400,9 @@ alias -s odt='lowriter'
 alias -s odp='loimpress'
 alias -s ods='localc'
 alias -s xls='localc'
-alias -s py='python3'
+#alias -s py='python3'
 alias -s sh='bash'
 alias -s rb='ruby'
-
-alias test='cd ./test'
 
 # Other
 alias today='grep -r `date +"%m/%d"` /usr/share/calendar'
@@ -356,7 +425,45 @@ alias lock='xscreensaver-command -lock'
 
 # Make alias
 export NBPROCS=`nproc`
-alias jmake='make -j$NBPROCS'
+alias jmake='make -j$NBPROCS MULTI_JOBS=y -k'
+
+
+# Git Merge request commit compilation check.
+function git_check_nsd_mr
+{
+
+   if [[ -z "$1" ]]
+   then
+       branch=master
+   else
+       if [ "$1" = "-i" ]
+       then
+           branch=master
+           option="-i"
+       fi
+       branch=$2
+   fi
+
+   git rebase -x "git submodule update" \
+              -x "./build.sh clean" \
+              -x "./build.sh" \
+              $branch $option
+}
+
+function git_check_firmware_mr
+{
+   if [[ -z "$1" ]]
+   then
+     branch=master
+   else
+     branch=$1
+   fi
+
+   git rebase -x "git submodule update"
+              -x "make -Ccortex -j$NBPROCS MULTI_JOBS=y clean && make -Ccortex -j$NBPROCS MULTI_JOBS=y" $branch
+}
+compdef _git git_check_nsd_mr=git-rebase
+compdef _git git_check_firmware_mr=git-rebase
 
 # Set Options
 ##############################################################################
@@ -394,7 +501,7 @@ setopt hist_ignore_all_dups        # Even if there are commands inbetween
 setopt hist_ignore_space           # If a line starts with a space, don't save
                                    # it.
 setopt hist_no_store
-#setopt EXTENDED_HISTORY           # Save the time and how long a command ran
+setopt EXTENDED_HISTORY           # Save the time and how long a command ran
 setopt hist_save_no_dups
 setopt hist_expire_dups_first
 setopt hist_find_no_dups
@@ -417,9 +524,6 @@ bindkey "^[[B" history-beginning-search-forward
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 autoload -U promptinit
-
-# Need git in English
-export LANGUAGE='en_US.UTF-8 git'
 
 # Enable auto-execution of functions.
 typeset -ga preexec_functions
@@ -524,8 +628,8 @@ esac
 export HISTSIZE=2000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
-#Say how long a command took, if it took more than 30 seconds
-export REPORTTIME=30
+# Say how long a command took, if it took more than 30 seconds
+export REPORTTIME=10
 
 # Watch other user login/out
 watch=notme
@@ -598,6 +702,77 @@ function adb_logcat()
     done
 }
 
+function scp_to_cam()
+{
+    scp -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa $2 root@$1:$3
+}
+
+function ssh_cam()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$@
+}
+
+function ssh_cam_start_dtg_install()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.camera.debug.RFNSC_INSTALLER_START
+}
+
+function ssh_cam_start_nis_install()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.camera.debug.NIS_INSTALLER_START
+}
+
+function ssh_cam_stop_module_install()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.camera.debug.MODULES_INSTALLER_STOP
+}
+
+function ssh_cam_send_camera_status()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.webservice.SEND_SETCAMERASTATUS
+}
+
+function ssh_cam_camera_status_secret()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.webservice.debug.SECRETS
+}
+
+function ssh_cam_force_rfnsc_update()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.rfnsc.debug.FORCE_UPDATE
+}
+
+function ssh_cam_force_rfnsc_install()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.rfnsc.debug.FORCE_INSTALL
+}
+
+function ssh_cam_force_rfnsc_unsupported()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.rfnsc.debug.FORCE_UNSUPPORTED
+}
+
+function ssh_cam_event_test()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 intentBroadcaster -a com.netatmo.backend.api.event.TEST
+}
+
+function ssh_cam_logcat()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 logcat -v time | python2.7 ~/.script/adb_logcat.py
+}
+
+function ssh_cam_logcat_in_file()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 logcat -v time | python2.7 ~/.script/adb_logcat.py -w $2
+}
+
+function ssh_cam_tailcam()
+{
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 switch_logger.sh net=trace other=off
+    ssh -i /home/hlefevre/netatmo/camera/camera/cam_key/id_rsa root@$1 tail-cam
+}
+
 function adb_shell()
 {
     while :
@@ -612,7 +787,7 @@ function timestamp()
     then
         echo "usage: timestamp time"
     else
-        python ~/.script/timestamp.py $1
+        ~/.script/timestamp.py $1
     fi
 }
 
@@ -636,7 +811,7 @@ function serial_dmesg_dump()
     cat /dev/ttyUSB0 > ~/dump_dmesg.txt
 }
 
-alias cortex_log='python ~/.script/cortex_log.py'
+alias cortex_log='~/.script/cortex_log.py'
 
 function markdown_preview()
 {
@@ -665,6 +840,17 @@ function git_rebase_correct_author()
     git rebase -x "git commit --amend --author hlefevre@netatmo.com" $branch
 }
 
+function netatmo_vpn_start()
+{
+    sudo openvpn --config /home/hlefevre/Downloads/hlefevre@corp.netatmo.com__ssl_vpn_config.ovpn
+}
+
+alias netatmo_vpn_stop='nmcli con down netatmo_vpn'
+alias fw_sftp='sftp -P 2222 fw@fpp.netatmo.net'
+
+export PATH=$PATH:/opt/tools_arm/bin/
+export PATH=$PATH:/home/hlefevre/.local/bin/
+
 # Computer's specific configurations
 ##############################################################################
 if [ `hostname` = "paluche-laptop" ]; then
@@ -690,17 +876,18 @@ if [ `hostname` = "paluche-laptop" ]; then
     users=(hlefevre paluche hubert bar)
     hosts=(paluche-laptop)
 
-elif [ `hostname` = "dell-hlefevre" ]; then
+elif [ `hostname` = "hlefevre-latitude" ]; then
     # Initialize a session
     init() {
         common_init
         setxkbmap -option "nbsp:none"
+        grep -r `date +"%m/%d"` /usr/share/calendar
     }
     # Netatmo shortcut
     export PATH=$PATH:~/netatmo/generic/stm32_sbm
     #export PATH=$PATH:/opt/jdk1.7.0_67/bin
     #export PATH=$PATH:/opt/jdk1.7.0_67/lib
-    export PATH=$PATH:/home/hlefevre/autre/rc_files/xflux
+    export PATH=$PATH:/home/hlefevre/work/rc_files/xflux
     export PATH=$PATH:/opt/android-studio/bin
     export PATH=$PATH:/home/hlefevre/netatmo/embedded/Android/Camera/build/toolchain/android_standalone/bin/
     #export JAVA_HOME=/opt/jdk1.7.0_67
@@ -716,11 +903,150 @@ elif [ `hostname` = "dell-hlefevre" ]; then
     alias flasher='sudo /home/hlefevre/netatmo/apps/Linux/flasher/flasher'
     alias dfu_flash='sudo /home/hlefevre/netatmo/generic/stm32_dfu/stm32_dfu -f='
     # SSH Users and Host
-    users=(hlefevre hubert paluche)
-    hosts=(devatmo democes1 vm1-inte.corp.netatmo.com vm3-inte.corp.netatmo.com)
+    users=(hlefevre embedded)
+    hosts=()
 
 fi
 
 # SSH Completion
 zstyle ':completion:*' users $users
 zstyle ':completion:*:hosts' hosts $hosts
+
+function alphabravo()
+{
+    echo " #  *  ascii ASCII NATO        #  *  ascii ASCII NATO"
+    echo " 1  A  0x61  0x41  Alpha      14  N  0x6e  0x4e  November"
+    echo " 2  B  0x62  0x42  Bravo      15  O  0x6f  0x4f  Oscar"
+    echo " 3  C  0x63  0x43  Charlie    16  P  0x70  0x50  Papa"
+    echo " 4  D  0x64  0x44  Delta      17  Q  0x71  0x51  Quebec"
+    echo " 5  E  0x65  0x45  Echo       18  R  0x72  0x52  Romeo"
+    echo " 6  F  0x66  0x46  Foxtrot    19  S  0x73  0x53  Sierra"
+    echo " 7  G  0x67  0x47  Golf       20  T  0x74  0x54  Tango"
+    echo " 8  H  0x68  0x48  Hotel      21  U  0x75  0x55  Uniform"
+    echo " 9  I  0x69  0x49  India      22  V  0x76  0x56  Victor"
+    echo "10  J  0x6a  0x4a  Juliet     23  W  0x77  0x57  Whiskey"
+    echo "11  K  0x6b  0x4b  Kilo       24  X  0x78  0x58  X-ray"
+    echo "12  L  0x6c  0x4c  Lima       25  Y  0x79  0x59  Yankees"
+    echo "13  M  0x6d  0x4d  Mike       26  Z  0x7a  0x5a  Zulu"
+}
+
+
+#function check_branch()
+#{
+#    while :
+#    do
+#        ./build.sh -At nsc -H a31
+#
+#        if [ ! $? -eq 0 ]
+#        then
+#            echo "NSC build fail"
+#            break
+#        fi
+#
+#        #./build.sh -At noc -H a83
+#        #if [ ! $? -eq 0 ]
+#        #then
+#        #    echo "NOC build fail"
+#        #    break
+#        #fi
+#
+#        git rebase --continue
+#
+#        if [ !$? -neq 0 ]
+#        then
+#            echo "END OF REBASE"
+#            break
+#        fi
+#    done
+#}
+
+alias zik_manager='/opt/zik-manager/zik-manager.sh'
+
+# function curl_cam_v1()
+# {
+#      curl -d @$3 -X POST https://v1.inte.netatmo.com/$1/command/$2
+# }
+#
+# function curl_cam()
+# {
+#      curl -d @$3 -X POST http://$1/command/$2
+# }
+
+alias curl_cam='python3 /home/hlefevre/.script/curl_cam.py'
+
+# hlefevre
+export GITLAB_USER_ID=33
+
+export CI_API_V4_URL="https://gitlab.corp.netatmo.com/api/v4"
+
+export NETATMO_WORK_DIR="/home/hlefevre/netatmo"
+
+PYET_BIN="${NETATMO_WORK_DIR}/core/python-emb-tools/python/bin"
+alias shrug='echo "¯\_(ツ)_/¯"'
+alias tableflop='echo "(╯°□°)╯︵ ┻━┻"'
+alias gitlab='ipython3 -i ~/.script/gitlab_api_interactive.py'
+alias gili="${PYET_BIN}/gitlab/get_gitlab_info.py 2> /dev/null"
+alias pipelines="${PYET_BIN}/gitlab/pipelines.py -c -1 2> /dev/null"
+alias trigger_pipeline="${PYET_BIN}/gitlab/trigger-pipeline.py"
+alias errno="~/C_test/errno"
+
+alias docker_netatmo='docker run \
+  --rm \
+  --dns=10.3.0.7 \
+  --dns=10.3.0.8 \
+  --dns-search=corp.netatmo.com \
+  -e HOME="$HOME" \
+  -e USER_ID="$(id -u)" \
+  -e GROUP_ID="$(id -g)" \
+  -e USER_NAME="$(whoami)" \
+  -e NETATMO_WORK_DIR="$NETATMO_WORK_DIR" \
+  -v "$HOME/.ssh":"$HOME/.ssh:ro" \
+  -v "$HOME/.ccache":"$HOME/.ccache" \
+  -v "$NETATMO_WORK_DIR":"$NETATMO_WORK_DIR"'
+#  -v "$HOME/.script":"$HOME/.script" \
+#  -v /tmp:/tmp \
+#  --name "$(whoami)"_$$'
+##  --entrypoint "/bin/bash $HOME/.script/docker_entrypoint.sh"'
+
+compdef _docker docker_netatmo=docker-run
+
+
+function gilr()
+{
+    if [ $# -eq 0 ]
+    then
+        strat='once'
+    else
+        strat=$1
+    fi
+
+    case $strat in
+        always)
+            ;;
+        never)
+            ;;
+        once)
+            ;;
+        on_change)
+            ;;
+        *)
+           echo 'Invalid strategy (always, never, once, on_change)'
+           exit 1
+           ;;
+    esac
+
+    typeset -x __GIT_GITLAB_STRATEGY="$strat"
+}
+
+alias gils='echo $__GIT_GITLAB_STRATEGY'
+
+export __GIT_GITLAB_STRATEGY='never'
+export TOOLCHAIN_DIR='/opt'
+
+
+function cr()
+{
+  cd "${NETATMO_WORK_DIR}/$1"
+}
+
+export PYTHONPAT='/home/hlefevre/work/nrf_projects/python/lib'

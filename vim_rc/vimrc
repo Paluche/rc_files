@@ -43,9 +43,9 @@ set mouse=nc             " Activate mouse support in all mode except insertion (
 
 set number               " Show line numbers
 set nowrap               " Turn off line wrap
-set tabstop=4            " 4 spaces
-set shiftwidth=4         " 4 spaces
-set softtabstop=4        " 4 spaces
+set tabstop=2            " 4 spaces
+set shiftwidth=2         " 4 spaces
+set softtabstop=2        " 4 spaces
 set expandtab            " Expand tabs to spaces
 set listchars=           " Clear list
 set listchars+=nbsp:.    " Add non breaking space to list
@@ -299,9 +299,11 @@ let g:solarized_hitrail=1
 colorscheme solarized
 " }}}
 " Syntastic -------------------------------------------------------- {{{
-let g:syntastic_python_flake8_exec = 'python3'
-let g:syntastic_python_flake8_args = ['-m', 'flake8', '--config', '/home/hlefevre/.flake8']
-let g:syntastic_c_checkers=['make']
+" let g:syntastic_python_pylint_exec  = 'python3.8.0'
+let g:syntastic_python_flake8_exec  = 'python3.8'
+let g:syntastic_python_flake8_args  = ['-m', 'flake8', '--config', '/home/hlefevre/.flake8']
+let g:syntastic_c_checkers          = ['make', '-j8']
+
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -312,7 +314,7 @@ let g:syntastic_check_on_open            = 0
 let g:syntastic_check_on_wq              = 0
 " }}}
 " Indent guide ------------------------------------------------------------ {{{
-set ts=4 sw=4 et
+set ts=2 sw=2 et
 let g:indent_guides_auto_colors = 0
 hi IndentGuidesOdd  ctermbg=black
 " hi IndentGuidesEven ctermbg=black Leave it background color

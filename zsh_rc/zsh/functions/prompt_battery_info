@@ -3,8 +3,7 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
     if [ "$__CURRENT_BATTERY_STATUS" = "full" ]
     then
         s+="%{${fg[green]}%}"
-        s+="█"
-
+        s+=""
     else
         if [ "$__CURRENT_BATTERY_STATUS" = "charging" ]
         then
@@ -15,54 +14,52 @@ if [ -n "$__CURRENT_BATTERY_STATUS" ]; then
 
         case "$__CURRENT_BATTERY_LEVEL" in
             10)
-                s+="█"
+                s+=""
                 ;;
-
-            0)
-                s+=" "
+            9)
+                s+=""
                 ;;
-
-            1)
-                if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
-                then
-                    s+="$at_blink"
-                fi
-
-                s+="▁$at_normal"
+            8)
+                s+=""
                 ;;
-
+            7)
+                s+=""
+                ;;
+            6)
+                s+=""
+                ;;
+            5)
+                s+=""
+                ;;
+            4)
+                s+=""
+                ;;
+            3)
+                s+=""
+                ;;
             2)
                 if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
                 then
                     s+="$at_blink"
                 fi
 
-                s+="▂$at_normal"
+                s+="$at_normal"
                 ;;
+            1)
+                if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
+                then
+                    s+="$at_blink"
+                fi
 
-            3)
-                s+="▂"
+                s+="$at_normal"
                 ;;
-
-            4)
-                s+="▃"
-                ;;
-
-            5)
-                s+="▄"
-                ;;
-
-            6)
-                s+="▅"
-                ;;
-            7)
-                s+="▆"
-                ;;
-            8)
-                s+="▇"
-                ;;
-            9)
-                s+="█"
+            0)
+                if [ "$__CURRENT_BATTERY_STATUS" = "discharging" ]
+                then
+                    s+="$at_blink$at_bold"
+                    s+="%{${fg[red]}%}"
+                fi
+                s+="$at_normal"
                 ;;
         esac
     fi

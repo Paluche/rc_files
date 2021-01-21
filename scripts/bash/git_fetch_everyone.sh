@@ -5,7 +5,7 @@
 ##############################################
 # Paths from ~/
 
-GIT_DIRS=""
+GIT_DIRS="work netatmo/embedded netatmo/core"
 REPO_AS_SUB=""
 
 
